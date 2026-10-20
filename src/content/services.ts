@@ -35,7 +35,7 @@ export const services: Service[] = [
     icon: ShoppingBag,
     title: "Shopify Store Setup",
     short: "A Shopify store, built and ready to take orders.",
-    price: "Get a quote",
+    price: "From A$1,200",
     included: [
       "Theme design",
       "Product upload",
@@ -51,7 +51,7 @@ export const services: Service[] = [
     icon: Sparkles,
     title: "Smart Store Setup (AI)",
     short: "Your store plus AI tools that sell while you sleep.",
-    price: "Get a quote",
+    price: "From A$2,000",
     included: [
       "Everything in Shopify Store Setup",
       "AI-written product descriptions",
@@ -67,8 +67,8 @@ export const services: Service[] = [
     icon: LifeBuoy,
     title: "Care Plan",
     short: "Monthly care so your site stays fast, safe and up to date.",
-    price: "Get a quote",
-    priceNote: "Monthly plan · price on request",
+    price: "From A$49",
+    priceNote: "/ month",
     included: [
       "Small edits and content updates",
       "Uptime and security checks",
