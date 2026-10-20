@@ -37,5 +37,5 @@ export function ProjectCard({ project: p }: { project: Project }) {
   if (!p.link) return <div className={cls}>{inner}</div>;
   if (isExternal)
     return <a href={p.link.href} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>;
-  return <Link to={p.link.href} className={cls}>{inner}</Link>;
+  return <Link to={p.link.href as "/contact"} className={cls}>{inner}</Link>;
 }
