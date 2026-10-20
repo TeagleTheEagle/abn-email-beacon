@@ -4,9 +4,9 @@ export const site = {
   est: "EST. 2026",
   email: "benteaguey6@gmail.com",
   abn: "64 813 107 974",
-  storeUrl: "https://teagueindustries.com.au",
+  storeUrl: "/shop",
   storeLabel: "teagueindustries.com.au",
-  location: "Based in Australia 🇦🇺",
+  location: "Based in Australia",
 };
 
 export const nav = [

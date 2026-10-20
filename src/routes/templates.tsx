@@ -32,7 +32,7 @@ function Templates() {
         ))}
       </div>
       <Reveal className="mt-16 text-center">
-        <a href={site.storeUrl} target="_blank" rel="noopener noreferrer" className="btn-primary !px-10 !py-4 !text-base">
+        <a href={site.storeUrl} className="btn-primary !px-10 !py-4 !text-base">
           Visit the template store <ExternalLink className="h-4 w-4" />
         </a>
       </Reveal>

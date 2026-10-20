@@ -166,7 +166,7 @@ function Home() {
           <p className="mx-auto mt-5 max-w-lg text-muted-foreground">
             Ready-made invoices, quotes, agreements and website kits — built for Australian businesses. Download and go.
           </p>
-          <a href={site.storeUrl} target="_blank" rel="noopener noreferrer" className="btn-chrome mt-8">
+          <a href={site.storeUrl} className="btn-chrome mt-8">
             Browse templates <ExternalLink className="h-4 w-4" />
           </a>
         </Reveal>
