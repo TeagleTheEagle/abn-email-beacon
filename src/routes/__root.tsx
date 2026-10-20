@@ -18,6 +18,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { useCartSync } from "@/hooks/useCartSync";
 
 function NotFoundComponent() {
+  useEffect(() => {
+    document.title = "Page not found | Teague Industries";
+  }, []);
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">

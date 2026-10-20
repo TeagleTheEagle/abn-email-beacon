@@ -10,11 +10,42 @@ import earth from "@/assets/earth-horizon.webp";
 import { faqs, site, steps } from "@/content/site";
 import { services } from "@/content/services";
 import { projects } from "@/content/projects";
-import { seo } from "@/lib/seo";
+import { seo, SITE_URL, OG_IMAGE } from "@/lib/seo";
 import { QuickLeadForm } from "@/components/QuickLeadForm";
 
 export const Route = createFileRoute("/")({
-  head: () => seo("/", "Websites & Shopify Stores for Australian Small Businesses", "Websites, Shopify stores and AI-powered tools for Australian small businesses. See a free preview before you pay a cent."),
+  head: () => {
+    const base = seo("/", "Websites & Shopify Stores for Australian Small Businesses", "Websites from A$500, Shopify stores and AI tools for small businesses on Sydney's Lower North Shore and across Australia. Free preview first.");
+    return {
+      ...base,
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ProfessionalService",
+            name: "Teague Industries",
+            url: SITE_URL,
+            image: OG_IMAGE,
+            email: site.email,
+            taxID: site.abn,
+            founder: { "@type": "Person", name: "Ben Teague" },
+            address: { "@type": "PostalAddress", addressRegion: "NSW", addressCountry: "AU" },
+            areaServed: [...site.suburbs.map((s) => ({ "@type": "Place", name: `${s}, NSW` })), { "@type": "Country", name: "Australia" }],
+            priceRange: "A$500+",
+          }),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+          }),
+        },
+      ],
+    };
+  },
   component: Home,
 });
 
@@ -53,7 +84,7 @@ function Home() {
             We build online stores that sell.
           </motion.h1>
           <motion.p {...fade(0.5)} className="mt-6 max-w-xl text-muted-foreground sm:text-lg">
-            Websites, Shopify stores and AI-powered tools for Australian small businesses. See a free preview before you pay a cent.
+            Websites from A$500 for cafés, tradies and local shops on Sydney's Lower North Shore, plus Shopify stores and AI tools for businesses Australia-wide. See a free preview before you pay a cent.
           </motion.p>
           <motion.div {...fade(0.6)} className="mt-10 flex w-full flex-col items-center gap-4">
             <QuickLeadForm />
@@ -101,7 +132,7 @@ function Home() {
         <Reveal className="mt-8 flex flex-col items-center justify-center gap-2 text-center text-sm text-muted-foreground sm:flex-row sm:gap-6">
           <span><span className="text-foreground">Websites from A$500</span> · one-off</span>
           <span className="hidden sm:inline">|</span>
-          <span>Shopify &amp; AI stores: free quote</span>
+          <span>Shopify stores from A$1,200 · Care from A$49/mo</span>
           <span className="hidden sm:inline">|</span>
           <Link to="/pricing" className="text-primary-soft hover:underline">See pricing</Link>
         </Reveal>
