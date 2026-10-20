@@ -14,3 +14,9 @@
 - [x] Reviewed published Privacy and Terms: business details/refund match; privacy access/tracking claims need confirmation, not legal approval
 - [x] Checked growth readiness: shop buttons correct; sitemap omits shop/products; recommended Search Console then five-business-owner outreach
 - [ ] Google indexing/performance verification — blocked until Ben connects Google Search Console
+
+## Photo and wording follow-ups
+- [x] Footer Shop label, internal Browse templates icon, café Demo suffix and navigation separation
+- [ ] Adjust founder portrait to reference framing or smart-casual preference
+- [ ] Identify session-id cookie and check privacy disclosure
+- [ ] Explain existing revision terms; confirm any new included-round limit with Ben

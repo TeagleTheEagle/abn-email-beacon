@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { MapPin, BadgeCheck, Eye, ArrowRight, ExternalLink } from "lucide-react";
+import { MapPin, BadgeCheck, Eye, ArrowRight } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { Starfield } from "@/components/Starfield";
 import { Reveal } from "@/components/Reveal";
@@ -198,7 +198,7 @@ function Home() {
             Ready-made invoices, quotes, agreements and website kits — built for Australian businesses. Download and go.
           </p>
           <a href={site.storeUrl} className="btn-chrome mt-8">
-            Browse templates <ExternalLink className="h-4 w-4" />
+            Browse templates
           </a>
         </Reveal>
       </section>
