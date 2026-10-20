@@ -175,7 +175,7 @@ function Home() {
       {/* WORK */}
       <Section label="Portfolio" title="Our work">
         <div className="grid gap-6 md:grid-cols-3">
-          {projects.slice(0, 2).map((p, i) => (
+          {projects.slice(0, 5).map((p, i) => (
             <Reveal key={p.title} delay={i * 0.08}><ProjectCard project={p} /></Reveal>
           ))}
           <Reveal delay={0.16}>
