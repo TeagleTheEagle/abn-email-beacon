@@ -9,7 +9,8 @@ Read this first: it's where the business is heading. Lovable, Claude and Shopify
 ## Open issues
 - [x] **Checkout fixed (20 Oct 2026):** Shopify's primary domain was www.teagueindustries.com.au (served by Lovable), so checkout links hit the site's 404 page. Primary domain is now jk1j1p-c5.myshopify.com; re-tested live: Add to cart → Checkout opens Shopify checkout with the product, A$29.00, and Shop Pay/PayPal/Google Pay/card.
 - [ ] Optional, branded checkout: connect shop.teagueindustries.com.au in Shopify (CNAME `shop` → `shops.myshopify.com`) and make it the primary domain — Ben
-- [ ] Delete the "TEST – site check (delete me)" lead (sitecheck@example.com) from the leads table — Ben
+- [x] Deleted the "TEST – site check (delete me)" lead from the leads table (done in Lovable, 20 Oct 2026)
+- [x] Lovable Project Knowledge includes the roadmap/CLAUDE.md pointer and the Shopify rules (products in Shopify; primary domain must not be www)
 
 ## Audit follow-ups (20 Oct 2026)
 - [x] Hide Lovable badge; tab title; remove legal "template" banner; store links -> /shop; remove "Most popular"; care plan price label; flag emoji
