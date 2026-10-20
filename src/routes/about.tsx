@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Users, Cpu, Sunrise, User } from "lucide-react";
+import { Users, Cpu, Sunrise } from "lucide-react";
 import { PageHeader, Reveal } from "@/components/Reveal";
 import { seo } from "@/lib/seo";
+import founderAsset from "@/assets/founder.webp.asset.json";
 
 export const Route = createFileRoute("/about")({
   head: () => seo("/about", "About", "Teague Industries is an Australian business founded in 2026 to help small businesses get online properly."),
@@ -36,8 +37,8 @@ function About() {
       </div>
       <Reveal className="mx-auto mt-20 max-w-3xl px-6">
         <div className="glass flex flex-col items-center gap-8 p-8 sm:flex-row sm:p-10">
-          <div className="flex h-36 w-36 shrink-0 items-center justify-center rounded-full border border-border bg-surface-2" role="img" aria-label="Founder photo placeholder">
-            <User className="h-12 w-12 text-muted-foreground" aria-hidden="true" />
+          <div className="h-36 w-36 shrink-0 overflow-hidden rounded-full border border-border" role="img" aria-label="Ben Teague, founder of Teague Industries">
+            <img src={founderAsset.url} alt="Ben Teague" className="h-full w-full object-cover" />
           </div>
           <div className="text-center sm:text-left">
             <p className="label">Founder</p>
