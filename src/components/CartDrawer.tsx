@@ -3,6 +3,7 @@ import { Minus, Plus, ShoppingBag, ShoppingCart, Trash2, ExternalLink, Loader2 }
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useCartStore } from "@/stores/cartStore";
 import { formatPrice } from "@/lib/shopify";
+import { track } from "@/lib/analytics";
 
 export function CartDrawer() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +24,7 @@ export function CartDrawer() {
   const handleCheckout = () => {
     const checkoutUrl = getCheckoutUrl();
     if (checkoutUrl) {
+      track("begin_checkout", { currency, value: Number(totalPrice.toFixed(2)), items: items.map((i) => ({ item_name: i.product.node.title, price: Number(i.price.amount), quantity: i.quantity })) });
       window.open(checkoutUrl, "_blank");
       setIsOpen(false);
     }

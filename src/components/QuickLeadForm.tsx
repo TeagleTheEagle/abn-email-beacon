@@ -7,6 +7,8 @@ import { CheckCircle2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useWebMCP } from "use-webmcp-tool";
 import { runWebMCPTool } from "@/lib/webmcp-telemetry";
+import { newLeadId, notifyLead } from "@/lib/leads";
+import { track } from "@/lib/analytics";
 
 const schema = z.object({
   business_name: z.string().trim().min(1, "Please enter your business name").max(150),
@@ -16,7 +18,9 @@ type V = z.infer<typeof schema>;
 
 async function sendQuickLead(raw: unknown) {
   const v = schema.parse(raw);
+  const id = newLeadId();
   const { error } = await supabase.from("leads").insert({
+    id,
     name: v.business_name,
     business_name: v.business_name,
     email: v.email,
@@ -24,6 +28,8 @@ async function sendQuickLead(raw: unknown) {
     message: "Quick free-preview request from the home page",
   });
   if (error) throw new Error("Sorry, something went wrong. Please try again.");
+  track("generate_lead", { form: "quick_preview" });
+  void notifyLead(supabase, id);
 }
 
 export function QuickLeadForm() {

@@ -16,6 +16,7 @@ import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Toaster } from "@/components/ui/sonner";
 import { useCartSync } from "@/hooks/useCartSync";
+import { analyticsScripts, trackPageView } from "@/lib/analytics";
 
 function NotFoundComponent() {
   useEffect(() => {
@@ -71,6 +72,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Michroma&family=Caveat:wght@600&display=swap" },
     ],
+    scripts: analyticsScripts(),
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -94,7 +96,15 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
   useCartSync();
+  // One page_view per page: the first on load, then one per client-side navigation.
+  useEffect(() => {
+    trackPageView(window.location.pathname + window.location.search);
+    return router.subscribe("onResolved", (e) => {
+      if (e.fromLocation && e.hrefChanged) trackPageView(e.toLocation.pathname + e.toLocation.searchStr);
+    });
+  }, [router]);
   return (
     <QueryClientProvider client={queryClient}>
       <SiteNav />

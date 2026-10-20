@@ -6,6 +6,7 @@ import { Reveal } from "@/components/Reveal";
 import { formatPrice, fetchProduct, type ShopifyProduct, type ShopifyVariant } from "@/lib/shopify";
 import { cartItemFromVariant, useCartStore } from "@/stores/cartStore";
 import { seo } from "@/lib/seo";
+import { track } from "@/lib/analytics";
 
 const productQueryOptions = (handle: string) =>
   queryOptions({
@@ -66,6 +67,7 @@ function ProductPage() {
   const handleAddToCart = async () => {
     if (!selectedVariant) return;
     await addItem(cartItemFromVariant(product, selectedVariant));
+    track("add_to_cart", { currency: selectedVariant.price.currencyCode, value: Number(selectedVariant.price.amount), items: [{ item_name: product.title, price: Number(selectedVariant.price.amount), quantity: 1 }] });
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 1500);
   };

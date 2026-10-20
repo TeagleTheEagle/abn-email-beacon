@@ -11,6 +11,11 @@ Read this first: it's where the business is heading. Lovable, Claude and Shopify
 - [ ] Branded email remains blocked until Ben provides the address; keep Gmail meanwhile.
 - [x] **Checkout fixed (20 Oct 2026):** Shopify's primary domain was www.teagueindustries.com.au (served by Lovable), so checkout links hit the site's 404 page. Primary domain is now jk1j1p-c5.myshopify.com; re-tested live: Add to cart → Checkout opens Shopify checkout with the product, A$29.00, and Shop Pay/PayPal/Google Pay/card.
 - [ ] Optional, branded checkout: connect shop.teagueindustries.com.au in Shopify (CNAME `shop` → `shops.myshopify.com`) and make it the primary domain — Ben
+- [x] Lead notification emails built (20 Oct 2026): forms call the `notify-lead` edge function after saving; it emails Ben (reply-to = enquirer) and, once a sender domain is verified, an auto-reply. Also fires from the MCP `request_free_preview` tool.
+- [ ] To switch lead emails on — Ben: create a Resend account with the site Gmail, add `RESEND_API_KEY` in Lovable Cloud → Secrets, make sure the `notify-lead` function is deployed, then submit a test enquiry
+- [ ] Customer auto-reply: verify teagueindustries.com.au in Resend (DNS records) and set `LEAD_FROM` secret, e.g. `Teague Industries <hello@teagueindustries.com.au>` — Ben
+- [x] Google Analytics 4 wired up (20 Oct 2026): page views plus generate_lead / add_to_cart / begin_checkout events; Privacy policy updated. Off until an ID is set.
+- [ ] To switch analytics on — Ben: create a GA4 property at analytics.google.com, send the `G-…` measurement ID; it goes in `.env` as `VITE_GA_MEASUREMENT_ID`, then publish
 - [x] Deleted the "TEST – site check (delete me)" lead from the leads table (done in Lovable, 20 Oct 2026)
 - [x] Lovable Project Knowledge includes the roadmap/CLAUDE.md pointer and the Shopify rules (products in Shopify; primary domain must not be www)
 

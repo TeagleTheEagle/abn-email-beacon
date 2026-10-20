@@ -1,6 +1,7 @@
 import { defineTool, ToolError } from "@lovable.dev/mcp-js";
 import { z } from "zod";
 import { supabaseAnon } from "../supabase";
+import { newLeadId, notifyLead } from "@/lib/leads";
 
 export default defineTool({
   name: "request_free_preview",
@@ -15,11 +16,14 @@ export default defineTool({
   },
   annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false },
   handler: async ({ name, business_name, email, phone, message }) => {
-    const { error } = await supabaseAnon().from("leads").insert({
-      name, business_name, email, phone: phone || null, needs: [],
+    const client = supabaseAnon();
+    const id = newLeadId();
+    const { error } = await client.from("leads").insert({
+      id, name, business_name, email, phone: phone || null, needs: [],
       message: `[Sent via AI assistant] ${message ?? ""}`.trim(),
     });
     if (error) throw new ToolError("Couldn't send the enquiry. Please try again.");
+    await notifyLead(client, id);
     return { content: [{ type: "text", text: "Enquiry sent. Teague Industries will be in touch about the free preview." }] };
   },
 });

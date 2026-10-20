@@ -8,6 +8,8 @@ import { PageHeader, Reveal } from "@/components/Reveal";
 import { supabase } from "@/integrations/supabase/client";
 import { site } from "@/content/site";
 import { seo } from "@/lib/seo";
+import { newLeadId, notifyLead } from "@/lib/leads";
+import { track } from "@/lib/analytics";
 
 export const Route = createFileRoute("/contact")({
   head: () => seo("/contact", "Get a Free Preview", "Tell us about your business and we'll build a free preview of your new website or store — no obligation."),
@@ -41,7 +43,9 @@ function Contact() {
   const onSubmit = async (v: FormValues) => {
     if (trapRef.current?.value) { setDone(true); return; }
     setErr(null);
+    const id = newLeadId();
     const { error } = await supabase.from("leads").insert({
+      id,
       name: v.name,
       business_name: v.business_name,
       email: v.email,
@@ -51,8 +55,13 @@ function Contact() {
       current_website: v.current_website || null,
       message: v.message || null,
     });
-    if (error) setErr("Sorry, something went wrong. Please try again or email us directly.");
-    else setDone(true);
+    if (error) {
+      setErr("Sorry, something went wrong. Please try again or email us directly.");
+      return;
+    }
+    setDone(true);
+    track("generate_lead", { form: "contact" });
+    void notifyLead(supabase, id);
   };
 
   return (
