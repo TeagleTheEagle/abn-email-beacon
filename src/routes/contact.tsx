@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -37,7 +37,9 @@ function Contact() {
     defaultValues: { needs: [] },
   });
 
+  const trapRef = useRef<HTMLInputElement>(null);
   const onSubmit = async (v: FormValues) => {
+    if (trapRef.current?.value) { setDone(true); return; }
     setErr(null);
     const { error } = await supabase.from("leads").insert({
       name: v.name,
@@ -66,8 +68,9 @@ function Contact() {
               </div>
             ) : (
               <form onSubmit={handleSubmit(onSubmit)} className="grid gap-5 sm:grid-cols-2" noValidate>
+<input ref={trapRef} type="text" name="company_website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
                 <Field label="Name *" error={errors.name?.message}><input className="field" autoComplete="name" {...register("name")} /></Field>
-                <Field label="Business name *" error={errors.business_name?.message}><input className="field" {...register("business_name")} /></Field>
+                <Field label="Business name *" error={errors.business_name?.message}><input className="field" {...register("business_name")} autoComplete="organization" /></Field>
                 <Field label="Email *" error={errors.email?.message}><input type="email" className="field" autoComplete="email" {...register("email")} /></Field>
                 <Field label="Phone" error={errors.phone?.message}><input type="tel" className="field" autoComplete="tel" {...register("phone")} /></Field>
                 <Field label="Business type" className="sm:col-span-2">

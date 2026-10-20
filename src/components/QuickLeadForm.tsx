@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -30,7 +30,9 @@ export function QuickLeadForm() {
   const [err, setErr] = useState<string | null>(null);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<V>({ resolver: zodResolver(schema) });
 
+  const trapRef = useRef<HTMLInputElement>(null);
   const onSubmit = async (v: V) => {
+    if (trapRef.current?.value) { setDone(true); return; }
     setErr(null);
     try { await sendQuickLead(v); setDone(true); } catch (e) { setErr((e as Error).message); }
   };
@@ -65,10 +67,11 @@ export function QuickLeadForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="glass w-full max-w-2xl p-3 text-left">
+<input ref={trapRef} type="text" name="company_website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
       <div className="flex flex-col gap-3 sm:flex-row">
         <label className="flex-1">
           <span className="sr-only">Business name</span>
-          <input {...register("business_name")} placeholder="Business name" className="w-full rounded-md border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-primary" />
+          <input {...register("business_name")} autoComplete="organization" placeholder="Business name" className="w-full rounded-md border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-primary" />
         </label>
         <label className="flex-1">
           <span className="sr-only">Email</span>
