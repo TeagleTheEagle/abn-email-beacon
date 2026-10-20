@@ -70,11 +70,13 @@ export function CartDrawer() {
                       </div>
                       <div className="min-w-0 flex-1">
                         <h4 className="truncate text-sm font-medium text-foreground">{item.product.node.title}</h4>
-                        {item.selectedOptions.length > 0 && (
+                        {item.variantTitle !== "Default Title" ? (
+                          <p className="truncate text-xs text-muted-foreground">{item.variantTitle}</p>
+                        ) : item.selectedOptions.length > 0 ? (
                           <p className="truncate text-xs text-muted-foreground">
                             {item.selectedOptions.map((o) => o.value).join(" • ")}
                           </p>
-                        )}
+                        ) : null}
                         <p className="mt-1 text-sm text-chrome">{formatPrice(item.price.amount, item.price.currencyCode)}</p>
                       </div>
                       <div className="flex shrink-0 flex-col items-end gap-2">
