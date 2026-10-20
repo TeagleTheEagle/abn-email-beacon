@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Check, ShoppingBag, Minus, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { demos, type DemoKind } from '@/content/demos';
 
-export function DemoSite({ kind, compact = false }: { kind: DemoKind; compact?: boolean }) {
+// `priority` marks the one preview that is the page's largest visible image (the home hero) so the
+// browser fetches it first; every other demo image waits until it's near the viewport.
+export function DemoSite({ kind, compact = false, priority = false }: { kind: DemoKind; compact?: boolean; priority?: boolean }) {
   const demo = demos[kind];
   const [filter, setFilter] = useState('All');
   const [booking, setBooking] = useState(false);
@@ -11,6 +13,14 @@ export function DemoSite({ kind, compact = false }: { kind: DemoKind; compact?: 
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const count = Object.values(quantities).reduce((total, value) => total + value, 0);
   const total = demo.items.reduce((sum, item) => sum + item.price * (quantities[item.name] ?? 0), 0);
+  // The booking/request form renders further down the demo; bring it into view and focus it, otherwise
+  // the button looks like it did nothing.
+  const bookingRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (!booking || !bookingRef.current) return;
+    bookingRef.current.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'center' });
+    bookingRef.current.querySelector('input')?.focus({ preventScroll: true });
+  }, [booking]);
   const openAction = () => {
     if (kind === 'tradie' || kind === 'salon') setBooking(true);
     else document.getElementById(`demo-items-${kind}-${compact ? 'compact' : 'full'}`)?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'nearest' });
@@ -23,7 +33,7 @@ export function DemoSite({ kind, compact = false }: { kind: DemoKind; compact?: 
         {kind === 'retail' ? <span className="demo-bag"><ShoppingBag size={16} /> {count}</span> : <Button size="sm" className="demo-button" onClick={openAction}>{kind === 'salon' ? 'Book now' : kind === 'tradie' ? 'Get in touch' : 'Our menu'} <ArrowRight /></Button>}
       </div>
       <div className="demo-cover">
-        <img src={demo.image} alt={`${demo.category} concept imagery for ${demo.name}`} width={1280} height={800} loading={compact ? 'eager' : 'lazy'} />
+        <img src={demo.image} alt={`${demo.category} concept imagery for ${demo.name}`} width={1024} height={640} loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : undefined} decoding="async" />
         <div className="demo-cover-shade" />
         <div className="demo-cover-copy">
           <p className="demo-eyebrow">{demo.eyebrow}</p>
@@ -41,7 +51,7 @@ export function DemoSite({ kind, compact = false }: { kind: DemoKind; compact?: 
           </article>)}
         </div>
         {kind === 'retail' && count > 0 && <p className="demo-cart" role="status">Demo bag · {count} {count === 1 ? 'item' : 'items'} · A${total} — no payment taken</p>}
-        {(kind === 'tradie' || kind === 'salon') && booking && <form className="demo-booking" onSubmit={event => { event.preventDefault(); setConfirmed(true); }}>
+        {(kind === 'tradie' || kind === 'salon') && booking && <form ref={bookingRef} className="demo-booking" onSubmit={event => { event.preventDefault(); setConfirmed(true); }}>
           {confirmed ? <p role="status"><Check size={18} /> Demo request complete — no enquiry has been sent.</p> : <><label>Your name<input required autoComplete="name" placeholder="Alex" /></label><label>{kind === 'salon' ? 'Preferred date' : 'Job details'}<input required type={kind === 'salon' ? 'date' : 'text'} placeholder="What needs attention?" /></label><Button className="demo-button" type="submit">{kind === 'salon' ? 'Preview booking' : 'Preview request'} <ArrowRight /></Button></>}
         </form>}
       </section>

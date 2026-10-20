@@ -41,7 +41,7 @@ function ShopPage() {
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-6 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((product: ShopifyProduct, i) => (
             <Reveal key={product.node.id} delay={i * 0.05} className="h-full">
-              <ProductCard product={product} />
+              <ProductCard product={product} priority={i === 0} />
             </Reveal>
           ))}
         </div>

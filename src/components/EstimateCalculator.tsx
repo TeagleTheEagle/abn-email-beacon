@@ -120,7 +120,7 @@ export function EstimateCalculator() {
           <p className="mt-1 text-sm text-muted-foreground">{estimate.exact ? "one-off" : "one-off, starting price"}{estimate.monthly ? ` + ${estimate.monthly}` : ""}</p>
           <ul className="mt-5 space-y-2 text-sm text-muted-foreground">
             <li className="flex gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />{build.title}{businessType ? ` for a ${businessType.toLowerCase()} business` : ""}</li>
-            {care && carePlan && <li className="flex gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />{carePlan.title}, cancel any time</li>}
+            {care && carePlan && <li className="flex gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />{carePlan.title}, billed monthly</li>}
             <li className="flex gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />Turnaround: {estimate.turnaround}</li>
             <li className="flex gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />Free preview first. Nothing to pay until you approve it</li>
           </ul>

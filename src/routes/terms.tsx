@@ -11,7 +11,7 @@ export const Route = createFileRoute("/terms")({
 function Terms() {
   return (
     <>
-      <PageHeader label="Legal" title="Terms" />
+      <PageHeader label="Legal" title="Terms" sub="Last updated 20 October 2026" />
       <article className="mx-auto max-w-2xl space-y-8 px-6 text-muted-foreground [&_h2]:text-sm [&_h2]:text-foreground">
         <section><h2>Quotes and deposits</h2><p className="mt-3">Quotes are valid for 30 days. Larger projects may need a deposit before work starts, agreed in writing.</p></section>
         <section><h2>Free previews</h2><p className="mt-3">Previews are free with no obligation. If you don't go ahead, you owe nothing.</p></section>

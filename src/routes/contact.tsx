@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { cloneElement, isValidElement, useRef, useState, type ReactElement } from "react";
+import { cloneElement, isValidElement, useId, useRef, useState, type ReactElement } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -156,11 +156,15 @@ function Contact() {
 }
 
 function Field({ label, error, className = "", children }: { label: string; error?: string | undefined; className?: string; children: React.ReactNode }) {
+  const id = useId();
+  const required = label.trim().endsWith("*");
   return (
-    <label className={`block ${className}`}>
+    <label htmlFor={id} className={`block ${className}`}>
       <span className="label mb-2 block">{label}</span>
-      {isValidElement(children) ? cloneElement(children as ReactElement<Record<string, unknown>>, { "aria-invalid": error ? true : undefined }) : children}
-      {error && <span role="alert" className="mt-1 block text-xs text-destructive">{error}</span>}
+      {isValidElement(children)
+        ? cloneElement(children as ReactElement<Record<string, unknown>>, { id, "aria-invalid": error ? true : undefined, "aria-required": required || undefined, "aria-describedby": error ? `${id}-error` : undefined })
+        : children}
+      {error && <span id={`${id}-error`} role="alert" className="mt-1 block text-xs text-destructive">{error}</span>}
     </label>
   );
 }

@@ -1,7 +1,7 @@
-import cafe from '@/assets/demo-cafe.jpg';
-import tradie from '@/assets/demo-tradie.jpg';
-import salon from '@/assets/demo-salon.jpg';
-import retail from '@/assets/demo-retail.jpg';
+import cafe from '@/assets/demo-cafe.webp';
+import tradie from '@/assets/demo-tradie.webp';
+import salon from '@/assets/demo-salon.webp';
+import retail from '@/assets/demo-retail.webp';
 
 export const demos = {
   cafe: { name: 'Harbour & Grain', category: 'Café', eyebrow: 'Coffee. Community. The good things.', title: 'Your daily ritual, made better.', body: 'Fresh coffee, seasonal plates and a little time for yourself.', image: cafe, action: 'Explore the menu', items: [{ name: 'Flat white', detail: 'Coffee', price: 5 }, { name: 'Iced latte', detail: 'Coffee', price: 6 }, { name: 'Avocado toast', detail: 'Kitchen', price: 19 }, { name: 'Breakfast bowl', detail: 'Kitchen', price: 22 }] },

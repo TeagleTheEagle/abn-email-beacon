@@ -11,7 +11,7 @@ export const Route = createFileRoute("/privacy")({
 function Privacy() {
   return (
     <>
-      <PageHeader label="Legal" title="Privacy Policy" />
+      <PageHeader label="Legal" title="Privacy Policy" sub="Last updated 20 October 2026" />
       <article className="mx-auto max-w-2xl space-y-8 px-6 text-muted-foreground [&_h2]:text-sm [&_h2]:text-foreground">
         <section><h2>What we collect</h2><p className="mt-3">When you use our contact form we collect your name, business name, email, phone (optional), business type, what you need, your current website (optional) and your message.</p></section>
         <section><h2>Why we collect it</h2><p className="mt-3">Only to reply to your enquiry, prepare your free preview and provide our services.</p></section>

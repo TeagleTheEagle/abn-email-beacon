@@ -69,7 +69,7 @@ export const projects: Project[] = [
   },
   {
     title: "Your business could be here",
-    category: "Coming soon",
+    category: "Founding clients",
     description: "Get a free preview of your new website or store — no obligation.",
     placeholder: true,
     link: { label: "Get a free preview", href: "/contact" },

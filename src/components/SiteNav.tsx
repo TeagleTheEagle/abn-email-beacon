@@ -1,9 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Logo } from "./Logo";
 import { CartDrawer } from "./CartDrawer";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { nav } from "@/content/site";
 
 export function SiteNav() {
@@ -47,37 +48,40 @@ export function SiteNav() {
           <Link to="/contact" className="btn-primary hidden !px-5 !py-2.5 !text-xs sm:inline-flex">
             Get a free preview
           </Link>
-          <Button variant="ghost" size="icon" className="text-foreground lg:hidden" onClick={() => setOpen(true)} aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open}>
-            <Menu className="h-6 w-6" />
-          </Button>
+          {/* Sheet (Radix Dialog) gives the phone menu what a hand-rolled overlay lacks: Escape closes it,
+              focus moves in and is trapped, the page behind stops scrolling, and focus returns on close. */}
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-foreground lg:hidden" aria-label="Open menu">
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent className="flex w-72 flex-col gap-2 border-l border-border bg-surface p-6 lg:hidden">
+              <SheetHeader className="sr-only">
+                <SheetTitle>Menu</SheetTitle>
+                <SheetDescription>Site navigation</SheetDescription>
+              </SheetHeader>
+              <nav aria-label="Site" className="mt-6 flex flex-col gap-2">
+                {nav.map((n) => (
+                  <Link
+                    key={n.to}
+                    to={n.to}
+                    onClick={() => setOpen(false)}
+                    className="py-3 text-base font-medium text-muted-foreground hover:text-foreground"
+                    activeProps={{ className: "text-primary-soft" }}
+                    activeOptions={{ exact: true }}
+                  >
+                    {n.label}
+                  </Link>
+                ))}
+                <Link to="/contact" onClick={() => setOpen(false)} className="btn-primary mt-6">
+                  Get a free preview
+                </Link>
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
       </nav>
-
-      {open && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-0 flex h-full w-72 flex-col gap-2 border-l border-border bg-surface p-6 animate-in slide-in-from-right">
-            <Button variant="ghost" size="icon" className="self-end" onClick={() => setOpen(false)} aria-label="Close menu">
-              <X className="h-6 w-6" />
-            </Button>
-            {nav.map((n) => (
-              <Link
-                key={n.to}
-                to={n.to}
-                onClick={() => setOpen(false)}
-                className="py-3 text-base font-medium text-muted-foreground hover:text-foreground"
-                activeProps={{ className: "text-primary-soft" }}
-                activeOptions={{ exact: true }}
-              >
-                {n.label}
-              </Link>
-            ))}
-            <Link to="/contact" onClick={() => setOpen(false)} className="btn-primary mt-6">
-              Get a free preview
-            </Link>
-          </div>
-        </div>
-      )}
     </header>
   );
 }

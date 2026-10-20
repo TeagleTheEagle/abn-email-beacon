@@ -4,7 +4,8 @@ import { useState } from "react";
 import { formatPrice, type ShopifyProduct } from "@/lib/shopify";
 import { cartItemFromVariant, useCartStore } from "@/stores/cartStore";
 
-export function ProductCard({ product }: { product: ShopifyProduct }) {
+// `priority` is for the first card on /shop: it's the largest image on screen, so load it first.
+export function ProductCard({ product, priority = false }: { product: ShopifyProduct; priority?: boolean }) {
   const addItem = useCartStore((state) => state.addItem);
   const isLoading = useCartStore((state) => state.isLoading);
   const [justAdded, setJustAdded] = useState(false);
@@ -30,7 +31,11 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
             <img
               src={image.url}
               alt={image.altText || node.title}
-              loading="lazy"
+              width={600}
+              height={600}
+              loading={priority ? "eager" : "lazy"}
+              fetchPriority={priority ? "high" : undefined}
+              decoding="async"
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (

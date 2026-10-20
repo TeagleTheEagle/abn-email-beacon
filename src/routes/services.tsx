@@ -19,7 +19,7 @@ function Services() {
           <Reveal key={s.id}>
             <article id={s.id} className="glass glass-hover scroll-mt-28 grid gap-10 p-8 sm:p-10 md:grid-cols-[1fr_1.2fr]">
               <div>
-                <img src={s.id === "website-build" ? demos.cafe.image : s.id === "care-plan" ? demos.tradie.image : demos.retail.image} alt="Illustrative website service example" width={1280} height={800} loading="lazy" className="mb-6 aspect-video w-full rounded-lg border border-border object-cover" />
+                <img src={s.id === "website-build" ? demos.cafe.image : s.id === "care-plan" ? demos.tradie.image : demos.retail.image} alt={`${s.title} example: the ${s.id === "website-build" ? demos.cafe.name : s.id === "care-plan" ? demos.tradie.name : demos.retail.name} demo website`} width={1280} height={800} loading="lazy" className="mb-6 aspect-video w-full rounded-lg border border-border object-cover" />
                 <s.icon className="h-9 w-9 text-primary-soft" aria-hidden="true" />
                 <h2 className="mt-6 text-lg">{s.title}</h2>
                 <p className="mt-4 text-muted-foreground">{s.short}</p>

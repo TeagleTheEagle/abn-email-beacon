@@ -70,7 +70,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Michroma&family=Caveat:wght@600&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Michroma&family=Caveat:wght@600&display=swap" },
     ],
     scripts: analyticsScripts(),
   }),
@@ -107,8 +107,11 @@ function RootComponent() {
   }, [router]);
   return (
     <QueryClientProvider client={queryClient}>
+      <a href="#main" className="sr-only z-[60] rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4">
+        Skip to content
+      </a>
       <SiteNav />
-      <main>
+      <main id="main" tabIndex={-1}>
         <Outlet />
       </main>
       <SiteFooter />

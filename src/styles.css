@@ -46,7 +46,7 @@
   --card-foreground: #e8f1ff;
   --popover: #0f1b33;
   --popover-foreground: #e8f1ff;
-  --primary: #3b8cff;
+  --primary: #2a74dc; /* 4.5:1 with white button text (WCAG AA); #3b8cff only managed 3.3:1 */
   --primary-foreground: #ffffff;
   --primary-soft: #8cc2ff;
   --secondary: #0f1b33;
@@ -80,6 +80,12 @@
     font-weight: 700;
     letter-spacing: 0;
     line-height: 1.3;
+  }
+  /* Links inside running text are underlined so they don't rely on colour alone (demos style their own). */
+  main :is(p, li, td):not(.demo-site *) a:not([class*="btn"]) {
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklab, currentColor 55%, transparent);
+    text-underline-offset: 3px;
   }
 }
 
