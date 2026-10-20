@@ -18,6 +18,9 @@ Read this first: it's where the business is heading. Lovable, Claude and Shopify
 - [x] Analytics switched on (20 Oct 2026): measurement ID G-C323SX5LEQ in `.env`, tag confirmed on the live site
 - [x] Site test follow-ups (20 Oct 2026): contact "Current website" accepts `mysite.com.au` (https:// added automatically); unknown product URLs return a real 404; Product structured data (price/availability) on product pages; H1 on each demo page; menu button label toggles; form fields flagged `aria-invalid` with `role="alert"` errors; shop image links labelled
 - [x] /design-system reference page (20 Oct 2026): brand, type scale, colour swatches read live from styles.css, effects, demo themes, buttons, forms, surfaces, feedback. Unlisted, noindex, not in nav or sitemap.
+- [x] Client journey "From first message to live site" (20 Oct 2026): four steps with timing and the 100%-ownership promise, shared by the home "Preview. Approve. Launch." section and the contact page; copy lives in `steps` in src/content/site.ts
+- [x] Instant estimate calculator on /pricing (20 Oct 2026): business type → build (Website / Shopify / Smart Store) → optional Care Plan → live estimate; "Lock in my free preview" saves a lead with the choices and emails Ben. Prices come from src/content/services.ts (`fromAud`)
+- [ ] Decided against for now: proposal page (build around the first real prospect), more demo industries, selling the design system as a product, social templates
 - [ ] From the same test, not code changes: small label text on phones (Lovable's design choice, revisit if it bothers users); X-Frame-Options / Content-Security-Policy headers are a hosting setting in Lovable, not in this repo
 - [x] Deleted the "TEST – site check (delete me)" lead from the leads table (done in Lovable, 20 Oct 2026)
 - [x] Lovable Project Knowledge includes the roadmap/CLAUDE.md pointer and the Shopify rules (products in Shopify; primary domain must not be www)

@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { CheckCircle2, Mail, MapPin } from "lucide-react";
 import { PageHeader, Reveal } from "@/components/Reveal";
+import { ProjectJourney } from "@/components/ProjectJourney";
 import { supabase } from "@/integrations/supabase/client";
 import { site } from "@/content/site";
 import { seo } from "@/lib/seo";
@@ -140,6 +141,13 @@ function Contact() {
               <div><p className="label">Location</p><p className="mt-1">{site.location}</p></div>
             </div>
             <p className="text-sm text-muted-foreground">ABN: {site.abn}</p>
+          </div>
+          <div className="glass mt-6 p-8">
+            <p className="label">What happens next</p>
+            <h2 className="mt-3 text-lg">From first message to live site</h2>
+            <div className="mt-6">
+              <ProjectJourney vertical />
+            </div>
           </div>
         </Reveal>
       </div>

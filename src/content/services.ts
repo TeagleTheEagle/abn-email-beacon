@@ -7,6 +7,9 @@ export type Service = {
   short: string;
   price: string;
   priceNote?: string;
+  fromAud: number; // numeric price for the estimate calculator; keep in step with `price`
+  monthly?: boolean;
+  turnaround?: string;
   included: string[];
   whoFor: string;
   popular?: boolean;
@@ -20,6 +23,8 @@ export const services: Service[] = [
     short: "A fast, mobile-friendly website that brings in customers.",
     price: "A$500",
     priceNote: "one-off · Free preview first.",
+    fromAud: 500,
+    turnaround: "About one week (5–7 business days)",
     included: [
       "Custom, mobile-friendly website (up to 5 pages)",
       "Contact form",
@@ -37,6 +42,7 @@ export const services: Service[] = [
     title: "Shopify Store Setup",
     short: "A Shopify store, built and ready to take orders.",
     price: "From A$1,200",
+    fromAud: 1200,
     included: [
       "Theme design",
       "Product upload",
@@ -53,6 +59,7 @@ export const services: Service[] = [
     title: "Smart Store Setup (AI)",
     short: "Your store plus AI tools that sell while you sleep.",
     price: "From A$2,000",
+    fromAud: 2000,
     included: [
       "Everything in Shopify Store Setup",
       "AI-written product descriptions",
@@ -70,6 +77,8 @@ export const services: Service[] = [
     short: "Monthly care so your site stays fast, safe and up to date.",
     price: "From A$49",
     priceNote: "/ month",
+    fromAud: 49,
+    monthly: true,
     included: [
       "Small edits and content updates",
       "Uptime and security checks",

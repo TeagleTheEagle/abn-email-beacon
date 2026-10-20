@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check } from "lucide-react";
 import { PageHeader, Reveal } from "@/components/Reveal";
+import { EstimateCalculator } from "@/components/EstimateCalculator";
 import { services } from "@/content/services";
 import { seo } from "@/lib/seo";
 
@@ -39,6 +40,9 @@ function Pricing() {
           </Reveal>
         ))}
       </div>
+      <Reveal className="mx-auto mt-16 max-w-5xl px-6">
+        <EstimateCalculator />
+      </Reveal>
       <Reveal className="mx-auto mt-14 max-w-2xl space-y-3 px-6 text-center text-sm text-muted-foreground">
         <p>Prices in AUD. Teague Industries is not registered for GST, so no GST is charged.</p>
         <p>

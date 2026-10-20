@@ -21,10 +21,12 @@ export const nav = [
   { to: "/contact", label: "Contact" },
 ] as const;
 
+// The client journey, shown on the home and contact pages. Keep the promises in step with the FAQs.
 export const steps = [
-  { n: "01", title: "We build a preview", body: "Free, no obligation." },
-  { n: "02", title: "You approve it", body: "Two rounds of revisions included." },
-  { n: "03", title: "We launch", body: "Domain, payments, go live." },
+  { n: "01", title: "Tell us about your business", body: "Two fields, two minutes. We reply within 1–2 business days.", when: "Today" },
+  { n: "02", title: "We build your free preview", body: "No deposit, no obligation. See the real thing before you decide.", when: "A few days" },
+  { n: "03", title: "You approve it", body: "Two rounds of revisions included, so it's right before it's live.", when: "Your call" },
+  { n: "04", title: "We launch and hand over", body: "Domain, payments, go live. You own the site, domain and accounts, 100%.", when: "About a week in" },
 ];
 
 export const faqs = [

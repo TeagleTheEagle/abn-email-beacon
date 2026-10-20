@@ -7,7 +7,8 @@ import { WebsitePreview } from "@/components/WebsitePreview";
 import { Button } from "@/components/ui/button";
 import earth from "@/assets/earth-horizon.webp";
 import founder from "@/assets/founder.webp.asset.json";
-import { faqs, site, steps } from "@/content/site";
+import { faqs, site } from "@/content/site";
+import { ProjectJourney } from "@/components/ProjectJourney";
 import { services } from "@/content/services";
 import { projects } from "@/content/projects";
 import { demos } from "@/content/demos";
@@ -78,7 +79,7 @@ function Home() {
       <p className="mt-6 text-sm text-muted-foreground">All prices in AUD. Not GST registered. <Link to="/pricing" className="text-primary-soft underline underline-offset-4">Full pricing details</Link></p>
     </Section>
     <Section label="Simple from the start" title="Preview. Approve. Launch.">
-      <div className="grid gap-8 md:grid-cols-3">{steps.map(step => <div key={step.n} className="border-t border-border pt-6"><p className="text-sm text-primary-soft">{step.n}</p><h3 className="mt-3 text-2xl">{step.title}</h3><p className="mt-3 text-muted-foreground">{step.body}</p></div>)}</div>
+      <ProjectJourney />
       <div className="mt-10 grid gap-5 border-t border-border pt-6 sm:grid-cols-3">{[{ icon: Clock, title: 'About one week', text: 'Standard website · 5–7 business days' },{ icon: Check, title: 'Two revision rounds', text: 'In scope; extra work quoted first' },{ icon: ShieldCheck, title: 'It’s yours', text: 'Your content, domain and accounts' }].map(({ icon: Icon, title, text }) => <div key={title} className="flex gap-3"><Icon className="mt-1 h-5 w-5 shrink-0 text-primary-soft" /><div><h3 className="text-base">{title}</h3><p className="mt-1 text-sm text-muted-foreground">{text}</p></div></div>)}</div>
     </Section>
     <section className="border-y border-border bg-surface/50 px-6 py-16 sm:py-20"><div className="mx-auto grid max-w-5xl items-center gap-8 md:grid-cols-[240px_minmax(0,1fr)]"><img src={founder.url} alt="Ben Teague, founder" width={768} height={1152} loading="lazy" className="mx-auto aspect-[4/5] w-full max-w-[240px] rounded-lg border border-border object-cover object-top" /><div className="min-w-0"><p className="label">Meet the founder</p><h2 className="mt-4 text-3xl">Hi, I’m Ben.</h2><blockquote className="mt-5 border-l-2 border-primary pl-4 text-xl text-primary-soft">“I’d rather show you than sell you.”</blockquote><p className="mt-5 max-w-xl text-muted-foreground">You work directly with me, from your first message to launch. No account managers, no jargon — just a website or store built around your business.</p><div className="mt-6 flex flex-wrap gap-3"><Button asChild variant="outline"><Link to="/about"><UserRound /> Meet Ben</Link></Button><Button asChild variant="ghost"><a href={`mailto:${site.email}`}>Email Ben <ArrowRight /></a></Button></div></div></div></section>
