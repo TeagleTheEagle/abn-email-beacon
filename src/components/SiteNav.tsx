@@ -42,6 +42,7 @@ export function SiteNav() {
           ))}
         </ul>
         <div className="flex items-center gap-3">
+          <CartDrawer />
           <Link to="/contact" className="btn-primary hidden !px-5 !py-2.5 !text-xs sm:inline-flex">
             Get a free preview
           </Link>
