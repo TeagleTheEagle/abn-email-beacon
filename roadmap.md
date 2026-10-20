@@ -21,3 +21,4 @@
 - [x] Identified deployed analytics session-id cookie and corrected Privacy disclosure (30-minute refreshed expiry)
 - [x] Explained no numeric revision count is currently promised; recommended two in-scope rounds without adding a policy
 - [x] Revision policy set — Ben approved two rounds; added to steps, services and FAQ copy (goes live on next publish)
+- [x] Redesign /about founder section: two-column glass card, 4:5 portrait, pull quote, Caveat sign-off, fact strip, buttons (verified desktop + mobile; live on next publish)
