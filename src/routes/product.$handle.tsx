@@ -3,7 +3,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ArrowLeft, Check, Loader2 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
-import { formatPrice, fetchProduct, type ShopifyVariant } from "@/lib/shopify";
+import { formatPrice, fetchProduct, type ShopifyProduct, type ShopifyVariant } from "@/lib/shopify";
 import { cartItemFromVariant, useCartStore } from "@/stores/cartStore";
 import { seo } from "@/lib/seo";
 
@@ -14,7 +14,7 @@ const productQueryOptions = (handle: string) =>
   });
 
 export const Route = createFileRoute("/product/$handle")({
-  head: ({ loaderData }) => {
+  head: ({ loaderData }: { loaderData: ShopifyProduct["node"] | null }) => {
     const product = loaderData;
     const path = product ? `/product/${product.handle}` : "/shop";
     const title = product?.title ?? "Product";
