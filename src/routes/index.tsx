@@ -14,7 +14,7 @@ import { seo } from "@/lib/seo";
 import { QuickLeadForm } from "@/components/QuickLeadForm";
 
 export const Route = createFileRoute("/")({
-  head: () => seo("/", "Websites & Shopify Stores That Sell", "Websites, Shopify stores and AI-powered tools for Australian small businesses. See a free preview before you pay a cent."),
+  head: () => seo("/", "Websites & Shopify Stores for Australian Small Businesses", "Websites, Shopify stores and AI-powered tools for Australian small businesses. See a free preview before you pay a cent."),
   component: Home,
 });
 
