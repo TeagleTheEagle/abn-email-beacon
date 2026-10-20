@@ -5,7 +5,7 @@ import { site } from "@/content/site";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/templates")({
-  head: () => seo("Business Templates", "Ready-made invoices, quotes, service agreements, website kits and AI prompt packs built for Australian ABN and GST rules."),
+  head: () => seo("/templates", "Business Templates", "Ready-made invoices, quotes, service agreements, website kits and AI prompt packs built for Australian ABN and GST rules."),
   component: Templates,
 });
 

@@ -13,7 +13,7 @@ import { projects } from "@/content/projects";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
-  head: () => seo("Websites & Shopify Stores That Sell", "Websites, Shopify stores and AI-powered tools for Australian small businesses. See a free preview before you pay a cent."),
+  head: () => seo("/", "Websites & Shopify Stores That Sell", "Websites, Shopify stores and AI-powered tools for Australian small businesses. See a free preview before you pay a cent."),
   component: Home,
 });
 

@@ -10,7 +10,7 @@ import { site } from "@/content/site";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/contact")({
-  head: () => seo("Get a Free Preview", "Tell us about your business and we'll build a free preview of your new website or store — no obligation."),
+  head: () => seo("/contact", "Get a Free Preview", "Tell us about your business and we'll build a free preview of your new website or store — no obligation."),
   component: Contact,
 });
 

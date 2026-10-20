@@ -27,10 +27,10 @@ export const projects: Project[] = [
     title: "Café Website Starter Kit",
     category: "Website",
     tag: "Demo",
-    description: "A demo café website template with menu, location and contact pages.",
+    description: "A one-page café website template with menu, gallery, reviews and a visit-us section.",
     image: cafeImg,
     imageAlt: "Tablet on a café counter displaying a stylish café website",
-    link: { label: "View demo", href: "/contact" },
+    link: { label: "Ask about this kit", href: "/contact" },
   },
   {
     title: "Your business could be here",
