@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ExternalLink, FileText, Receipt, ScrollText, LayoutTemplate, Bot } from "lucide-react";
+import { ArrowRight, FileText, Receipt, ScrollText, LayoutTemplate, Bot } from "lucide-react";
 import { PageHeader, Reveal } from "@/components/Reveal";
 import { site } from "@/content/site";
 import { seo } from "@/lib/seo";
@@ -33,7 +33,7 @@ function Templates() {
       </div>
       <Reveal className="mt-16 text-center">
         <a href={site.storeUrl} className="btn-primary !px-10 !py-4 !text-base">
-          Visit the template store <ExternalLink className="h-4 w-4" />
+          Visit the template store <ArrowRight className="h-4 w-4" />
         </a>
       </Reveal>
     </>

@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion } from "framer-motion";
 import { MapPin, BadgeCheck, Eye, ArrowRight } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { Starfield } from "@/components/Starfield";
@@ -49,11 +48,7 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const fade = (d: number) => ({
-  initial: { opacity: 0, y: 16 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, delay: d, ease: "easeOut" as const },
-});
+const delay = (s: number) => ({ animationDelay: `${s}s` });
 
 function Home() {
   return (
@@ -73,30 +68,32 @@ function Home() {
         <div className="animate-flare pointer-events-none absolute left-1/2 top-[58%] h-40 w-[36rem] max-w-[90vw] -translate-x-1/2 rounded-full bg-primary/25 blur-3xl" />
 
         <div className="relative z-10 flex flex-col items-center">
-          <motion.div {...fade(0)}>
+          <div className="animate-rise">
             <Logo glow className="h-28 w-28 sm:h-40 sm:w-40" />
-          </motion.div>
-          <motion.p {...fade(0.15)} className="mt-8 font-display text-base tracking-[0.3em] text-chrome sm:text-2xl sm:tracking-[0.4em]">
+          </div>
+          <p style={delay(0.1)} className="animate-rise mt-8 font-display text-base tracking-[0.3em] text-chrome sm:text-2xl sm:tracking-[0.4em]">
             Teague Industries
-          </motion.p>
-          <motion.p {...fade(0.25)} className="label mt-4 !text-[9px] sm:!text-[11px]">{site.tagline}</motion.p>
-          <motion.h1 {...fade(0.4)} className="mt-12 max-w-3xl text-2xl text-foreground sm:text-4xl lg:text-5xl">
+          </p>
+          <p style={delay(0.15)} className="animate-rise label mt-4 !text-[9px] sm:!text-[11px]">{site.tagline}</p>
+          <h1 style={delay(0.25)} className="animate-rise mt-12 max-w-3xl text-2xl text-foreground sm:text-4xl lg:text-5xl">
             We build online stores that sell.
-          </motion.h1>
-          <motion.p {...fade(0.5)} className="mt-6 max-w-xl text-muted-foreground sm:text-lg">
+          </h1>
+          <p style={delay(0.3)} className="animate-rise mt-6 max-w-xl text-muted-foreground sm:text-lg">
             Websites from A$500 for cafés, tradies and local shops on Sydney's Lower North Shore, plus Shopify stores and AI tools for businesses Australia-wide. See a free preview before you pay a cent.
-          </motion.p>
-          <motion.div {...fade(0.6)} className="mt-10 flex w-full flex-col items-center gap-4">
+          </p>
+          <div style={delay(0.35)} className="animate-rise mt-10 flex w-full flex-col items-center gap-4">
             <QuickLeadForm />
             <Link to="/work" className="text-sm text-primary-soft hover:underline">or see our work →</Link>
-          </motion.div>
+          </div>
         </div>
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
-        <div className="chrome-line absolute inset-x-6 bottom-24" />
-        <div className="absolute bottom-6 left-6 z-10 hidden border-l border-foreground/40 pl-3 text-left sm:block">
-          <p className="font-display text-[9px] tracking-[0.3em] text-foreground">Teague Industries</p>
-          <p className="label mt-1 !text-[9px]">{site.est}</p>
+        <div className="chrome-line absolute inset-x-6 bottom-24 mx-auto max-w-6xl" />
+        <div className="absolute inset-x-6 bottom-6 z-10 mx-auto hidden max-w-6xl sm:block">
+          <div className="w-fit border-l border-foreground/40 pl-3 text-left">
+            <p className="font-display text-[9px] tracking-[0.3em] text-foreground">Teague Industries</p>
+            <p className="label mt-1 !text-[9px]">{site.est}</p>
+          </div>
         </div>
       </section>
 

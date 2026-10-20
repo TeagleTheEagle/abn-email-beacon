@@ -173,9 +173,12 @@
 @keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
 @keyframes flare { 0%, 100% { opacity: 0.85; transform: scale(1); } 50% { opacity: 1; transform: scale(1.08); } }
 @keyframes drift { from { transform: translate3d(0,0,0) scale(1.04); } to { transform: translate3d(-1.5%, -1%, 0) scale(1.08); } }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } }
 
 @utility animate-flare { animation: flare 6s ease-in-out infinite; }
 @utility animate-drift { animation: drift 40s ease-in-out infinite alternate; }
+/* Pure CSS so above-the-fold content animates on first paint, without waiting for JavaScript. */
+@utility animate-rise { animation: rise 0.6s ease-out both; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
