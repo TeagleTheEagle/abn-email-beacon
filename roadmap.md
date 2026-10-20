@@ -17,6 +17,7 @@ Read this first: it's where the business is heading. Lovable, Claude and Shopify
 - [x] Google Analytics 4 wired up (20 Oct 2026): page views plus generate_lead / add_to_cart / begin_checkout events; Privacy policy updated. Off until an ID is set.
 - [x] Analytics switched on (20 Oct 2026): measurement ID G-C323SX5LEQ in `.env`, tag confirmed on the live site
 - [x] Site test follow-ups (20 Oct 2026): contact "Current website" accepts `mysite.com.au` (https:// added automatically); unknown product URLs return a real 404; Product structured data (price/availability) on product pages; H1 on each demo page; menu button label toggles; form fields flagged `aria-invalid` with `role="alert"` errors; shop image links labelled
+- [x] /design-system reference page (20 Oct 2026): brand, type scale, colour swatches read live from styles.css, effects, demo themes, buttons, forms, surfaces, feedback. Unlisted, noindex, not in nav or sitemap.
 - [ ] From the same test, not code changes: small label text on phones (Lovable's design choice, revisit if it bothers users); X-Frame-Options / Content-Security-Policy headers are a hosting setting in Lovable, not in this repo
 - [x] Deleted the "TEST – site check (delete me)" lead from the leads table (done in Lovable, 20 Oct 2026)
 - [x] Lovable Project Knowledge includes the roadmap/CLAUDE.md pointer and the Shopify rules (products in Shopify; primary domain must not be www)
