@@ -1,3 +1,15 @@
+## Direction (Ben's plan, 20 Oct 2026)
+Read this first: it's where the business is heading. Lovable, Claude and Shopify all work toward it.
+- **Business:** Teague Industries builds websites (A$500), Shopify stores (from A$1,200), Smart Store AI setups (from A$2,000) and Care Plans (from A$49/mo) for Australian small businesses, starting on Sydney's Lower North Shore. The hook is a free preview first: pay only if you love it.
+- **Goal now:** land the first 5 paying clients through warm-network outreach, Lower North Shore direct outreach and a Flying Solo intro; Google Ads later.
+- **Shop:** digital products in Shopify (templates, playbooks, prompt packs, a 48-hour audit; A$19–149), aimed at Aussie small businesses and creators. Shopify is the single source of truth for products (see CLAUDE.md).
+- **Next on the site:** working checkout (below), live demo pages (/demo/cafe, /demo/tradie …), real client case studies once won (no fake testimonials), a booking link.
+- **Ben's setup to-dos:** business email on the domain, Google Search Console, Google Business Profile, business phone when needed, invoicing for the A$500 builds.
+
+## Open issues
+- [ ] **Checkout broken (found 20 Oct 2026):** Shopify's primary domain is www.teagueindustries.com.au, which Lovable serves, so checkout links go to the site's 404 page. Fix in Shopify → Settings → Domains: make jk1j1p-c5.myshopify.com primary (quick), or connect shop.teagueindustries.com.au (CNAME `shop` → `shops.myshopify.com`) and make that primary (branded). Ben to do; then re-test checkout.
+- [ ] Delete the "TEST – site check (delete me)" lead (sitecheck@example.com) from the leads table — Ben
+
 ## Audit follow-ups (20 Oct 2026)
 - [x] Hide Lovable badge; tab title; remove legal "template" banner; store links -> /shop; remove "Most popular"; care plan price label; flag emoji
 - [x] Privacy: Shopify checkout, analytics, cookies
