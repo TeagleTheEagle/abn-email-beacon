@@ -6,7 +6,7 @@ import { Starfield } from "@/components/Starfield";
 import { Reveal } from "@/components/Reveal";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ProjectCard } from "@/components/ProjectCard";
-import earth from "@/assets/earth-horizon.jpg";
+import earth from "@/assets/earth-horizon.webp";
 import { faqs, site, steps } from "@/content/site";
 import { services } from "@/content/services";
 import { projects } from "@/content/projects";
