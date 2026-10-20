@@ -7,3 +7,9 @@
 - [x] Founder photo on About page; phone number left off at Ben's request; suburbs done
 - [x] Demo sites, structured data, 404 title, honeypot, WebP hero
 - [ ] Nav merge, product page detail (not yet requested)
+
+## Requested checks (20 Oct 2026)
+- [x] Publishing completed by Ben; business email deferred
+- [x] Both domains active; HTTPS and bare-to-www redirect checked without DNS changes
+- [ ] Review published Privacy and Terms for consistency and remaining gaps
+- [ ] Check growth readiness and recommend next steps; Google indexing unverified until Search Console is connected
