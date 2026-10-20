@@ -38,7 +38,7 @@ function About() {
       <Reveal className="mx-auto mt-20 max-w-3xl px-6">
         <div className="glass flex flex-col items-center gap-8 p-8 sm:flex-row sm:p-10">
           <div className="h-36 w-36 shrink-0 overflow-hidden rounded-full border border-border" role="img" aria-label="Ben Teague, founder of Teague Industries">
-            <img src={founderAsset.url} alt="Ben Teague" className="h-full w-full object-cover" />
+            <img src={founderAsset.url} alt="Ben Teague" width={768} height={1152} className="h-full w-full object-cover object-top" />
           </div>
           <div className="text-center sm:text-left">
             <p className="label">Founder</p>
