@@ -7,7 +7,8 @@ Read this first: it's where the business is heading. Lovable, Claude and Shopify
 - **Ben's setup to-dos:** business email on the domain, Google Search Console, Google Business Profile, business phone when needed, invoicing for the A$500 builds.
 
 ## Open issues
-- [ ] **Checkout broken (found 20 Oct 2026):** Shopify's primary domain is www.teagueindustries.com.au, which Lovable serves, so checkout links go to the site's 404 page. Fix in Shopify → Settings → Domains: make jk1j1p-c5.myshopify.com primary (quick), or connect shop.teagueindustries.com.au (CNAME `shop` → `shops.myshopify.com`) and make that primary (branded). Ben to do; then re-test checkout.
+- [x] **Checkout fixed (20 Oct 2026):** Shopify's primary domain was www.teagueindustries.com.au (served by Lovable), so checkout links hit the site's 404 page. Primary domain is now jk1j1p-c5.myshopify.com; re-tested live: Add to cart → Checkout opens Shopify checkout with the product, A$29.00, and Shop Pay/PayPal/Google Pay/card.
+- [ ] Optional, branded checkout: connect shop.teagueindustries.com.au in Shopify (CNAME `shop` → `shops.myshopify.com`) and make it the primary domain — Ben
 - [ ] Delete the "TEST – site check (delete me)" lead (sitecheck@example.com) from the leads table — Ben
 
 ## Audit follow-ups (20 Oct 2026)
