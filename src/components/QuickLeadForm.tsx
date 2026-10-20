@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useWebMCP } from "use-webmcp-tool";
@@ -66,20 +67,20 @@ export function QuickLeadForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="glass w-full max-w-2xl p-3 text-left">
+    <form onSubmit={handleSubmit(onSubmit)} noValidate className="w-full text-left">
 <input ref={trapRef} type="text" name="company_website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <label className="flex-1">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <label className="min-w-0">
           <span className="sr-only">Business name</span>
           <input {...register("business_name")} autoComplete="organization" placeholder="Business name" className="w-full rounded-md border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-primary" />
         </label>
-        <label className="flex-1">
+        <label className="min-w-0">
           <span className="sr-only">Email</span>
           <input {...register("email")} type="email" placeholder="Email" className="w-full rounded-md border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-primary" />
         </label>
-        <button type="submit" disabled={isSubmitting} className="btn-primary whitespace-nowrap">
+        <Button type="submit" disabled={isSubmitting} className="h-12 sm:col-span-2">
           {isSubmitting ? "Sending…" : "Get a free preview"}
-        </button>
+        </Button>
       </div>
       {(errors.business_name || errors.email || err) && (
         <p className="mt-2 px-1 text-xs text-destructive">{errors.business_name?.message || errors.email?.message || err}</p>
