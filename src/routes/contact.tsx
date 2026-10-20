@@ -23,7 +23,7 @@ const schema = z.object({
   email: z.string().trim().email("Please enter a valid email").max(255),
   phone: z.string().trim().max(30).optional(),
   business_type: z.string().optional(),
-  needs: z.array(z.string()).default([]),
+  needs: z.array(z.string()),
   current_website: z.union([z.literal(""), z.string().trim().url("Please enter a full URL, e.g. https://…").max(255)]).optional(),
   message: z.string().trim().max(2000).optional(),
 });
@@ -118,7 +118,7 @@ function Contact() {
   );
 }
 
-function Field({ label, error, className = "", children }: { label: string; error?: string; className?: string; children: React.ReactNode }) {
+function Field({ label, error, className = "", children }: { label: string; error?: string | undefined; className?: string; children: React.ReactNode }) {
   return (
     <label className={`block ${className}`}>
       <span className="label mb-2 block">{label}</span>
