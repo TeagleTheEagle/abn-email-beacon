@@ -6,7 +6,6 @@ import { Reveal } from "@/components/Reveal";
 import { formatPrice, fetchProduct, type ShopifyVariant } from "@/lib/shopify";
 import { cartItemFromVariant, useCartStore } from "@/stores/cartStore";
 import { seo } from "@/lib/seo";
-import { SITE_URL } from "@/lib/seo";
 
 const productQueryOptions = (handle: string) =>
   queryOptions({
@@ -44,6 +43,8 @@ function ProductPage() {
   const addItem = useCartStore((state) => state.addItem);
   const isLoading = useCartStore((state) => state.isLoading);
   const [justAdded, setJustAdded] = useState(false);
+  const [activeImage, setActiveImage] = useState(0);
+  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
 
   if (!product) {
     return (
@@ -57,13 +58,11 @@ function ProductPage() {
 
   const variants = product.variants.edges.map((v) => v.node);
   const hasOptions = product.options.length > 0 && variants.length > 1;
-  const [firstAvailable, setFirstAvailable] = useState<ShopifyVariant | null>(null);
-  // Pick the default variant: first available, else first.
   const defaultVariant = variants.find((v) => v.availableForSale) ?? variants[0];
-  const selectedVariant = firstAvailable ?? defaultVariant;
+  const selectedVariant =
+    variants.find((v) => v.id === selectedVariantId) ?? (defaultVariant as ShopifyVariant | undefined);
 
   const images = product.images.edges.map((e) => e.node);
-  const [activeImage, setActiveImage] = useState(0);
   const outOfStock = !selectedVariant?.availableForSale;
 
   const handleAddToCart = async () => {
@@ -74,19 +73,23 @@ function ProductPage() {
   };
 
   const selectOption = (name: string, value: string) => {
-    const wanted = selectedVariant?.selectedOptions.map((o) => (o.name === name ? { name, value } : o)) ??
+    const wanted =
+      selectedVariant?.selectedOptions.map((o) => (o.name === name ? { ...o, value } : o)) ??
       variants[0]?.selectedOptions.map((o) => ({ ...o }));
-    const next = wanted?.map((o) => (o.name === name ? { ...o, value } : o)) ?? [];
+    if (!wanted) return;
     const match = variants.find(
-      (v) => v.selectedOptions.every((o) => next.some((n) => n.name === o.name && n.value === o.value)),
+      (v) => v.selectedOptions.every((o) => wanted.some((n) => n.name === o.name && n.value === o.value)),
     );
-    if (match) setFirstAvailable(match);
+    if (match) setSelectedVariantId(match.id);
   };
 
   return (
     <>
       <div className="mx-auto max-w-6xl px-6 pt-32 lg:pt-40">
-        <Link to="/shop" className="inline-flex items-center gap-2 font-display text-[10px] tracking-[0.25em] text-muted-foreground transition-colors hover:text-foreground">
+        <Link
+          to="/shop"
+          className="inline-flex items-center gap-2 font-display text-[10px] tracking-[0.25em] text-muted-foreground transition-colors hover:text-foreground"
+        >
           <ArrowLeft className="h-3.5 w-3.5" /> BACK TO SHOP
         </Link>
 
@@ -195,6 +198,3 @@ function ProductPage() {
     </>
   );
 }
-
-// Keep SITE_URL referenced for canonical absolute URLs on product pages.
-void SITE_URL;
