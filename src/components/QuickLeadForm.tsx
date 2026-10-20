@@ -4,12 +4,26 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { CheckCircle2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useWebMCP } from "use-webmcp-tool";
+import { runWebMCPTool } from "@/lib/webmcp-telemetry";
 
 const schema = z.object({
   business_name: z.string().trim().min(1, "Please enter your business name").max(150),
   email: z.string().trim().email("Please enter a valid email").max(255),
 });
 type V = z.infer<typeof schema>;
+
+async function sendQuickLead(raw: unknown) {
+  const v = schema.parse(raw);
+  const { error } = await supabase.from("leads").insert({
+    name: v.business_name,
+    business_name: v.business_name,
+    email: v.email,
+    needs: [],
+    message: "Quick free-preview request from the home page",
+  });
+  if (error) throw new Error("Sorry, something went wrong. Please try again.");
+}
 
 export function QuickLeadForm() {
   const [done, setDone] = useState(false);
@@ -18,16 +32,28 @@ export function QuickLeadForm() {
 
   const onSubmit = async (v: V) => {
     setErr(null);
-    const { error } = await supabase.from("leads").insert({
-      name: v.business_name,
-      business_name: v.business_name,
-      email: v.email,
-      needs: [],
-      message: "Quick free-preview request from the home page",
-    });
-    if (error) setErr("Sorry, something went wrong. Please try again.");
-    else setDone(true);
+    try { await sendQuickLead(v); setDone(true); } catch (e) { setErr((e as Error).message); }
   };
+
+  useWebMCP({
+    name: "request_free_preview",
+    description: "Send a free-preview request with a business name and email, using the form at the top of the home page.",
+    enabled: !done,
+    inputSchema: {
+      type: "object",
+      properties: {
+        business_name: { type: "string", description: "Business name." },
+        email: { type: "string", description: "Contact email." },
+      },
+      required: ["business_name", "email"],
+    },
+    execute: (args: { business_name: string; email: string }) =>
+      runWebMCPTool("request_free_preview", async () => {
+        await sendQuickLead(args);
+        setDone(true);
+        return "Free-preview request sent.";
+      }),
+  });
 
   if (done) {
     return (
