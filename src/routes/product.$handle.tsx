@@ -185,11 +185,17 @@ function ProductPage() {
               Instant download. Checkout is handled securely by Shopify.
             </p>
 
-            {product.description && (
+            {product.descriptionHtml ? (
+              <div
+                className="mt-10 space-y-3 border-t border-border pt-8 text-sm leading-relaxed text-muted-foreground [&_h2]:mt-6 [&_h2]:text-base [&_h2]:text-foreground [&_h3]:mt-5 [&_h3]:text-foreground [&_li]:mt-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_strong]:text-foreground [&_ul]:list-disc [&_ul]:pl-5"
+                // Content comes from the owner's own Shopify store admin.
+                dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+              />
+            ) : product.description ? (
               <div className="mt-10 border-t border-border pt-8">
                 <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">{product.description}</p>
               </div>
-            )}
+            ) : null}
           </div>
         </Reveal>
       </div>

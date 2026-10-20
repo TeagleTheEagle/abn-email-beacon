@@ -104,6 +104,7 @@ export const PRODUCT_BY_HANDLE_QUERY = `
       id
       title
       description
+      descriptionHtml
       handle
       priceRange { minVariantPrice { amount currencyCode } }
       images(first: 10) { edges { node { url altText } } }
@@ -128,7 +129,9 @@ export async function fetchProducts(query?: string): Promise<ShopifyProduct[]> {
   return data?.data?.products?.edges ?? [];
 }
 
-export async function fetchProduct(handle: string): Promise<ShopifyProduct["node"] | null> {
+export async function fetchProduct(
+  handle: string,
+): Promise<(ShopifyProduct["node"] & { descriptionHtml?: string }) | null> {
   const data = await storefrontApiRequest(PRODUCT_BY_HANDLE_QUERY, { handle });
   return data?.data?.product ?? null;
 }
