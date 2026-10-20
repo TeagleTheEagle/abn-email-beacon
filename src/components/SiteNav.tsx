@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Logo } from "./Logo";
+import { CartDrawer } from "./CartDrawer";
 import { nav } from "@/content/site";
 
 export function SiteNav() {
@@ -41,6 +42,7 @@ export function SiteNav() {
           ))}
         </ul>
         <div className="flex items-center gap-3">
+          <CartDrawer />
           <Link to="/contact" className="btn-primary hidden !px-5 !py-2.5 !text-xs sm:inline-flex">
             Get a free preview
           </Link>
