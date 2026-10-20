@@ -14,7 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      leads: {
+        Row: {
+          business_name: string
+          business_type: string | null
+          created_at: string
+          current_website: string | null
+          email: string
+          id: string
+          message: string | null
+          name: string
+          needs: string[]
+          phone: string | null
+        }
+        Insert: {
+          business_name: string
+          business_type?: string | null
+          created_at?: string
+          current_website?: string | null
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          needs?: string[]
+          phone?: string | null
+        }
+        Update: {
+          business_name?: string
+          business_type?: string | null
+          created_at?: string
+          current_website?: string | null
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          needs?: string[]
+          phone?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
