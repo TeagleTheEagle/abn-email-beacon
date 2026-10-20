@@ -29,5 +29,7 @@
 - [x] Sitemap: added /shop and the invoice/quote/agreement templates product page
 - [x] Templates page store button: external-link icon replaced (it links to internal /shop)
 - [x] Checked, no change needed: section spacing is uniform (gaps seen in testing were unrevealed sections); "Browse templates"/footer/"View live" -> /shop is intentional; honeypot already hidden from keyboard and screen readers; no internal notes left in Templates/Privacy/Terms
-- [ ] Live demo pages (/demo/cafe, /demo/tradie, …), 2–3 more template products, booking link — not yet requested
+- [x] Three new shop products (Launch Kit A$39, Conversion Playbook A$49, 48-Hour Audit A$149) with dark-space covers; sitemap updated with their pages
+- [ ] Cover artwork for the original Invoice/Quote/Agreement templates product — not yet requested
+- [ ] Live demo pages (/demo/cafe, /demo/tradie, …), booking link — not yet requested
 - [ ] Google Business Profile (service-area, Lower North Shore) — Ben to set up
