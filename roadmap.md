@@ -17,6 +17,7 @@
 
 ## Photo and wording follow-ups
 - [x] Footer Shop label, internal Browse templates icon, café Demo suffix and navigation separation
-- [ ] Adjust founder portrait to reference framing or smart-casual preference
-- [ ] Identify session-id cookie and check privacy disclosure
-- [ ] Explain existing revision terms; confirm any new included-round limit with Ben
+- [x] Adjusted founder portrait to tighter reference crop; original clothing retained as requested
+- [x] Identified deployed analytics session-id cookie and corrected Privacy disclosure (30-minute refreshed expiry)
+- [x] Explained no numeric revision count is currently promised; recommended two in-scope rounds without adding a policy
+- [ ] Set an included revision-round policy — waiting for Ben's approval of a count and scope
