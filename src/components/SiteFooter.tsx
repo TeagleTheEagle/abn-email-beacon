@@ -28,7 +28,7 @@ export function SiteFooter() {
           <p className="label mb-4">Contact</p>
           <p>
             Templates store →{" "}
-            <a href={site.storeUrl} target="_blank" rel="noopener noreferrer" className="text-primary-soft hover:underline">
+            <a href={site.storeUrl} className="text-primary-soft hover:underline">
               {site.storeLabel}
             </a>
           </p>

@@ -52,7 +52,6 @@ export const services: Service[] = [
     title: "Smart Store Setup (AI)",
     short: "Your store plus AI tools that sell while you sleep.",
     price: "Get a quote",
-    popular: true,
     included: [
       "Everything in Shopify Store Setup",
       "AI-written product descriptions",
@@ -69,7 +68,7 @@ export const services: Service[] = [
     title: "Care Plan",
     short: "Monthly care so your site stays fast, safe and up to date.",
     price: "Get a quote",
-    priceNote: "/ month",
+    priceNote: "Monthly plan · price on request",
     included: [
       "Small edits and content updates",
       "Uptime and security checks",

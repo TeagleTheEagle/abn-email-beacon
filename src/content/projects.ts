@@ -21,7 +21,7 @@ export const projects: Project[] = [
     description: "A Shopify store selling ready-made Australian business templates.",
     image: templatesImg,
     imageAlt: "Laptop on a dark desk showing an online store of business document templates",
-    link: { label: "View live", href: "https://teagueindustries.com.au", external: true },
+    link: { label: "View live", href: "/shop", external: false },
   },
   {
     title: "Café Website Starter Kit",
