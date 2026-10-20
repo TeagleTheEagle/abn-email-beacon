@@ -4,6 +4,6 @@
 - [x] Terms: download refunds + ABN
 - [ ] Business email on own domain — Ben to set up
 - [x] Starting prices
-- [ ] Founder photo (Ben uploading), phone number (Ben to send real number); suburbs done
+- [x] Founder photo on About page; phone number left off at Ben's request; suburbs done
 - [x] Demo sites, structured data, 404 title, honeypot, WebP hero
 - [ ] Nav merge, product page detail (not yet requested)
