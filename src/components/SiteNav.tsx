@@ -26,7 +26,7 @@ export function SiteNav() {
       <nav className="mx-auto grid h-16 max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 md:flex md:justify-between lg:h-20">
         <Link to="/" className="flex shrink-0 items-center gap-3" aria-label="Teague Industries home">
           <Logo className="h-7 w-7" />
-          <span className="hidden font-display text-[10px] tracking-brand text-foreground sm:block">Teague Industries</span>
+          <span className="font-display text-[8px] text-foreground sm:text-[10px]">Teague Industries</span>
         </Link>
         <ul className="hidden min-w-0 items-center gap-5 lg:flex">
           {nav.filter(n => ["/services", "/work", "/pricing", "/about"].includes(n.to)).map((n) => (

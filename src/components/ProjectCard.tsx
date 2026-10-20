@@ -8,7 +8,7 @@ export function ProjectCard({ project: p }: { project: Project }) {
   const inner = (
     <>
       <div className="relative aspect-[16/10] overflow-hidden rounded-t-[var(--radius)] bg-surface-2">
-        {p.demoKind ? <div className="pointer-events-none h-full overflow-hidden" aria-hidden="true"><DemoSite kind={p.demoKind} compact /></div> : p.image ? (
+        {p.demoKind ? <div className="pointer-events-none h-full overflow-hidden" aria-hidden="true" inert><DemoSite kind={p.demoKind} compact /></div> : p.image ? (
           <img src={p.image} alt={p.imageAlt ?? p.title} loading="lazy" width={1280} height={800} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-[radial-gradient(circle_at_center,var(--surface-2),var(--background))]">
@@ -17,7 +17,7 @@ export function ProjectCard({ project: p }: { project: Project }) {
           </div>
         )}
         {p.tag && (
-          <span className="absolute right-4 top-4 rounded-full border border-border bg-background/70 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-primary-soft backdrop-blur">
+          <span className="absolute bottom-3 right-3 rounded-full border border-border bg-background/70 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-primary-soft backdrop-blur">
             {p.tag}
           </span>
         )}
