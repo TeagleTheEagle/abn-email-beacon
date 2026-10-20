@@ -4,7 +4,7 @@ import { PageHeader, Reveal } from "@/components/Reveal";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/about")({
-  head: () => seo("About", "Teague Industries is an Australian business founded in 2026 to help small businesses get online properly."),
+  head: () => seo("/about", "About", "Teague Industries is an Australian business founded in 2026 to help small businesses get online properly."),
   component: About,
 });
 

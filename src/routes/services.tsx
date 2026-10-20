@@ -5,7 +5,7 @@ import { services } from "@/content/services";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/services")({
-  head: () => seo("Services", "Website builds, Shopify store setup, AI-powered smart stores and monthly care plans for Australian small businesses."),
+  head: () => seo("/services", "Services", "Website builds, Shopify store setup, AI-powered smart stores and monthly care plans for Australian small businesses."),
   component: Services,
 });
 

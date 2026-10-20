@@ -3,7 +3,7 @@ import { PageHeader } from "@/components/Reveal";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/terms")({
-  head: () => seo("Terms", "Plain-English terms for working with Teague Industries: quotes, deposits, free previews, ownership and refunds."),
+  head: () => seo("/terms", "Terms", "Plain-English terms for working with Teague Industries: quotes, deposits, free previews, ownership and refunds."),
   component: Terms,
 });
 

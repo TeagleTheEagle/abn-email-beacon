@@ -5,7 +5,7 @@ import { services } from "@/content/services";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/pricing")({
-  head: () => seo("Pricing", "Website builds from A$500 with a free preview first. Shopify, AI store and care plan quotes to suit your business."),
+  head: () => seo("/pricing", "Pricing", "Website builds from A$500 with a free preview first. Shopify, AI store and care plan quotes to suit your business."),
   component: Pricing,
 });
 
