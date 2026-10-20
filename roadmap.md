@@ -20,4 +20,4 @@
 - [x] Adjusted founder portrait to tighter reference crop; original clothing retained as requested
 - [x] Identified deployed analytics session-id cookie and corrected Privacy disclosure (30-minute refreshed expiry)
 - [x] Explained no numeric revision count is currently promised; recommended two in-scope rounds without adding a policy
-- [ ] Set an included revision-round policy — waiting for Ben's approval of a count and scope
+- [x] Revision policy set — Ben approved two rounds; added to steps, services and FAQ copy (goes live on next publish)
