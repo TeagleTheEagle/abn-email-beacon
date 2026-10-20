@@ -1,0 +1,23 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { PageHeader, Reveal } from "@/components/Reveal";
+import { ProjectCard } from "@/components/ProjectCard";
+import { projects } from "@/content/projects";
+import { seo } from "@/lib/seo";
+
+export const Route = createFileRoute("/work")({
+  head: () => seo("Our Work", "Websites and Shopify stores built by Teague Industries for Australian businesses."),
+  component: Work,
+});
+
+function Work() {
+  return (
+    <>
+      <PageHeader label="Portfolio" title="Our work" sub="Real projects and demos. More on the way." />
+      <div className="mx-auto grid max-w-6xl gap-6 px-6 md:grid-cols-2 lg:grid-cols-3">
+        {projects.map((p, i) => (
+          <Reveal key={p.title} delay={i * 0.08}><ProjectCard project={p} /></Reveal>
+        ))}
+      </div>
+    </>
+  );
+}
