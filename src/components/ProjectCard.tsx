@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { demos } from "@/content/demos";
+import { DemoSite } from "@/components/DemoSite";
 import type { Project } from "@/content/projects";
 
 export function ProjectCard({ project: p }: { project: Project }) {
@@ -8,8 +8,8 @@ export function ProjectCard({ project: p }: { project: Project }) {
   const inner = (
     <>
       <div className="relative aspect-[16/10] overflow-hidden rounded-t-[var(--radius)] bg-surface-2">
-        {p.image ? (
-          <img src={p.demoKind ? demos[p.demoKind].image : p.image} alt={p.demoKind ? `${p.title} concept imagery` : p.imageAlt ?? p.title} loading="lazy" width={1280} height={800} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        {p.demoKind ? <div className="pointer-events-none h-full overflow-hidden" aria-hidden="true"><DemoSite kind={p.demoKind} compact /></div> : p.image ? (
+          <img src={p.image} alt={p.imageAlt ?? p.title} loading="lazy" width={1280} height={800} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-[radial-gradient(circle_at_center,var(--surface-2),var(--background))]">
             <Sparkles className="h-8 w-8 text-primary-soft" aria-hidden="true" />
@@ -17,7 +17,7 @@ export function ProjectCard({ project: p }: { project: Project }) {
           </div>
         )}
         {p.tag && (
-          <span className="absolute left-4 top-4 rounded-full border border-border bg-background/70 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-primary-soft backdrop-blur">
+          <span className="absolute right-4 top-4 rounded-full border border-border bg-background/70 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-primary-soft backdrop-blur">
             {p.tag}
           </span>
         )}
