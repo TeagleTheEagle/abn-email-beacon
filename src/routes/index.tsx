@@ -11,6 +11,7 @@ import { faqs, site, steps } from "@/content/site";
 import { services } from "@/content/services";
 import { projects } from "@/content/projects";
 import { seo } from "@/lib/seo";
+import { QuickLeadForm } from "@/components/QuickLeadForm";
 
 export const Route = createFileRoute("/")({
   head: () => seo("/", "Websites & Shopify Stores That Sell", "Websites, Shopify stores and AI-powered tools for Australian small businesses. See a free preview before you pay a cent."),
@@ -54,9 +55,9 @@ function Home() {
           <motion.p {...fade(0.5)} className="mt-6 max-w-xl text-muted-foreground sm:text-lg">
             Websites, Shopify stores and AI-powered tools for Australian small businesses. See a free preview before you pay a cent.
           </motion.p>
-          <motion.div {...fade(0.6)} className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <Link to="/contact" className="btn-primary">Get a free preview</Link>
-            <Link to="/work" className="btn-chrome">See our work</Link>
+          <motion.div {...fade(0.6)} className="mt-10 flex w-full flex-col items-center gap-4">
+            <QuickLeadForm />
+            <Link to="/work" className="text-sm text-primary-soft hover:underline">or see our work →</Link>
           </motion.div>
         </div>
 
@@ -97,6 +98,31 @@ function Home() {
             </Reveal>
           ))}
         </div>
+        <Reveal className="mt-8 flex flex-col items-center justify-center gap-2 text-center text-sm text-muted-foreground sm:flex-row sm:gap-6">
+          <span><span className="text-foreground">Websites from A$500</span> · one-off</span>
+          <span className="hidden sm:inline">|</span>
+          <span>Shopify &amp; AI stores: free quote</span>
+          <span className="hidden sm:inline">|</span>
+          <Link to="/pricing" className="text-primary-soft hover:underline">See pricing</Link>
+        </Reveal>
+      </Section>
+
+      {/* AI DETAIL */}
+      <Section label="Smart Store Setup" title="What the AI actually does">
+        <div className="grid gap-6 sm:grid-cols-2">
+          {[
+            { t: "Writes your product descriptions", b: "Clear, search-friendly descriptions drafted for every product, ready for you to check and approve." },
+            { t: "Recommends related products", b: "\"You may also like\" suggestions on product and cart pages to lift order size." },
+            { t: "Answers common questions", b: "Live chat that replies to FAQs and order-tracking questions at any hour." },
+            { t: "Sends emails automatically", b: "Welcome, abandoned-cart and post-purchase emails that go out on their own." },
+          ].map((x, i) => (
+            <Reveal key={x.t} delay={i * 0.06} className="glass p-6">
+              <h3 className="text-xs tracking-[0.2em]">{x.t}</h3>
+              <p className="mt-3 text-sm text-muted-foreground">{x.b}</p>
+            </Reveal>
+          ))}
+        </div>
+        <p className="mt-6 text-center text-xs text-muted-foreground">Built on Shopify's own tools, so no extra monthly app fees from us.</p>
       </Section>
 
       {/* HOW IT WORKS */}
@@ -118,9 +144,17 @@ function Home() {
       {/* WORK */}
       <Section label="Portfolio" title="Our work">
         <div className="grid gap-6 md:grid-cols-3">
-          {projects.slice(0, 3).map((p, i) => (
+          {projects.slice(0, 2).map((p, i) => (
             <Reveal key={p.title} delay={i * 0.08}><ProjectCard project={p} /></Reveal>
           ))}
+          <Reveal delay={0.16}>
+            <Link to="/contact" className="glass glass-hover flex h-full flex-col justify-center p-8 text-center">
+              <p className="label">Founding clients</p>
+              <h3 className="mt-4 text-sm tracking-[0.2em]">Your business could be here</h3>
+              <p className="mt-3 text-sm text-muted-foreground">We're taking on our first client projects now. Get a free preview and be one of our first case studies.</p>
+              <span className="mt-6 inline-flex items-center justify-center gap-1 text-sm text-primary-soft">Get a free preview <ArrowRight className="h-4 w-4" /></span>
+            </Link>
+          </Reveal>
         </div>
       </Section>
 
