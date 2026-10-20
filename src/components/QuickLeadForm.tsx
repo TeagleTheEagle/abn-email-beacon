@@ -78,11 +78,11 @@ export function QuickLeadForm() {
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <label className="min-w-0">
           <span className="sr-only">Business name</span>
-          <input {...register("business_name")} autoComplete="organization" placeholder="Business name" className="w-full rounded-md border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-primary" />
+          <input {...register("business_name")} aria-invalid={errors.business_name ? true : undefined} autoComplete="organization" placeholder="Business name" className="w-full rounded-md border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-primary" />
         </label>
         <label className="min-w-0">
           <span className="sr-only">Email</span>
-          <input {...register("email")} type="email" placeholder="Email" className="w-full rounded-md border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-primary" />
+          <input {...register("email")} aria-invalid={errors.email ? true : undefined} type="email" placeholder="Email" className="w-full rounded-md border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-primary" />
         </label>
         <Button type="submit" disabled={isSubmitting} className="h-12 sm:col-span-2">
           {isSubmitting ? "Sending…" : "Get a free preview"}

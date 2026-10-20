@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { cloneElement, isValidElement, useRef, useState, type ReactElement } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -19,6 +19,18 @@ export const Route = createFileRoute("/contact")({
 const businessTypes = ["Café/Restaurant", "Trades", "Beauty/Salon", "Retail", "Other"];
 const needOptions = ["Website", "Shopify store", "AI features", "Not sure"];
 
+// People type "mysite.com.au"; add the https:// for them rather than rejecting it.
+function normaliseWebsite(value: string | undefined): string | null {
+  const v = value?.trim();
+  if (!v) return null;
+  const url = /^https?:\/\//i.test(v) ? v : `https://${v}`;
+  try {
+    return new URL(url).hostname.includes(".") ? url : null;
+  } catch {
+    return null;
+  }
+}
+
 const schema = z.object({
   name: z.string().trim().min(1, "Please enter your name").max(100),
   business_name: z.string().trim().min(1, "Please enter your business name").max(150),
@@ -26,7 +38,12 @@ const schema = z.object({
   phone: z.string().trim().max(30).optional(),
   business_type: z.string().optional(),
   needs: z.array(z.string()),
-  current_website: z.union([z.literal(""), z.string().trim().url("Please enter a full URL, e.g. https://…").max(255)]).optional(),
+  current_website: z
+    .string()
+    .trim()
+    .max(255)
+    .optional()
+    .refine((v) => !v || normaliseWebsite(v) !== null, "Please enter your website address, e.g. mysite.com.au"),
   message: z.string().trim().max(2000).optional(),
 });
 type FormValues = z.infer<typeof schema>;
@@ -52,7 +69,7 @@ function Contact() {
       phone: v.phone || null,
       business_type: v.business_type || null,
       needs: v.needs ?? [],
-      current_website: v.current_website || null,
+      current_website: normaliseWebsite(v.current_website),
       message: v.message || null,
     });
     if (error) {
@@ -99,7 +116,7 @@ function Contact() {
                   </div>
                 </fieldset>
                 <Field label="Current website (optional)" error={errors.current_website?.message} className="sm:col-span-2">
-                  <input type="url" placeholder="https://" className="field" {...register("current_website")} />
+                  <input type="text" inputMode="url" autoComplete="url" placeholder="mysite.com.au" className="field" {...register("current_website")} />
                 </Field>
                 <Field label="Message" error={errors.message?.message} className="sm:col-span-2">
                   <textarea rows={5} className="field" {...register("message")} />
@@ -134,8 +151,8 @@ function Field({ label, error, className = "", children }: { label: string; erro
   return (
     <label className={`block ${className}`}>
       <span className="label mb-2 block">{label}</span>
-      {children}
-      {error && <span className="mt-1 block text-xs text-destructive">{error}</span>}
+      {isValidElement(children) ? cloneElement(children as ReactElement<Record<string, unknown>>, { "aria-invalid": error ? true : undefined }) : children}
+      {error && <span role="alert" className="mt-1 block text-xs text-destructive">{error}</span>}
     </label>
   );
 }

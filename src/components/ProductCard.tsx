@@ -24,12 +24,12 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
 
   return (
     <div className="glass glass-hover group flex h-full flex-col overflow-hidden rounded-2xl">
-      <Link to="/product/$handle" params={{ handle: node.handle }} className="block">
+      <Link to="/product/$handle" params={{ handle: node.handle }} className="block" aria-label={`View ${node.title}`}>
         <div className="relative aspect-square overflow-hidden bg-surface-2">
           {image ? (
             <img
               src={image.url}
-              alt={image.altText ?? node.title}
+              alt={image.altText || node.title}
               loading="lazy"
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />

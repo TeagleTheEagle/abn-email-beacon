@@ -1,12 +1,22 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ArrowLeft, Check, Loader2 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { formatPrice, fetchProduct, type ShopifyProduct, type ShopifyVariant } from "@/lib/shopify";
 import { cartItemFromVariant, useCartStore } from "@/stores/cartStore";
-import { seo } from "@/lib/seo";
+import { seo, SITE_URL } from "@/lib/seo";
 import { track } from "@/lib/analytics";
+
+function ProductNotFound() {
+  return (
+    <div className="mx-auto max-w-md px-6 py-32 text-center">
+      <h1 className="text-2xl text-chrome">Product not found</h1>
+      <p className="mt-3 text-muted-foreground">This product may have been removed.</p>
+      <Link to="/shop" className="btn-primary mt-8">Back to shop</Link>
+    </div>
+  );
+}
 
 const productQueryOptions = (handle: string) =>
   queryOptions({
@@ -30,10 +40,43 @@ export const Route = createFileRoute("/product/$handle")({
         { name: "twitter:image", content: image },
       );
     }
-    return base;
+    if (!product) return base;
+    // Product rich result (price and availability in Google search listings).
+    const inStock = product.variants.edges.some((v) => v.node.availableForSale);
+    return {
+      ...base,
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: product.title,
+            description: product.description,
+            image: product.images.edges.map((e) => e.node.url),
+            url: `${SITE_URL}${path}`,
+            brand: { "@type": "Brand", name: "Teague Industries" },
+            offers: {
+              "@type": "Offer",
+              url: `${SITE_URL}${path}`,
+              price: product.priceRange.minVariantPrice.amount,
+              priceCurrency: product.priceRange.minVariantPrice.currencyCode,
+              availability: inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+              seller: { "@type": "Organization", name: "Teague Industries" },
+            },
+          }),
+        },
+      ],
+    };
   },
-  loader: ({ context, params }) => context.queryClient.ensureQueryData(productQueryOptions(params.handle)),
+  loader: async ({ context, params }) => {
+    const product = await context.queryClient.ensureQueryData(productQueryOptions(params.handle));
+    // A real 404 (not a 200 "not found" page) so search engines don't index dead product URLs.
+    if (!product) throw notFound();
+    return product;
+  },
   component: ProductPage,
+  notFoundComponent: ProductNotFound,
 });
 
 function ProductPage() {
@@ -45,15 +88,7 @@ function ProductPage() {
   const [activeImage, setActiveImage] = useState(0);
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
 
-  if (!product) {
-    return (
-      <div className="mx-auto max-w-md px-6 py-32 text-center">
-        <h1 className="text-2xl text-chrome">Product not found</h1>
-        <p className="mt-3 text-muted-foreground">This product may have been removed.</p>
-        <Link to="/shop" className="btn-primary mt-8">Back to shop</Link>
-      </div>
-    );
-  }
+  if (!product) return null;
 
   const variants = product.variants.edges.map((v) => v.node);
   const hasOptions = product.options.length > 0 && variants.length > 1;

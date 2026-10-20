@@ -47,7 +47,7 @@ export function SiteNav() {
           <Link to="/contact" className="btn-primary hidden !px-5 !py-2.5 !text-xs sm:inline-flex">
             Get a free preview
           </Link>
-          <Button variant="ghost" size="icon" className="text-foreground lg:hidden" onClick={() => setOpen(true)} aria-label="Open menu" aria-expanded={open}>
+          <Button variant="ghost" size="icon" className="text-foreground lg:hidden" onClick={() => setOpen(true)} aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open}>
             <Menu className="h-6 w-6" />
           </Button>
         </div>
