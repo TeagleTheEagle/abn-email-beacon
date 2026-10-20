@@ -1,14 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MapPin, BadgeCheck, Eye, ArrowRight } from "lucide-react";
-import { Logo } from "@/components/Logo";
-import { Starfield } from "@/components/Starfield";
+import { MapPin, BadgeCheck, Eye, ArrowRight, Check, Clock, UserRound, ShieldCheck } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ProjectCard } from "@/components/ProjectCard";
+import { WebsitePreview } from "@/components/WebsitePreview";
+import { Button } from "@/components/ui/button";
 import earth from "@/assets/earth-horizon.webp";
+import founder from "@/assets/founder.webp.asset.json";
 import { faqs, site, steps } from "@/content/site";
 import { services } from "@/content/services";
 import { projects } from "@/content/projects";
+import { demos } from "@/content/demos";
 import { seo, SITE_URL, OG_IMAGE } from "@/lib/seo";
 import { QuickLeadForm } from "@/components/QuickLeadForm";
 
@@ -48,199 +50,51 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const delay = (s: number) => ({ animationDelay: `${s}s` });
 
 function Home() {
-  return (
-    <>
-      {/* HERO */}
-      <section className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-5 pb-40 pt-28 text-center">
-        <img
-          src={earth}
-          alt=""
-          aria-hidden="true"
-          width={1920}
-          height={1088}
-          className="animate-drift pointer-events-none absolute inset-0 h-full w-full object-cover object-[50%_70%] opacity-90"
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background via-background/40 to-background" />
-        <Starfield className="pointer-events-none absolute inset-0 h-full w-full" />
-        <div className="animate-flare pointer-events-none absolute left-1/2 top-[58%] h-40 w-[36rem] max-w-[90vw] -translate-x-1/2 rounded-full bg-primary/25 blur-3xl" />
-
-        <div className="relative z-10 flex flex-col items-center">
-          <div className="animate-rise">
-            <Logo glow className="h-28 w-28 sm:h-40 sm:w-40" />
-          </div>
-          <p style={delay(0.1)} className="animate-rise mt-8 font-display text-base tracking-[0.3em] text-chrome sm:text-2xl sm:tracking-[0.4em]">
-            Teague Industries
-          </p>
-          <p style={delay(0.15)} className="animate-rise label mt-4 !text-[9px] sm:!text-[11px]">{site.tagline}</p>
-          <h1 style={delay(0.25)} className="animate-rise mt-12 max-w-3xl text-2xl text-foreground sm:text-4xl lg:text-5xl">
-            We build online stores that sell.
-          </h1>
-          <p style={delay(0.3)} className="animate-rise mt-6 max-w-xl text-muted-foreground sm:text-lg">
-            Websites from A$500 for cafés, tradies and local shops on Sydney's Lower North Shore, plus Shopify stores and AI tools for businesses Australia-wide. See a free preview before you pay a cent.
-          </p>
-          <div style={delay(0.35)} className="animate-rise mt-10 flex w-full flex-col items-center gap-4">
-            <QuickLeadForm />
-            <Link to="/work" className="text-sm text-primary-soft hover:underline">or see our work →</Link>
-          </div>
+  return <>
+    <section className="home-hero">
+      <img src={earth} alt="" aria-hidden="true" width={1920} height={1088} className="hero-earth" />
+      <div className="hero-shade" />
+      <div className="home-hero-inner">
+        <div className="min-w-0 animate-rise">
+          <p className="label text-primary-soft">Sydney · Australia</p>
+          <h1 className="hero-heading mt-5">Websites &amp; Shopify stores.<br /><span className="text-primary-soft">Built for your next chapter.</span></h1>
+          <p className="mt-6 max-w-lg text-lg text-muted-foreground">A better home for your business online. Custom websites, Shopify stores and smart tools — with a free preview before you pay.</p>
+          <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm"><span>Websites <strong className="text-primary-soft">A$500</strong></span><span>Shopify <strong className="text-primary-soft">from A$1,200</strong></span></div>
+          <div className="mt-7 max-w-md"><QuickLeadForm /></div>
+          <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground"><span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-primary-soft" /> No payment upfront</span><Link to="/work" className="inline-flex items-center gap-1 text-primary-soft">Explore our work <ArrowRight className="h-3.5 w-3.5" /></Link></div>
         </div>
-
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
-        <div className="chrome-line absolute inset-x-6 bottom-24 mx-auto max-w-6xl" />
-        <div className="absolute inset-x-6 bottom-6 z-10 mx-auto hidden max-w-6xl sm:block">
-          <div className="w-fit border-l border-foreground/40 pl-3 text-left">
-            <p className="font-display text-[9px] tracking-[0.3em] text-foreground">Teague Industries</p>
-            <p className="label mt-1 !text-[9px]">{site.est}</p>
-          </div>
-        </div>
-      </section>
-
-      {/* TRUST */}
-      <section className="px-6">
-        <Reveal className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-3">
-          {[
-            { icon: MapPin, t: "Built in Australia" },
-            { icon: BadgeCheck, t: "ABN registered" },
-            { icon: Eye, t: "Free preview before you pay" },
-          ].map(({ icon: I, t }) => (
-            <div key={t} className="flex items-center justify-center gap-3 text-sm text-muted-foreground">
-              <I className="h-4 w-4 text-primary-soft" aria-hidden="true" /> {t}
-            </div>
-          ))}
-        </Reveal>
-      </section>
-
-      {/* SERVICES */}
-      <Section label="What we do" title="Services">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {services.map((s, i) => (
-            <Reveal key={s.id} delay={i * 0.08}>
-              <Link to="/services" hash={s.id} className="glass glass-hover flex h-full flex-col p-6">
-                <s.icon className="h-7 w-7 text-primary-soft" aria-hidden="true" />
-                <h3 className="mt-6 text-xs tracking-[0.2em]">{s.title}</h3>
-                <p className="mt-3 flex-1 text-sm text-muted-foreground">{s.short}</p>
-                <span className="mt-6 inline-flex items-center gap-1 text-sm text-primary-soft">Learn more <ArrowRight className="h-4 w-4" /></span>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
-        <Reveal className="mt-8 flex flex-col items-center justify-center gap-2 text-center text-sm text-muted-foreground sm:flex-row sm:gap-6">
-          <span><span className="text-foreground">Websites from A$500</span> · one-off</span>
-          <span className="hidden sm:inline">|</span>
-          <span>Shopify stores from A$1,200 · Care from A$49/mo</span>
-          <span className="hidden sm:inline">|</span>
-          <Link to="/pricing" className="text-primary-soft hover:underline">See pricing</Link>
-        </Reveal>
-      </Section>
-
-      {/* AI DETAIL */}
-      <Section label="Smart Store Setup" title="What the AI actually does">
-        <div className="grid gap-6 sm:grid-cols-2">
-          {[
-            { t: "Writes your product descriptions", b: "Clear, search-friendly descriptions drafted for every product, ready for you to check and approve." },
-            { t: "Recommends related products", b: "\"You may also like\" suggestions on product and cart pages to lift order size." },
-            { t: "Answers common questions", b: "Live chat that replies to FAQs and order-tracking questions at any hour." },
-            { t: "Sends emails automatically", b: "Welcome, abandoned-cart and post-purchase emails that go out on their own." },
-          ].map((x, i) => (
-            <Reveal key={x.t} delay={i * 0.06} className="glass p-6">
-              <h3 className="text-xs tracking-[0.2em]">{x.t}</h3>
-              <p className="mt-3 text-sm text-muted-foreground">{x.b}</p>
-            </Reveal>
-          ))}
-        </div>
-        <p className="mt-6 text-center text-xs text-muted-foreground">Built on Shopify's own tools, so no extra monthly app fees from us.</p>
-      </Section>
-
-      {/* HOW IT WORKS */}
-      <Section label="The process" title="How it works">
-        <div className="relative grid gap-10 md:grid-cols-3">
-          <div className="absolute left-0 right-0 top-6 hidden h-px bg-gradient-to-r from-transparent via-primary to-transparent shadow-[var(--glow)] md:block" />
-          {steps.map((s, i) => (
-            <Reveal key={s.n} delay={i * 0.1} className="relative text-center">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-primary/50 bg-background font-display text-xs text-primary-soft shadow-[var(--glow)]">
-                {s.n}
-              </div>
-              <h3 className="mt-6 text-sm tracking-[0.2em]">{s.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{s.body}</p>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
-
-      {/* WORK */}
-      <Section label="Portfolio" title="Our work">
-        <div className="grid gap-6 md:grid-cols-3">
-          {projects.slice(0, 5).map((p, i) => (
-            <Reveal key={p.title} delay={i * 0.08}><ProjectCard project={p} /></Reveal>
-          ))}
-          <Reveal delay={0.16}>
-            <Link to="/contact" className="glass glass-hover flex h-full flex-col justify-center p-8 text-center">
-              <p className="label">Founding clients</p>
-              <h3 className="mt-4 text-sm tracking-[0.2em]">Your business could be here</h3>
-              <p className="mt-3 text-sm text-muted-foreground">We're taking on our first client projects now. Get a free preview and be one of our first case studies.</p>
-              <span className="mt-6 inline-flex items-center justify-center gap-1 text-sm text-primary-soft">Get a free preview <ArrowRight className="h-4 w-4" /></span>
-            </Link>
-          </Reveal>
-        </div>
-      </Section>
-
-      {/* TEMPLATES */}
-      <section className="px-6 py-20">
-        <Reveal className="glass mx-auto max-w-4xl p-10 text-center sm:p-14">
-          <p className="label">Templates</p>
-          <h2 className="mt-4 text-xl sm:text-2xl">Prefer to DIY?</h2>
-          <p className="mx-auto mt-5 max-w-lg text-muted-foreground">
-            Ready-made invoices, quotes, agreements and website kits — built for Australian businesses. Download and go.
-          </p>
-          <a href={site.storeUrl} className="btn-chrome mt-8">
-            Browse templates
-          </a>
-        </Reveal>
-      </section>
-
-      {/* FAQ */}
-      <Section label="Questions" title="FAQ">
-        <Reveal className="mx-auto max-w-3xl">
-          <Accordion type="single" collapsible className="glass px-6">
-            {faqs.map((f, i) => (
-              <AccordionItem key={f.q} value={`f${i}`} className="border-border last:border-0">
-                <AccordionTrigger className="text-left text-base hover:no-underline">{f.q}</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">{f.a}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </Reveal>
-      </Section>
-
-      <CtaBand />
-    </>
-  );
-}
-
-function Section({ label, title, children }: { label: string; title: string; children: React.ReactNode }) {
-  return (
-    <section className="px-6 py-24">
-      <div className="mx-auto max-w-6xl">
-        <Reveal className="mb-14 text-center">
-          <p className="label">{label}</p>
-          <h2 className="mt-4 text-xl text-chrome sm:text-3xl">{title}</h2>
-        </Reveal>
-        {children}
+        <div className="min-w-0 animate-rise"><WebsitePreview /><p className="mt-3 text-right text-xs text-muted-foreground">Interactive concepts · Not client projects</p></div>
       </div>
     </section>
-  );
+    <section className="border-y border-border bg-surface/60 px-6 py-6"><div className="mx-auto grid max-w-6xl gap-5 sm:grid-cols-3">{[{ icon: MapPin, title: "Australian based", detail: "Sydney’s Lower North Shore · Australia-wide" },{ icon: BadgeCheck, title: "ABN registered", detail: site.abn },{ icon: Eye, title: "Free preview first", detail: "Only pay if you want to go ahead" }].map(({ icon: Icon, title, detail }) => <div key={title} className="flex items-center gap-4 sm:justify-center"><Icon className="h-6 w-6 shrink-0 text-primary-soft" /><div className="min-w-0"><p className="text-sm font-semibold">{title}</p><p className="mt-1 text-xs text-muted-foreground">{detail}</p></div></div>)}</div></section>
+    <Section label="See what's possible" title="Your business. A better first impression." action={<Link to="/work" className="inline-flex items-center gap-2 text-sm text-primary-soft">All work <ArrowRight className="h-4 w-4" /></Link>}>
+      <p className="mb-8 max-w-2xl text-muted-foreground">Explore a café, trades business, salon or store. These are working concepts, not client case studies.</p>
+      <div className="grid gap-6 md:grid-cols-2">{projects.filter(p => p.demoKind).map((project, i) => <Reveal key={project.title} delay={i * .06}><ProjectCard project={project} /></Reveal>)}</div>
+    </Section>
+    <Section label="Our services" title="A clear scope. An honest price." surface>
+      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">{services.map((service, i) => <Reveal key={service.id} delay={i * .05} className="h-full"><article className="glass glass-hover flex h-full flex-col overflow-hidden"><img src={i === 0 ? demos.cafe.image : i === 3 ? demos.tradie.image : demos.retail.image} alt={`${service.title} illustrative example`} width={1280} height={800} loading="lazy" className="service-card-image" /><div className="flex flex-1 flex-col p-6"><service.icon className="h-6 w-6 text-primary-soft" /><h3 className="mt-4 text-xl">{service.title}</h3><p className="mt-3 text-sm text-muted-foreground">{service.short}</p><p className="mt-5 text-2xl font-bold text-primary-soft">{service.price}<span className="text-sm font-normal">{service.id === 'care-plan' ? '/mo' : ''}</span></p><p className="mt-1 text-xs text-muted-foreground">{service.id === 'website-build' ? 'One-off · Free preview first' : service.id === 'care-plan' ? 'Monthly' : 'Setup fee · Shopify plan separate'}</p><ul className="mb-6 mt-6 flex-1 space-y-3">{service.included.map(item => <li key={item} className="flex gap-2 text-xs text-muted-foreground"><Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary-soft" /><span>{item}</span></li>)}</ul><Button asChild variant="outline" className="h-11"><Link to="/services" hash={service.id}>Explore service <ArrowRight /></Link></Button></div></article></Reveal>)}</div>
+      <p className="mt-6 text-sm text-muted-foreground">All prices in AUD. Not GST registered. <Link to="/pricing" className="text-primary-soft underline underline-offset-4">Full pricing details</Link></p>
+    </Section>
+    <Section label="Simple from the start" title="Preview. Approve. Launch.">
+      <div className="grid gap-8 md:grid-cols-3">{steps.map(step => <div key={step.n} className="border-t border-border pt-6"><p className="text-sm text-primary-soft">{step.n}</p><h3 className="mt-3 text-2xl">{step.title}</h3><p className="mt-3 text-muted-foreground">{step.body}</p></div>)}</div>
+      <div className="mt-10 grid gap-5 border-t border-border pt-6 sm:grid-cols-3">{[{ icon: Clock, title: 'About one week', text: 'Standard website · 5–7 business days' },{ icon: Check, title: 'Two revision rounds', text: 'In scope; extra work quoted first' },{ icon: ShieldCheck, title: 'It’s yours', text: 'Your content, domain and accounts' }].map(({ icon: Icon, title, text }) => <div key={title} className="flex gap-3"><Icon className="mt-1 h-5 w-5 shrink-0 text-primary-soft" /><div><h3 className="text-base">{title}</h3><p className="mt-1 text-sm text-muted-foreground">{text}</p></div></div>)}</div>
+    </Section>
+    <section className="border-y border-border bg-surface/50 px-6 py-16 sm:py-20"><div className="mx-auto grid max-w-5xl items-center gap-8 md:grid-cols-[240px_minmax(0,1fr)]"><img src={founder.url} alt="Ben Teague, founder" width={768} height={1152} loading="lazy" className="mx-auto aspect-[4/5] w-full max-w-[240px] rounded-lg border border-border object-cover object-top" /><div className="min-w-0"><p className="label">Meet the founder</p><h2 className="mt-4 text-3xl">Hi, I’m Ben.</h2><blockquote className="mt-5 border-l-2 border-primary pl-4 text-xl text-primary-soft">“I’d rather show you than sell you.”</blockquote><p className="mt-5 max-w-xl text-muted-foreground">You work directly with me, from your first message to launch. No account managers, no jargon — just a website or store built around your business.</p><div className="mt-6 flex flex-wrap gap-3"><Button asChild variant="outline"><Link to="/about"><UserRound /> Meet Ben</Link></Button><Button asChild variant="ghost"><a href={`mailto:${site.email}`}>Email Ben <ArrowRight /></a></Button></div></div></div></section>
+    <Section label="Smart Store Setup" title="Useful AI. Not just a buzzword.">
+      <div className="grid gap-x-12 gap-y-8 sm:grid-cols-2">{[{ t: 'Product descriptions, drafted for you', b: 'Clear, search-friendly copy for every product, ready for you to check and approve.' },{ t: 'Related products, recommended', b: '“You may also like” suggestions on product and cart pages to help customers find more of what they need.' },{ t: 'Common questions, answered', b: 'Live chat for FAQs and order-tracking questions, even outside business hours.' },{ t: 'Follow-up emails, automated', b: 'Welcome, abandoned-cart and post-purchase emails that go out on their own.' }].map(item => <div key={item.t} className="border-t border-border pt-6"><h3 className="text-xl">{item.t}</h3><p className="mt-3 text-muted-foreground">{item.b}</p></div>)}</div><p className="mt-8 text-sm text-muted-foreground">Built on Shopify’s own tools. No extra monthly app fees from us.</p>
+    </Section>
+    <section className="border-y border-border bg-surface px-6 py-14"><div className="mx-auto grid max-w-6xl items-center gap-6 md:grid-cols-[minmax(0,1fr)_auto]"><div><p className="label">The digital shop</p><h2 className="mt-3 text-3xl">Tools for your next chapter.</h2><p className="mt-4 max-w-xl text-muted-foreground">Templates, guides and practical resources for Australian businesses and creators.</p></div><Button asChild size="lg" variant="outline" className="h-12"><Link to="/shop">Explore our products <ArrowRight /></Link></Button></div></section>
+    <Section label="Good questions" title="Before we get started."><div className="max-w-3xl"><Accordion type="single" collapsible>{faqs.map((faq, i) => <AccordionItem key={faq.q} value={`f${i}`}><AccordionTrigger className="text-left text-base hover:no-underline">{faq.q}</AccordionTrigger><AccordionContent className="text-muted-foreground">{faq.a}</AccordionContent></AccordionItem>)}</Accordion></div></Section>
+    <CtaBand />
+  </>;
+}
+
+function Section({ label, title, children, action, surface = false }: { label: string; title: string; children: React.ReactNode; action?: React.ReactNode; surface?: boolean }) {
+  return <section className={`px-6 py-16 sm:py-20 ${surface ? 'border-y border-border bg-surface/40' : ''}`}><div className="mx-auto max-w-6xl"><div className="mb-8 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-5"><div className="min-w-0"><p className="label">{label}</p><h2 className="mt-3 text-3xl sm:text-4xl">{title}</h2></div>{action}</div>{children}</div></section>;
 }
 
 export function CtaBand() {
-  return (
-    <section className="relative overflow-hidden px-6 py-24 text-center">
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-64 w-[40rem] max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/15 blur-3xl" />
-      <Reveal className="relative">
-        <h2 className="mx-auto max-w-2xl text-xl sm:text-3xl">Ready to see your business online?</h2>
-        <Link to="/contact" className="btn-primary mt-10">Get a free preview</Link>
-      </Reveal>
-    </section>
-  );
+  return <section className="relative overflow-hidden border-t border-border px-6 py-16 text-center sm:py-20"><img src={earth} alt="" aria-hidden="true" width={1920} height={1088} loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-20" /><div className="relative"><p className="label">Your next chapter starts here</p><h2 className="mx-auto mt-4 max-w-2xl text-3xl sm:text-4xl">Ready for a better website?</h2><p className="mt-4 text-muted-foreground">Free preview first. No obligation.</p><Button asChild size="lg" className="mt-7 h-12"><Link to="/contact">Get a free preview <ArrowRight /></Link></Button></div></section>;
 }

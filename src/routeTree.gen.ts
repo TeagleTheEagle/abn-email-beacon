@@ -21,6 +21,7 @@ import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WorkRouteImport } from './routes/work'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as DemoKindRouteImport } from './routes/demo.$kind'
 import { Route as ProductHandleRouteImport } from './routes/product.$handle'
 
 const IndexRoute = IndexRouteImport.update({
@@ -84,6 +85,11 @@ const Char91DotwellKnownChar93OauthProtectedResourceRoute =
     path: '/.well-known/oauth-protected-resource',
     getParentRoute: () => rootRouteImport,
   } as any)
+const DemoKindRoute = DemoKindRouteImport.update({
+  id: '/demo/$kind',
+  path: '/demo/$kind',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProductHandleRoute = ProductHandleRouteImport.update({
   id: '/product/$handle',
   path: '/product/$handle',
@@ -103,6 +109,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/work': typeof WorkRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/demo/$kind': typeof DemoKindRoute
   '/product/$handle': typeof ProductHandleRoute
 }
 export interface FileRoutesByTo {
@@ -118,6 +125,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/work': typeof WorkRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/demo/$kind': typeof DemoKindRoute
   '/product/$handle': typeof ProductHandleRoute
 }
 export interface FileRoutesById {
@@ -134,6 +142,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/work': typeof WorkRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/demo/$kind': typeof DemoKindRoute
   '/product/$handle': typeof ProductHandleRoute
 }
 export interface FileRouteTypes {
@@ -151,6 +160,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/work'
     | '/.well-known/oauth-protected-resource'
+    | '/demo/$kind'
     | '/product/$handle'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/work'
     | '/.well-known/oauth-protected-resource'
+    | '/demo/$kind'
     | '/product/$handle'
   id:
     | '__root__'
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/work'
     | '/.well-known/oauth-protected-resource'
+    | '/demo/$kind'
     | '/product/$handle'
   fileRoutesById: FileRoutesById
 }
@@ -197,6 +209,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   WorkRoute: typeof WorkRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  DemoKindRoute: typeof DemoKindRoute
   ProductHandleRoute: typeof ProductHandleRoute
 }
 
@@ -286,6 +299,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/demo/$kind': {
+      id: '/demo/$kind'
+      path: '/demo/$kind'
+      fullPath: '/demo/$kind'
+      preLoaderRoute: typeof DemoKindRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/product/$handle': {
       id: '/product/$handle'
       path: '/product/$handle'
@@ -310,6 +330,7 @@ const rootRouteChildren: RootRouteChildren = {
   WorkRoute: WorkRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  DemoKindRoute: DemoKindRoute,
   ProductHandleRoute: ProductHandleRoute,
 }
 export const routeTree = rootRouteImport

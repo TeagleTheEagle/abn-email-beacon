@@ -12,6 +12,7 @@ export type Project = {
   image?: string;
   imageAlt?: string;
   link?: { label: string; href: string; external?: boolean };
+  demoKind?: "cafe" | "tradie" | "salon" | "retail";
   placeholder?: boolean;
 };
 
@@ -30,37 +31,41 @@ export const projects: Project[] = [
     title: "Café Website Starter Kit (Demo)",
     category: "Website",
     tag: "Demo",
-    description: "A one-page café website template with menu, gallery, reviews and a visit-us section.",
+    description: "An inviting café concept with a visual first impression and an interactive coffee and kitchen menu.",
     image: cafeImg,
     imageAlt: "Tablet on a café counter displaying a stylish café website",
-    link: { label: "Ask about this kit", href: "/contact" },
+    demoKind: "cafe",
+    link: { label: "Open interactive demo", href: "/demo/cafe" },
   },
   {
     title: "Tradie Website (Demo)",
     category: "Website",
     tag: "Demo",
-    description: "Demo design for a plumber or electrician: services, service areas, licence details and a 'Book a job' form.",
+    description: "An electrical services concept with clear service details and a working demonstration job-request form.",
     image: tradieImg,
     imageAlt: "Demo plumbing and electrical website shown on a laptop in a work van",
-    link: { label: "Ask about this design", href: "/contact" },
+    demoKind: "tradie",
+    link: { label: "Open interactive demo", href: "/demo/tradie" },
   },
   {
     title: "Salon Website (Demo)",
     category: "Website",
     tag: "Demo",
-    description: "Demo design for a hair or beauty salon: service menu with prices, gallery and online booking.",
+    description: "A hair salon concept with a priced service menu and an interactive demonstration booking form.",
     image: salonImg,
     imageAlt: "Demo hair salon website shown on a tablet at a salon reception desk",
-    link: { label: "Ask about this design", href: "/contact" },
+    demoKind: "salon",
+    link: { label: "Open interactive demo", href: "/demo/salon" },
   },
   {
     title: "Retail Shopify Store (Demo)",
     category: "Shopify Store",
     tag: "Demo",
-    description: "Demo design for a boutique shop: best sellers, product pages, cart and Shopify checkout.",
+    description: "A boutique store concept with an essentials collection and a demo shopping bag. No payments are taken.",
     image: retailImg,
     imageAlt: "Demo clothing boutique online store shown on a laptop on a shop counter",
-    link: { label: "Ask about this design", href: "/contact" },
+    demoKind: "retail",
+    link: { label: "Open interactive demo", href: "/demo/retail" },
   },
   {
     title: "Your business could be here",
