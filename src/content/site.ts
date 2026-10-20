@@ -23,7 +23,7 @@ export const nav = [
 
 export const steps = [
   { n: "01", title: "We build a preview", body: "Free, no obligation." },
-  { n: "02", title: "You approve it", body: "Tweaks included." },
+  { n: "02", title: "You approve it", body: "Two rounds of revisions included." },
   { n: "03", title: "We launch", body: "Domain, payments, go live." },
 ];
 
@@ -35,5 +35,6 @@ export const faqs = [
   { q: "Do I own my domain name?", a: "Yes. Your domain is registered in your name, and you keep it even if you stop working with us." },
   { q: "Does Shopify cost extra?", a: "Yes. Shopify charges its own monthly plan fee, paid directly to Shopify, not us. Our setup fee covers building the store. Current plans are listed on Shopify's pricing page." },
   { q: "Where are you based?", a: "Sydney's Lower North Shore — North Sydney, Neutral Bay, Cremorne, Mosman, Crows Nest, Kirribilli, Lane Cove and Chatswood. We also work online with businesses anywhere in Australia." },
+  { q: "How many changes are included?", a: "Two rounds of revisions are included with every website build — text, images and layout tweaks within the agreed scope. Anything beyond that is quoted before we start, so there are no surprises." },
   { q: "What are \"AI features\"?", a: "Things like auto-written product descriptions, smart product recommendations, chat that answers common questions, and automated emails, set up for you." },
 ];

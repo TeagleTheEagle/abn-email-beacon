@@ -26,6 +26,7 @@ export const services: Service[] = [
       "Google Maps",
       "Basic SEO",
       "Connection to your own domain",
+      "Two rounds of revisions included",
       "A free preview before you pay",
     ],
     whoFor: "Cafés, tradies, salons and local shops that need a professional home online.",
