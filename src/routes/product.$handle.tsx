@@ -13,8 +13,6 @@ const productQueryOptions = (handle: string) =>
     queryFn: () => fetchProduct(handle),
   });
 
-type ProductData = Awaited<ReturnType<ReturnType<typeof productQueryOptions>["queryFn"]>>;
-
 export const Route = createFileRoute("/product/$handle")({
   head: ({ loaderData }) => {
     const product = loaderData;

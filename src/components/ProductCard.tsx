@@ -11,7 +11,7 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
 
   const node = product.node;
   const image = node.images.edges[0]?.node;
-  const firstAvailable = node.variants.edges.find((v) => v.node.availableForSale) ?? node.variants.edges[0]?.node;
+  const firstAvailable = node.variants.edges.find((v) => v.node.availableForSale)?.node ?? node.variants.edges[0]?.node;
   const price = node.priceRange.minVariantPrice;
   const outOfStock = !firstAvailable?.availableForSale;
 
