@@ -48,6 +48,7 @@ It fetches every sitemap page from the local dev server and the live site. It co
 - It needs the dev server on `localhost:8080` serving the commit you're checking. If the server isn't running, start it in the background (`npm run dev`) and wait for its `Local:` line.
 - Run `git fetch` and confirm `main...origin/main` is in sync, so you also know GitHub has the code.
 - **Interpreting it:** all ✓ means live is running this code. If pages differ and the `+ local` lines match recent commits, the user hasn't published yet. If the `- live` lines show things that aren't in the repo, someone changed the site in Lovable without that change reaching git. Fetch, and tell the user.
+- **`/shop` and `/product/…` render Shopify data on the server.** If a Shopify request is slow, often during a cold start, one fetch can come back without the product cards and look like a big difference. Re-run that page with `--pages shop` before concluding anything.
 - **Blind spots:** it reads server-rendered HTML. A change that only touches `src/styles.css` (a new keyframe, a colour token) won't show. For those, find the stylesheet in the live page's `<head>` (`/assets/styles-*.css`), fetch it, and grep for the new rule. The cart drawer and other client-only UI aren't compared either.
 - "Both" can mean local + GitHub, or both domains. Cover both readings unless it's obvious.
 

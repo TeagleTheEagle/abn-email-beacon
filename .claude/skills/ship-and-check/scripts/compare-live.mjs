@@ -62,7 +62,8 @@ function signature(html) {
     .replace(/<style[\s\S]*?<\/style>/gi, "")
     .replace(/<!--[\s\S]*?-->/g, "");
   const lines = [`title: ${title}`, `description: ${description}`];
-  for (const m of body.matchAll(/<([a-z][a-z0-9-]*)([^>]*)>|([^<]+)/gi)) {
+  for (const m of body.matchAll(/<\/[^>]*>|<([a-z][a-z0-9-]*)([^>]*)>|([^<]+)/gi)) {
+    if (!m[1] && !m[3]) continue; // closing tag
     if (m[3]) {
       const text = decode(m[3]).replace(/\s+/g, " ").trim();
       if (text) lines.push(`text: ${text}`);
