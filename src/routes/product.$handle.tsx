@@ -14,7 +14,7 @@ const productQueryOptions = (handle: string) =>
   });
 
 export const Route = createFileRoute("/product/$handle")({
-  head: ({ loaderData }: { loaderData: ShopifyProduct["node"] | null }) => {
+  head: ({ loaderData }: { loaderData?: ShopifyProduct["node"] | null }) => {
     const product = loaderData;
     const path = product ? `/product/${product.handle}` : "/shop";
     const title = product?.title ?? "Product";
