@@ -29,7 +29,7 @@ export function SiteFooter() {
           <p>
             Templates store →{" "}
             <a href={site.storeUrl} className="text-primary-soft hover:underline">
-              {site.storeLabel}
+              Shop
             </a>
           </p>
           <p>

@@ -27,7 +27,7 @@ export const projects: Project[] = [
     link: { label: "View live", href: "/shop", external: false },
   },
   {
-    title: "Café Website Starter Kit",
+    title: "Café Website Starter Kit (Demo)",
     category: "Website",
     tag: "Demo",
     description: "A one-page café website template with menu, gallery, reviews and a visit-us section.",
