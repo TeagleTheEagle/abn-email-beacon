@@ -1,4 +1,4 @@
-export const SITE_URL = "https://tech.teagueindustries.com.au";
+export const SITE_URL = "https://www.teagueindustries.com.au";
 export const OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 
 export function seo(path: string, title: string, description: string) {
