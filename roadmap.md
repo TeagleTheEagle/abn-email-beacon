@@ -11,5 +11,6 @@
 ## Requested checks (20 Oct 2026)
 - [x] Publishing completed by Ben; business email deferred
 - [x] Both domains active; HTTPS and bare-to-www redirect checked without DNS changes
-- [ ] Review published Privacy and Terms for consistency and remaining gaps
-- [ ] Check growth readiness and recommend next steps; Google indexing unverified until Search Console is connected
+- [x] Reviewed published Privacy and Terms: business details/refund match; privacy access/tracking claims need confirmation, not legal approval
+- [x] Checked growth readiness: shop buttons correct; sitemap omits shop/products; recommended Search Console then five-business-owner outreach
+- [ ] Google indexing/performance verification — blocked until Ben connects Google Search Console
