@@ -68,9 +68,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Michroma&family=Caveat:wght@600&display=swap" },
+      // Fonts are self-hosted (see styles.css); preload the two used above the fold on every page.
+      { rel: "preload", href: "/fonts/inter-latin.woff2", as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+      { rel: "preload", href: "/fonts/michroma-latin.woff2", as: "font", type: "font/woff2", crossOrigin: "anonymous" },
     ],
     scripts: analyticsScripts(),
   }),

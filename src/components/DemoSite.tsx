@@ -33,7 +33,7 @@ export function DemoSite({ kind, compact = false, priority = false }: { kind: De
         {kind === 'retail' ? <span className="demo-bag"><ShoppingBag size={16} /> {count}</span> : <Button size="sm" className="demo-button" onClick={openAction}>{kind === 'salon' ? 'Book now' : kind === 'tradie' ? 'Get in touch' : 'Our menu'} <ArrowRight /></Button>}
       </div>
       <div className="demo-cover">
-        <img src={demo.image} alt={`${demo.category} concept imagery for ${demo.name}`} width={1024} height={640} loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : undefined} decoding="async" />
+        <img src={demo.image} srcSet={`${demo.imageSmall} 640w, ${demo.image} 1024w`} sizes={compact ? '(max-width: 767px) 92vw, 640px' : '(max-width: 1199px) 92vw, 1100px'} alt={`${demo.category} concept imagery for ${demo.name}`} width={1024} height={640} loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : undefined} decoding="async" />
         <div className="demo-cover-shade" />
         <div className="demo-cover-copy">
           <p className="demo-eyebrow">{demo.eyebrow}</p>
@@ -52,7 +52,7 @@ export function DemoSite({ kind, compact = false, priority = false }: { kind: De
         </div>
         {kind === 'retail' && count > 0 && <p className="demo-cart" role="status">Demo bag · {count} {count === 1 ? 'item' : 'items'} · A${total} — no payment taken</p>}
         {(kind === 'tradie' || kind === 'salon') && booking && <form ref={bookingRef} className="demo-booking" onSubmit={event => { event.preventDefault(); setConfirmed(true); }}>
-          {confirmed ? <p role="status"><Check size={18} /> Demo request complete — no enquiry has been sent.</p> : <><label>Your name<input required autoComplete="name" placeholder="Alex" /></label><label>{kind === 'salon' ? 'Preferred date' : 'Job details'}<input required type={kind === 'salon' ? 'date' : 'text'} placeholder="What needs attention?" /></label><Button className="demo-button" type="submit">{kind === 'salon' ? 'Preview booking' : 'Preview request'} <ArrowRight /></Button></>}
+          {confirmed ? <p role="status"><Check size={18} /> Demo request complete — no enquiry has been sent.</p> : <><label>Your name<input required autoComplete="name" placeholder="Alex" /></label><label>{kind === 'salon' ? 'Preferred date' : 'Job details'}<input required type={kind === 'salon' ? 'date' : 'text'} placeholder={kind === 'salon' ? 'Pick a date' : 'What needs attention?'} /></label><Button className="demo-button" type="submit">{kind === 'salon' ? 'Preview booking' : 'Preview request'} <ArrowRight /></Button></>}
         </form>}
       </section>
       {!compact && <footer className="demo-footer"><strong>{demo.name}</strong><span>Fictional business · Demonstration only · Images and prices are illustrative</span></footer>}

@@ -3,7 +3,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ArrowLeft, Check, Loader2 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
-import { formatPrice, fetchProduct, type ShopifyProduct, type ShopifyVariant } from "@/lib/shopify";
+import { formatPrice, fetchProduct, shopifyImage, type ShopifyProduct, type ShopifyVariant } from "@/lib/shopify";
 import { cartItemFromVariant, useCartStore } from "@/stores/cartStore";
 import { seo, SITE_URL } from "@/lib/seo";
 import { track } from "@/lib/analytics";
@@ -133,8 +133,13 @@ function ProductPage() {
             <div className="aspect-square overflow-hidden rounded-2xl border border-border bg-surface-2">
               {images[activeImage] ? (
                 <img
-                  src={images[activeImage].url}
+                  src={shopifyImage(images[activeImage].url, 900)}
+                  srcSet={`${shopifyImage(images[activeImage].url, 600)} 600w, ${shopifyImage(images[activeImage].url, 900)} 900w, ${shopifyImage(images[activeImage].url, 1200)} 1200w`}
+                  sizes="(max-width: 1023px) 92vw, 560px"
                   alt={images[activeImage].altText ?? product.title}
+                  width={900}
+                  height={900}
+                  fetchPriority={activeImage === 0 ? "high" : undefined}
                   className="h-full w-full object-cover"
                 />
               ) : (
@@ -154,7 +159,7 @@ function ProductPage() {
                       i === activeImage ? "border-primary-soft" : "border-border hover:border-muted-foreground"
                     }`}
                   >
-                    <img src={img.url} alt="" className="h-full w-full object-cover" />
+                    <img src={shopifyImage(img.url, 160)} alt="" width={80} height={80} loading="lazy" className="h-full w-full object-cover" />
                   </button>
                 ))}
               </div>

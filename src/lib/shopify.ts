@@ -27,6 +27,12 @@ export interface ShopifyProduct {
   };
 }
 
+// Shopify's CDN resizes on request: ask for the width a slot needs instead of the 1024px original.
+export function shopifyImage(url: string, width: number) {
+  if (!url.includes("cdn.shopify.com")) return url;
+  return `${url}${url.includes("?") ? "&" : "?"}width=${width}`;
+}
+
 export function formatPrice(amount: string, currencyCode: string) {
   const value = parseFloat(amount);
   if (currencyCode === "AUD") return `A$${value.toFixed(2)}`;

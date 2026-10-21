@@ -13,7 +13,7 @@ function Privacy() {
     <>
       <PageHeader label="Legal" title="Privacy Policy" sub="Last updated 20 October 2026" />
       <article className="mx-auto max-w-2xl space-y-8 px-6 text-muted-foreground [&_h2]:text-sm [&_h2]:text-foreground">
-        <section><h2>What we collect</h2><p className="mt-3">When you use our contact form we collect your name, business name, email, phone (optional), business type, what you need, your current website (optional) and your message.</p></section>
+        <section><h2>What we collect</h2><p className="mt-3">When you use our contact form we collect your name, business name, email, phone (optional), business type, what you need, your current website (optional) and your message. The quick form on the home page collects your business name and email. The estimate tool on the pricing page collects your business name and email together with the business type and services you selected.</p></section>
         <section><h2>Why we collect it</h2><p className="mt-3">Only to reply to your enquiry, prepare your free preview and provide our services.</p></section>
         <section><h2>We never sell it</h2><p className="mt-3">Your information is never sold or shared with marketers.</p></section>
         <section><h2>Where it's stored</h2><p className="mt-3">Your details are stored securely with our hosting and database provider, which may store data on servers outside Australia. Only Teague Industries can view your enquiry.</p></section>

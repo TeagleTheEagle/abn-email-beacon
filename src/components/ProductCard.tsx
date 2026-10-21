@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Loader2, Plus } from "lucide-react";
 import { useState } from "react";
-import { formatPrice, type ShopifyProduct } from "@/lib/shopify";
+import { formatPrice, type ShopifyProduct, shopifyImage } from "@/lib/shopify";
 import { cartItemFromVariant, useCartStore } from "@/stores/cartStore";
 
 // `priority` is for the first card on /shop: it's the largest image on screen, so load it first.
@@ -29,7 +29,9 @@ export function ProductCard({ product, priority = false }: { product: ShopifyPro
         <div className="relative aspect-square overflow-hidden bg-surface-2">
           {image ? (
             <img
-              src={image.url}
+              src={shopifyImage(image.url, 600)}
+              srcSet={`${shopifyImage(image.url, 400)} 400w, ${shopifyImage(image.url, 600)} 600w, ${shopifyImage(image.url, 900)} 900w`}
+              sizes="(max-width: 639px) 92vw, (max-width: 1023px) 46vw, 360px"
               alt={image.altText || node.title}
               width={600}
               height={600}
