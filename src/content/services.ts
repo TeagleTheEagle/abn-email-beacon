@@ -15,6 +15,27 @@ export type Service = {
   popular?: boolean;
 };
 
+// The entry-level Care Plan. It sits in `services` (so the cards, calculator and MCP see it) and in
+// `carePlans` beside the Local Growth tier. Both are month-to-month; stop any time by email (Terms).
+const essentials: Service = {
+  id: "care-plan",
+  icon: LifeBuoy,
+  title: "Care Plan · Essentials",
+  short: "Monthly care so your site stays fast, safe and up to date.",
+  price: "A$49",
+  priceNote: "/month",
+  fromAud: 49,
+  monthly: true,
+  included: [
+    "Hosting, SSL certificate and daily backups",
+    "Uptime and security checks",
+    "Two small edits a month: text, photos, prices",
+    "Monthly health report",
+    "Priority support",
+  ],
+  whoFor: "Anyone who'd rather run their business than maintain a website.",
+};
+
 export const services: Service[] = [
   {
     id: "website-build",
@@ -45,7 +66,7 @@ export const services: Service[] = [
     fromAud: 1200,
     included: [
       "Theme design",
-      "Product upload",
+      "Up to 25 products loaded and formatted (bulk CSV import for larger catalogues)",
       "Payments",
       "Shipping or digital delivery",
       "Domain connection",
@@ -70,21 +91,145 @@ export const services: Service[] = [
     ],
     whoFor: "Store owners who want more sales with less admin.",
   },
+  essentials,
+];
+
+export const carePlans: Service[] = [
+  essentials,
   {
-    id: "care-plan",
+    id: "care-plan-growth",
     icon: LifeBuoy,
-    title: "Care Plan",
-    short: "Monthly care so your site stays fast, safe and up to date.",
-    price: "From A$49",
+    title: "Care Plan · Local Growth",
+    short: "Essentials, plus the systems that bring local customers back.",
+    price: "A$149",
     priceNote: "/month",
-    fromAud: 49,
+    fromAud: 149,
     monthly: true,
     included: [
-      "Small edits and content updates",
-      "Uptime and security checks",
-      "Monthly health report",
-      "Priority support",
+      "Everything in Essentials",
+      "Missed-call text-back: an instant SMS when you can't answer",
+      "A Google Business Profile update or offer every month",
+      "Automated Google review requests after each job or visit",
+      "Monthly lead and traffic report",
     ],
-    whoFor: "Anyone who'd rather run their business than maintain a website.",
+    whoFor: "Tradies, cafés and salons that live on calls, bookings and reviews.",
+  },
+];
+
+// Fixed-scope add-ons: one clearly defined deliverable each, sold beside a build or on their own.
+// Launch test prices (22 Oct 2026); adjust here and every page follows.
+export type AddOn = {
+  id: string;
+  title: string;
+  price: string;
+  fromAud: number;
+  summary: string;
+  included: string[];
+  note?: string;
+  href?: string;
+};
+
+export const addOns: AddOn[] = [
+  {
+    id: "audit",
+    title: "48-Hour Website Audit",
+    price: "A$149",
+    fromAud: 149,
+    summary: "A 10-minute video review of your current site and a one-page priority roadmap.",
+    included: [
+      "Speed, mobile and conversion review",
+      "Ranked action list",
+      "Delivered within 48 hours",
+    ],
+    note: "Credited in full if you go ahead with a build within 30 days.",
+    href: "/product/48-hour-website-speed-conversion-audit",
+  },
+  {
+    id: "fix-sprint",
+    title: "Website Fix Sprint",
+    price: "From A$299",
+    fromAud: 299,
+    summary: "The fixes from your audit, implemented and checked on your existing site.",
+    included: [
+      "Agreed list of fixes",
+      "Before-and-after checks",
+      "Quoted against your actual site",
+    ],
+    note: "Your A$149 audit is credited.",
+  },
+  {
+    id: "business-email",
+    title: "Business Email Setup",
+    price: "A$199",
+    fromAud: 199,
+    summary: "Email on your own domain, set up properly and handed over.",
+    included: [
+      "Mailbox on your domain",
+      "SPF, DKIM and DMARC records so mail lands in inboxes",
+      "Branded signature and a handover guide",
+    ],
+    note: "Email provider subscription separate.",
+  },
+  {
+    id: "booking",
+    title: "Booking System Setup",
+    price: "A$349",
+    fromAud: 349,
+    summary: "Online bookings on your site: services, availability and confirmations.",
+    included: [
+      "Service list and availability",
+      "Booking page on your website",
+      "Confirmation and reminder messages",
+    ],
+    note: "Booking platform fees separate.",
+  },
+  {
+    id: "follow-up",
+    title: "Enquiry & Quote Follow-up",
+    price: "A$399",
+    fromAud: 399,
+    summary: "Never lose a quote to silence: a lead tracker and an automatic follow-up sequence.",
+    included: [
+      "One enquiry form feeding a lead tracker",
+      "Follow-ups at day 2, 5 and 10",
+      "Overdue-invoice reminders",
+    ],
+  },
+  {
+    id: "missed-call",
+    title: "Missed-Call Text-Back",
+    price: "A$299 setup + A$79/month",
+    fromAud: 299,
+    summary:
+      "When you can't answer, the caller gets an instant text with your name and a way to reach you.",
+    included: [
+      "Automatic SMS to missed callers",
+      "Your wording, your number",
+      "SMS service included in the monthly fee",
+    ],
+  },
+  {
+    id: "google-profile",
+    title: "Google Business Profile & Reviews",
+    price: "A$299",
+    fromAud: 299,
+    summary: "Show up on Google Maps and collect reviews without chasing people.",
+    included: [
+      "Profile set up or tidied: hours, services, photos",
+      "Review-request messages for after each job",
+      "Counter sign with a tap-to-review QR code",
+    ],
+  },
+  {
+    id: "listing-pack",
+    title: "Product Listing Pack",
+    price: "A$249",
+    fromAud: 249,
+    summary: "Ten products written, formatted and uploaded to your store.",
+    included: [
+      "Ten product descriptions",
+      "Images sized and named",
+      "Uploaded and organised into collections",
+    ],
   },
 ];

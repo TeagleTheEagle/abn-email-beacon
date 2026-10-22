@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check } from "lucide-react";
 import { PageHeader, Reveal } from "@/components/Reveal";
 import { Price } from "@/components/Price";
+import { CarePlans } from "@/components/CarePlans";
+import { AddOns } from "@/components/AddOns";
 import { demos } from "@/content/demos";
 import { services } from "@/content/services";
 import { seo } from "@/lib/seo";
@@ -13,7 +15,7 @@ export const Route = createFileRoute("/services")({
     seo(
       "/services",
       "Websites and Stores",
-      "Website builds, online store setup, smart stores and monthly care plans for Australian businesses of every size.",
+      "Website builds, online store setup, smart stores, care plans and fixed-scope add-ons for Australian businesses of every size.",
     ),
   component: Services,
 });
@@ -33,6 +35,9 @@ function illustration(id: string): { src: string; alt: string } {
   }
 }
 
+// The builds get the full write-up; the Care Plans are compared side by side further down.
+const builds = services.filter((s) => !s.monthly);
+
 function Services() {
   return (
     <>
@@ -45,7 +50,7 @@ function Services() {
         <EstimateCalculator guided />
       </section>
       <div className="mx-auto flex max-w-5xl flex-col gap-10 px-6">
-        {services.map((s) => {
+        {builds.map((s) => {
           const picture = illustration(s.id);
           return (
             <Reveal key={s.id}>
@@ -91,6 +96,14 @@ function Services() {
           );
         })}
       </div>
+      <Reveal className="mx-auto mt-20 max-w-5xl scroll-mt-28 px-6">
+        <div id="care-plan">
+          <CarePlans />
+        </div>
+      </Reveal>
+      <Reveal className="mx-auto mt-20 max-w-5xl px-6">
+        <AddOns />
+      </Reveal>
     </>
   );
 }

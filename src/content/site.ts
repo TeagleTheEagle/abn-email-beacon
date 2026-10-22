@@ -1,6 +1,6 @@
 export const site = {
   name: "Teague Industries",
-  tagline: "PEOPLE | TECHNOLOGY | A BRIGHTER TOMORROW",
+  tagline: "FAST, HONEST WEBSITES AND STORES FOR AUSTRALIAN BUSINESSES",
   est: "EST. 2026",
   email: "benteague@teagueindustries.com.au",
   abn: "64 813 107 974",
@@ -91,5 +91,17 @@ export const faqs = [
   {
     q: "What is store automation?",
     a: "Things like product description drafts, smart product recommendations, chat that answers common questions, and automated emails, set up for you.",
+  },
+  {
+    q: "What does the free preview include?",
+    a: "A working preview of your actual website on a private link: the home page and key pages with your business details and a first pass at the content, usually within a few days. If you like it, we finish any remaining pages, connect your domain and launch. If not, there is nothing to pay.",
+  },
+  {
+    q: "When do I pay?",
+    a: "After you approve the preview and before launch. Store builds are quoted with the preview. Care Plans are billed monthly from launch, and you can stop any time by email.",
+  },
+  {
+    q: "What are the ongoing costs?",
+    a: "Your domain renews yearly in your name, usually A$15–30 a year for a .com.au. Hosting, SSL and backups are included in a Care Plan; without one, we set hosting up in your name and you pay the host directly, confirmed with your quote. Online stores also pay the store platform's monthly plan to the provider.",
   },
 ];

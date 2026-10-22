@@ -22,7 +22,7 @@ describe("guided preview enquiry", () => {
     if (!store) throw new Error("Missing store choice");
     fireEvent.click(store);
     fireEvent.click(screen.getByRole("button", { name: "Continue" }));
-    fireEvent.click(screen.getByRole("checkbox"));
+    fireEvent.click(screen.getByRole("radio", { name: /^Care Plan · Essentials/ }));
     fireEvent.change(screen.getByRole("textbox", { name: "Business name" }), {
       target: { value: "Example Electrical" },
     });
@@ -36,9 +36,9 @@ describe("guided preview enquiry", () => {
           business_name: "Example Electrical",
           business_type: "Trades",
           email: "example@example.com",
-          needs: ["Store Setup", "Care Plan"],
+          needs: ["Store Setup", "Care Plan · Essentials"],
           message:
-            "Estimate from the services page: Store Setup + Care Plan — From A$1,200 + A$49/month.",
+            "Estimate from the services page: Store Setup + Care Plan · Essentials — From A$1,200 + A$49/month.",
         }),
       ),
     );

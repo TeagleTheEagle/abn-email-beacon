@@ -156,3 +156,17 @@ Ben's decisions (not done):
 - [ ] Testimonials and case studies once real clients launch (permission-based)
 - [ ] Measuring the buying journey: page views, preview requests, add-to-cart and begin-checkout are already tracked in GA4; completed purchases need GA4 connected in the Shopify checkout settings (Ben, in Shopify admin)
 - [ ] Not taken up: "Most popular" badge on Pricing (Ben had it removed earlier); replacing the space/rocket cover art (Ben chose it); midnight-navy palette (the industrial-tech brief is newer)
+
+## Ben approved the review decisions (22 Oct 2026)
+
+Done on the site:
+
+- [x] Store tiers capped: "Up to 25 products loaded and formatted (bulk CSV import for larger catalogues)"
+- [x] Two Care Plans: Essentials A$49/month (hosting, SSL, daily backups, uptime and security checks, two small edits a month, monthly report, priority support) and Local Growth A$149/month (Essentials plus missed-call text-back, a monthly Google Business Profile update, automated review requests, monthly lead report). Side by side on Services and Pricing; the calculator offers both
+- [x] Eight fixed-scope add-ons with launch test prices on Services and Pricing: 48-Hour Audit A$149 (credited), Website Fix Sprint from A$299, Business Email Setup A$199, Booking System Setup A$349, Enquiry & Quote Follow-up A$399, Missed-Call Text-Back A$299 + A$79/month, Google Business Profile & Reviews A$299, Product Listing Pack A$249. Data in `addOns` in services.ts; the MCP list_services tool returns them too
+- [x] New FAQs: what the free preview includes, when you pay, what the ongoing costs are (also on the Pricing page). **Ben to confirm the wording matches how he actually works**, especially hosting without a Care Plan and the "home page and key pages" preview scope
+- [x] Footer slogan is now "FAST, HONEST WEBSITES AND STORES FOR AUSTRALIAN BUSINESSES"
+- [x] Creator products hidden: TikTok Bio-Link Kit, Creator Media Kit and Solo Hustle OS set to Draft in Shopify (not deleted; flip back to Active to restore). Removed from the sitemap
+- [ ] Not reversed: "Most popular" badge, cover art, navy palette (Ben's earlier choices stand)
+
+Next: the first three digital products (Tradie Website Starter Kit, Google Business Profile & Review Kit, Enquiry Tracker) as real files, with draft Shopify products. Shopify's upload tool opens a file picker on Ben's side, so Ben attaches each file in the Digital Products app and sets the product to Active.

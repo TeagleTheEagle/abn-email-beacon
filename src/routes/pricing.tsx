@@ -3,6 +3,8 @@ import { Check } from "lucide-react";
 import { PageHeader, Reveal } from "@/components/Reveal";
 import { Price } from "@/components/Price";
 import { EstimateCalculator } from "@/components/EstimateCalculator";
+import { CarePlans } from "@/components/CarePlans";
+import { AddOns } from "@/components/AddOns";
 import {
   Accordion,
   AccordionContent,
@@ -24,7 +26,12 @@ export const Route = createFileRoute("/pricing")({
 });
 
 // The money questions from the shared FAQ list, so this page answers them without a second copy.
-const pricingFaqs = faqs.filter((f) => /cost|pay|platform|owns|changes|own my domain/i.test(f.q));
+const pricingFaqs = faqs.filter((f) =>
+  /cost|pay|platform|owns|changes|own my domain|preview include/i.test(f.q),
+);
+
+// The three builds get the big cards; the Care Plans have their own comparison below.
+const builds = services.filter((s) => !s.monthly);
 
 function Pricing() {
   return (
@@ -34,8 +41,8 @@ function Pricing() {
         title="Honest, simple pricing"
         sub="See a free preview first. Pay only when you're happy."
       />
-      <div className="mx-auto grid max-w-6xl gap-6 px-6 md:grid-cols-2 lg:grid-cols-4">
-        {services.map((s, i) => (
+      <div className="mx-auto grid max-w-6xl gap-6 px-6 md:grid-cols-3">
+        {builds.map((s, i) => (
           <Reveal key={s.id} delay={i * 0.08}>
             <div
               className={`glass glass-hover relative flex h-full flex-col p-7 ${s.popular ? "border-primary/60 shadow-[var(--glow-soft)]" : ""}`}
@@ -68,6 +75,12 @@ function Pricing() {
           </Reveal>
         ))}
       </div>
+      <Reveal className="mx-auto mt-16 max-w-6xl px-6">
+        <CarePlans />
+      </Reveal>
+      <Reveal className="mx-auto mt-16 max-w-6xl px-6">
+        <AddOns />
+      </Reveal>
       <Reveal className="mx-auto mt-16 max-w-5xl px-6">
         <EstimateCalculator />
       </Reveal>

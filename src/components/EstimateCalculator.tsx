@@ -5,7 +5,7 @@ import { z } from "zod";
 import { ArrowLeft, ArrowRight, Check, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DemoSite } from "@/components/DemoSite";
-import { services } from "@/content/services";
+import { carePlans, services } from "@/content/services";
 import { supabase } from "@/integrations/supabase/client";
 import { newLeadId, notifyLead } from "@/lib/leads";
 import { track } from "@/lib/analytics";
@@ -14,7 +14,6 @@ import { track } from "@/lib/analytics";
 // The point of the tool is the last step: "send me this estimate" turns a browser into an enquiry.
 const businessTypes = ["Café/Restaurant", "Trades", "Beauty/Salon", "Retail", "Other"];
 const builds = services.filter((s) => !s.monthly);
-const carePlan = services.find((s) => s.monthly);
 
 const schema = z.object({
   business_name: z.string().trim().min(1, "Please enter your business name").max(150),
@@ -28,7 +27,7 @@ export function EstimateCalculator({ guided = false }: { guided?: boolean }) {
   const [step, setStep] = useState(0);
   const [businessType, setBusinessType] = useState<string | null>(null);
   const [buildId, setBuildId] = useState<string>(builds[0]?.id ?? "");
-  const [care, setCare] = useState(false);
+  const [careId, setCareId] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const trapRef = useRef<HTMLInputElement>(null);
@@ -39,20 +38,21 @@ export function EstimateCalculator({ guided = false }: { guided?: boolean }) {
   } = useForm<V>({ resolver: zodResolver(schema) });
 
   const build = builds.find((b) => b.id === buildId) ?? builds[0];
+  const carePlan = carePlans.find((p) => p.id === careId) ?? null;
   const estimate = useMemo(() => {
     if (!build) return null;
     const exact = build.price.startsWith("A$"); // "A$500" is fixed; "From A$1,200" is a starting point
     const oneOff = `${exact ? "" : "From "}${aud(build.fromAud)}`;
-    const monthly = care && carePlan ? `${aud(carePlan.fromAud)}/month` : null;
+    const monthly = carePlan ? `${aud(carePlan.fromAud)}/month` : null;
     return {
       oneOff,
       monthly,
       exact,
       turnaround: build.turnaround ?? "Confirmed with your free preview",
     };
-  }, [build, care]);
+  }, [build, carePlan]);
 
-  const chosen = [build?.title, care ? carePlan?.title : null].filter((x): x is string => !!x);
+  const chosen = [build?.title, carePlan?.title ?? null].filter((x): x is string => !!x);
 
   const onSubmit = async (v: V) => {
     if (trapRef.current?.value) {
@@ -165,33 +165,46 @@ export function EstimateCalculator({ guided = false }: { guided?: boolean }) {
             </div>
           </fieldset>
 
-          {carePlan && (
-            <fieldset className="mt-8" hidden={guided && step !== 2}>
-              <legend className="text-sm font-semibold">3. Want us to look after it?</legend>
-              <label
-                className={`mt-3 flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors ${care ? "border-primary-soft bg-primary/10" : "border-border hover:border-muted-foreground"}`}
-              >
-                <input
-                  type="checkbox"
-                  checked={care}
-                  onChange={(e) => setCare(e.target.checked)}
-                  className="mt-1 accent-[var(--primary)]"
-                />
-                <span className="min-w-0 flex-1">
-                  <span className="flex flex-wrap items-baseline justify-between gap-3">
-                    <span className="text-sm font-medium">{carePlan.title}</span>
-                    <span className="text-sm font-semibold text-accent-tech">
-                      {carePlan.price}
-                      {carePlan.priceNote}
+          <fieldset className="mt-8" hidden={guided && step !== 2}>
+            <legend className="text-sm font-semibold">3. Want us to look after it?</legend>
+            <div className="mt-3 grid gap-2">
+              {[null, ...carePlans].map((plan) => {
+                const id = plan?.id ?? "none";
+                const selected = (plan?.id ?? null) === careId;
+                return (
+                  <label
+                    key={id}
+                    className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors ${selected ? "border-primary-soft bg-primary/10" : "border-border hover:border-muted-foreground"}`}
+                  >
+                    <input
+                      type="radio"
+                      name="care"
+                      value={id}
+                      checked={selected}
+                      onChange={() => setCareId(plan?.id ?? null)}
+                      className="mt-1 accent-[var(--primary)]"
+                    />
+                    <span className="min-w-0 flex-1">
+                      <span className="flex flex-wrap items-baseline justify-between gap-3">
+                        <span className="text-sm font-medium">
+                          {plan?.title ?? "No thanks, I’ll look after it"}
+                        </span>
+                        {plan && (
+                          <span className="text-sm font-semibold text-accent-tech">
+                            {plan.price}
+                            {plan.priceNote}
+                          </span>
+                        )}
+                      </span>
+                      <span className="mt-0.5 block text-xs text-muted-foreground">
+                        {plan?.short ?? "You can add a Care Plan later."}
+                      </span>
                     </span>
-                  </span>
-                  <span className="mt-0.5 block text-xs text-muted-foreground">
-                    {carePlan.short}
-                  </span>
-                </span>
-              </label>
-            </fieldset>
-          )}
+                  </label>
+                );
+              })}
+            </div>
+          </fieldset>
           {guided && (
             <div className="mt-8 flex justify-between gap-3">
               {step > 0 ? (
@@ -244,7 +257,7 @@ export function EstimateCalculator({ guided = false }: { guided?: boolean }) {
               {build.title}
               {businessType ? ` for a ${businessType.toLowerCase()} business` : ""}
             </li>
-            {care && carePlan && (
+            {carePlan && (
               <li className="flex gap-2">
                 <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                 {carePlan.title}, billed monthly
