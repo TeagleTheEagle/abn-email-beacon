@@ -52,15 +52,21 @@ Deno.serve(async (req) => {
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
   );
+  // Atomically claim the lead: only a fresh, never-notified lead can trigger email, and only once.
   const { data: lead, error } = await db
     .from("leads")
+    .update({ notified_at: new Date().toISOString() })
+    .eq("id", id)
+    .is("notified_at", null)
+    .gte("created_at", new Date(Date.now() - 15 * 60 * 1000).toISOString())
     .select(
       "id, created_at, name, business_name, email, phone, business_type, needs, current_website, message",
     )
-    .eq("id", id)
-    .gte("created_at", new Date(Date.now() - 15 * 60 * 1000).toISOString())
     .maybeSingle();
-  if (error) return json({ error: error.message }, 500);
+  if (error) {
+    console.error("notify-lead lookup failed:", error.message);
+    return json({ error: "Could not process request" }, 500);
+  }
   if (!lead) return json({ error: "Lead not found" }, 404);
 
   const to = Deno.env.get("LEAD_NOTIFY_TO") || DEFAULT_TO;
