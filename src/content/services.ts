@@ -45,6 +45,7 @@ export const services: Service[] = [
     price: "A$500",
     priceNote: "one-off · Free preview first.",
     fromAud: 500,
+    popular: true,
     turnaround: "About one week (5–7 business days)",
     included: [
       "Custom, mobile-friendly website (up to 5 pages)",

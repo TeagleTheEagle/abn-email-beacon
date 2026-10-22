@@ -65,22 +65,22 @@
 
 :root {
   --radius: 0.25rem; /* small corner radii: engineered, not "SaaS" */
-  --background: #05070a; /* near-black */
+  --background: #070c17; /* midnight navy */
   --foreground: #eef3f8;
-  --surface: #10151b; /* graphite */
-  --surface-2: #171e26;
-  --card: #10151b;
+  --surface: #0e1626; /* graphite navy */
+  --surface-2: #151f33;
+  --card: #0e1626;
   --card-foreground: #eef3f8;
-  --popover: #171e26;
+  --popover: #151f33;
   --popover-foreground: #eef3f8;
-  --primary: #54d9ff; /* electric cyan. Button text is near-black (12:1); never put white text on it */
-  --primary-foreground: #05070a;
+  --primary: #54d9ff; /* electric cyan. Button text is navy (11:1); never put white text on it */
+  --primary-foreground: #070c17;
   --primary-soft: #8fe6ff;
-  --secondary: #10151b;
+  --secondary: #0e1626;
   --secondary-foreground: #eef3f8;
-  --muted: #10151b;
+  --muted: #0e1626;
   --muted-foreground: #aeb8c4;
-  --accent: #10151b;
+  --accent: #0e1626;
   --accent-foreground: #eef3f8;
   --destructive: oklch(0.65 0.2 25);
   --destructive-foreground: #ffffff;
@@ -93,7 +93,7 @@
   --glow-soft: 0 0 40px -10px rgba(84, 217, 255, 0.35);
   /* One accent only: prices, ticks and the free-preview badge share the cyan. */
   --accent-tech: #54d9ff;
-  --accent-tech-foreground: #05070a;
+  --accent-tech-foreground: #070c17;
 }
 
 @layer base {

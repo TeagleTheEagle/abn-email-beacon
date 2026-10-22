@@ -296,7 +296,7 @@ function DesignSystem() {
                 Accent tech: prices, ticks and the free-preview badge.
               </p>
               <p className="rounded-lg bg-primary px-3 py-2 text-primary-foreground">
-                Near-black on primary: button text (never white on the cyan).
+                Navy on primary: button text (never white on the cyan).
               </p>
               <p className="text-xs text-destructive">Destructive: "Please enter a valid email".</p>
             </div>

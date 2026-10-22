@@ -185,3 +185,10 @@ Built as real files in `products/` (git-ignored; on Ben's machine only) and crea
 - [ ] Once a product is Active, tell Claude so its page goes into `public/sitemap.xml`
 - [ ] Ben to open each file once before selling it (the Word templates and the spreadsheet especially) and say if any wording should change; Claude regenerates them from source
 - [ ] Next batch when these show sales: industry social media kits, café menu & QR kit, pricing/estimate calculator, client onboarding kit, brand essentials kit, local SEO playbook, quote-to-cash script vault
+
+## Ben approved the three reversals (22 Oct 2026)
+
+- [x] "Most popular" badge back on the Website Build card on Pricing (solid cyan button, highlighted border)
+- [x] Palette moved from near-black to midnight navy (#070C17 background, #0E1626 surfaces); cyan accent and titanium labels unchanged; manifest and theme colour updated
+- [x] Cover art replaced: all nine shop products now have consistent covers in the site's style (navy studio background, faint grid, corner marks, a clean UI mock-up of what the product is). The AI "space" art is removed from the products. Generated from `covers2.js` in Claude's scratchpad; PNGs kept in `products/covers/`
+- [ ] Second batch of digital products stays parked until the first three show sales, as both reviews advised
