@@ -78,7 +78,7 @@ function Services() {
                     {s.included.map((i) => (
                       <li key={i} className="flex gap-3 text-sm">
                         <Check
-                          className="mt-0.5 h-4 w-4 shrink-0 text-accent-warm"
+                          className="mt-0.5 h-4 w-4 shrink-0 text-accent-tech"
                           aria-hidden="true"
                         />{" "}
                         {i}

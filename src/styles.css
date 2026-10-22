@@ -58,40 +58,42 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-accent-warm: var(--accent-warm);
-  --color-accent-warm-foreground: var(--accent-warm-foreground);
+  --color-accent-tech: var(--accent-tech);
+  --color-accent-tech-foreground: var(--accent-tech-foreground);
+  --color-silver: var(--silver);
 }
 
 :root {
-  --radius: 0.5rem;
-  --background: #04060b;
-  --foreground: #e8f1ff;
-  --surface: #0a1222;
-  --surface-2: #0f1b33;
-  --card: #0a1222;
-  --card-foreground: #e8f1ff;
-  --popover: #0f1b33;
-  --popover-foreground: #e8f1ff;
-  --primary: #2a74dc; /* 4.5:1 with white button text (WCAG AA); #3b8cff only managed 3.3:1 */
-  --primary-foreground: #ffffff;
-  --primary-soft: #8cc2ff;
-  --secondary: #0f1b33;
-  --secondary-foreground: #e8f1ff;
-  --muted: #0f1b33;
-  --muted-foreground: #c3cfe2;
-  --accent: #0f1b33;
-  --accent-foreground: #e8f1ff;
+  --radius: 0.25rem; /* small corner radii: engineered, not "SaaS" */
+  --background: #05070a; /* near-black */
+  --foreground: #eef3f8;
+  --surface: #10151b; /* graphite */
+  --surface-2: #171e26;
+  --card: #10151b;
+  --card-foreground: #eef3f8;
+  --popover: #171e26;
+  --popover-foreground: #eef3f8;
+  --primary: #54d9ff; /* electric cyan. Button text is near-black (12:1); never put white text on it */
+  --primary-foreground: #05070a;
+  --primary-soft: #8fe6ff;
+  --secondary: #10151b;
+  --secondary-foreground: #eef3f8;
+  --muted: #10151b;
+  --muted-foreground: #aeb8c4;
+  --accent: #10151b;
+  --accent-foreground: #eef3f8;
   --destructive: oklch(0.65 0.2 25);
   --destructive-foreground: #ffffff;
-  --border: rgba(140, 194, 255, 0.15);
-  --input: rgba(140, 194, 255, 0.22);
-  --ring: #3b8cff;
-  --chrome: linear-gradient(180deg, #f4f8ff 0%, #a9b8d0 50%, #5b6b86 100%);
-  --glow: 0 0 24px rgba(59, 140, 255, 0.45);
-  --glow-soft: 0 0 40px -10px rgba(59, 140, 255, 0.5);
-  /* Warm accent for prices, ticks and the free-preview badge, so the page isn't blue-only. */
-  --accent-warm: #f5b544;
-  --accent-warm-foreground: #1a1200;
+  --border: rgba(196, 205, 214, 0.14);
+  --input: rgba(196, 205, 214, 0.22);
+  --ring: #54d9ff;
+  --silver: #c4cdd6; /* titanium: technical labels and chrome text */
+  --chrome: linear-gradient(180deg, #f4f8ff 0%, #c4cdd6 50%, #6b7886 100%);
+  --glow: 0 0 24px rgba(84, 217, 255, 0.3);
+  --glow-soft: 0 0 40px -10px rgba(84, 217, 255, 0.35);
+  /* One accent only: prices, ticks and the free-preview badge share the cyan. */
+  --accent-tech: #54d9ff;
+  --accent-tech-foreground: #05070a;
 }
 
 @layer base {
@@ -114,8 +116,8 @@
   h4 {
     font-family: var(--font-sans);
     font-weight: 700;
-    letter-spacing: 0;
-    line-height: 1.3;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
   }
   /* Links inside running text are underlined so they don't rely on colour alone (demos style their own).
      Covers the footer too, and any link using the inline-link colour wherever it sits. */
@@ -139,11 +141,11 @@
 }
 
 @utility label {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   text-transform: uppercase;
-  letter-spacing: 0.3em;
-  font-size: 11px;
-  color: var(--muted-foreground);
+  letter-spacing: 0.22em;
+  font-size: 10px;
+  color: var(--silver);
 }
 
 @utility text-chrome {
@@ -166,11 +168,11 @@
 
 @utility glass-hover {
   &:hover {
-    transform: translateY(-3px);
-    border-color: rgba(140, 194, 255, 0.35);
+    transform: translateY(-2px);
+    border-color: rgba(84, 217, 255, 0.45);
     box-shadow:
-      var(--glow-soft),
-      inset 0 0 0 1px rgba(140, 194, 255, 0.08);
+      0 0 0 1px rgba(84, 217, 255, 0.12),
+      inset 0 0 48px -24px rgba(84, 217, 255, 0.35);
   }
   &:active {
     transform: translateY(0) scale(0.995);
@@ -190,18 +192,93 @@
   opacity: 0.5;
 }
 
-/* An off-white band to break up the dark sections. Every colour token is remapped inside it, so the
-   usual bg-/text-/border- classes need no special cases. One per page at most. */
-@utility band-light {
-  --background: #f3f6fb;
-  --foreground: #0a1222;
-  --surface: #ffffff;
-  --surface-2: #e6edf7;
-  --muted-foreground: #4a5a74;
-  --primary-soft: #1d5fc0;
-  --border: rgba(10, 18, 34, 0.12);
-  background: var(--background);
-  color: var(--foreground);
+/* Technical layers: a faint grid, corner marks, a slow scan line and a hairline that grows in as it
+   scrolls into view. Decorative only; keep them aria-hidden and subtle. */
+@utility tech-grid {
+  background-image:
+    linear-gradient(rgba(196, 205, 214, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(196, 205, 214, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+@utility corner-marks {
+  position: relative;
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: rgba(196, 205, 214, 0.5);
+    border-style: solid;
+    pointer-events: none;
+  }
+  &::before {
+    top: 6px;
+    left: 6px;
+    border-width: 1px 0 0 1px;
+  }
+  &::after {
+    bottom: 6px;
+    right: 6px;
+    border-width: 0 1px 1px 0;
+  }
+}
+@utility scanline {
+  position: relative;
+  overflow: hidden;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -1px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(84, 217, 255, 0.5), transparent);
+    animation: scan 11s linear infinite;
+    pointer-events: none;
+  }
+}
+@keyframes scan {
+  from {
+    top: -1px;
+  }
+  to {
+    top: 100%;
+  }
+}
+.tech-line {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(84, 217, 255, 0.7),
+    rgba(196, 205, 214, 0.25),
+    transparent
+  );
+  transform-origin: left;
+}
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+@keyframes cine {
+  from {
+    transform: scale(0.9);
+    opacity: 0.5;
+  }
+}
+/* Scroll-driven where the browser supports it; otherwise these are simply static. */
+@supports (animation-timeline: view()) {
+  .tech-line {
+    animation: grow 1s linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+  .cinematic-scale {
+    animation: cine 1s linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 60%;
+  }
 }
 
 @utility btn-primary {
@@ -342,11 +419,15 @@
 .home-hero {
   position: relative;
   overflow: hidden;
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
   padding: 148px 24px 70px;
 }
 .home-hero-inner {
   position: relative;
   z-index: 1;
+  width: 100%;
   max-width: 1280px;
   margin: auto;
   display: grid;
@@ -356,8 +437,8 @@
 }
 .hero-heading {
   font-size: 54px;
-  line-height: 1.1;
-  letter-spacing: 0;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
 }
 .hero-earth {
   position: absolute;
@@ -385,7 +466,7 @@
   width: min(60vw, 720px);
   height: min(60vw, 720px);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(59, 140, 255, 0.32), transparent 62%);
+  background: radial-gradient(circle, rgba(84, 217, 255, 0.22), transparent 62%);
   filter: blur(40px);
   animation: flare 9s ease-in-out infinite;
   pointer-events: none;
@@ -685,7 +766,7 @@
     gap: 32px;
   }
   .hero-heading {
-    font-size: 40px;
+    font-size: 44px;
   }
 }
 @media (max-width: 767px) {
@@ -697,7 +778,7 @@
     gap: 32px;
   }
   .hero-heading {
-    font-size: clamp(28px, 8.4vw, 38px);
+    font-size: clamp(28px, 8.6vw, 40px);
   }
   .preview-viewport {
     height: 350px;

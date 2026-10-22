@@ -17,7 +17,7 @@ export function Price({
     <p className={`flex flex-wrap items-baseline gap-x-2 ${className}`}>
       {from && <span className="label">from</span>}
       <span
-        className={`font-bold tracking-tight text-accent-warm ${size === "lg" ? "text-4xl" : "text-3xl"}`}
+        className={`font-bold tracking-tight text-accent-tech ${size === "lg" ? "text-4xl" : "text-3xl"}`}
       >
         {amount}
       </span>

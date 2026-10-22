@@ -41,7 +41,7 @@ function About() {
         {facts.map((fact, i) => (
           <Reveal key={fact.t} delay={i * 0.08}>
             <div className="glass glass-hover h-full p-7">
-              <p className="text-3xl font-bold tracking-tight text-accent-warm">{fact.n}</p>
+              <p className="text-3xl font-bold tracking-tight text-accent-tech">{fact.n}</p>
               <h2 className="mt-3 text-base">{fact.t}</h2>
               <p className="mt-2 text-sm text-muted-foreground">{fact.d}</p>
             </div>

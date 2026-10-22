@@ -49,7 +49,7 @@ export function BeforeAfter() {
       </figure>
       <figure className="glass glass-hover overflow-hidden">
         <figcaption className="flex items-center justify-between gap-4 border-b border-border px-5 py-3">
-          <span className="label text-accent-warm">After</span>
+          <span className="label text-accent-tech">After</span>
           <span className="text-xs text-muted-foreground">Built in about a week</span>
         </figcaption>
         <div

@@ -31,7 +31,7 @@ export function ProductCard({
   };
 
   return (
-    <div className="glass glass-hover group flex h-full flex-col overflow-hidden rounded-2xl">
+    <div className="glass glass-hover group flex h-full flex-col overflow-hidden">
       <Link
         to="/product/$handle"
         params={{ handle: node.handle }}

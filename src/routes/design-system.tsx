@@ -38,7 +38,8 @@ const coreTokens = [
   { name: "--surface-2", use: "Inputs, raised panels" },
   { name: "--primary", use: "Buttons, links, glow" },
   { name: "--primary-soft", use: "Icons, highlights, hover text" },
-  { name: "--accent-warm", use: "Prices, ticks, free-preview badge" },
+  { name: "--accent-tech", use: "Prices, ticks, free-preview badge (same cyan as --primary)" },
+  { name: "--silver", use: "Technical labels (.label), chrome text" },
   { name: "--foreground", use: "Body text" },
   { name: "--muted-foreground", use: "Secondary text, labels" },
   { name: "--border", use: "Hairlines on cards and inputs" },
@@ -238,7 +239,7 @@ function DesignSystem() {
               <div>
                 <p className="label">What we do</p>
                 <code className="text-xs text-muted-foreground">
-                  .label · 11px uppercase, 0.3em tracking (eyebrows above headings)
+                  .label · Michroma 10px uppercase, 0.22em tracking, silver (eyebrows, spec keys)
                 </code>
               </div>
               <div>
@@ -261,7 +262,7 @@ function DesignSystem() {
             <Spec title="Sans" note="Inter · default">
               <p className="text-lg">Readable headings and body text.</p>
               <p className="mt-2 text-xs text-muted-foreground">
-                Weights 400–800 loaded. Prices are bold Inter in accent-warm (the Price component).
+                Weights 400–800 loaded. Prices are bold Inter in accent-tech (the Price component).
               </p>
             </Spec>
             <Spec title="Accent script" note="Caveat · .font-hand">
@@ -291,11 +292,11 @@ function DesignSystem() {
               </p>
               <p className="text-primary-soft">Primary-soft: icons, links, highlighted words.</p>
               <p className="text-chrome text-xl">Chrome gradient: page headings.</p>
-              <p className="text-xl font-bold text-accent-warm">
-                Accent warm: prices, ticks and the free-preview badge.
+              <p className="text-xl font-bold text-accent-tech">
+                Accent tech: prices, ticks and the free-preview badge.
               </p>
               <p className="rounded-lg bg-primary px-3 py-2 text-primary-foreground">
-                White on primary: button text.
+                Near-black on primary: button text (never white on the cyan).
               </p>
               <p className="text-xs text-destructive">Destructive: "Please enter a valid email".</p>
             </div>
@@ -331,17 +332,14 @@ function DesignSystem() {
               1px divider under page headers and above the footer. Fades out at both ends.
             </p>
           </Spec>
-          <Spec title="Light band" note=".band-light">
-            <div className="band-light rounded-lg border border-border p-5">
-              <p className="label">Section label</p>
-              <p className="mt-2 font-semibold">Dark text on an off-white band.</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Every token is remapped inside, so the usual classes just work.
-              </p>
+          <Spec title="Technical layers" note=".tech-grid · .corner-marks · .scanline · .tech-line">
+            <div className="tech-grid corner-marks scanline h-28 border border-border p-5">
+              <p className="label">01 / Section label</p>
+              <div className="tech-line mt-3 max-w-[120px]" aria-hidden="true" />
             </div>
             <p className="mt-5 text-xs text-muted-foreground">
-              Breaks up the dark sections. One per page at most ("Preview. Approve. Launch." on the
-              home page).
+              Faint grid, corner marks, a slow scan line and a hairline that grows in on scroll.
+              Decorative, aria-hidden and subtle: lighting and spacing do the work, not neon.
             </p>
           </Spec>
           <Spec title="Glass" note=".glass · .glass-hover">

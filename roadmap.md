@@ -107,3 +107,17 @@ Ben asked for every item on the eye-catching list. Done in code:
 - [x] About page: four number facts replace the icon cards
 - [ ] Real logos in the "Works with" row need brand assets and permission — Ben to decide
 - [ ] A real 15-second phone recording of a demo site would beat the auto-playing preview — Ben to record or ask Claude to produce one
+
+## Industrial-tech direction (22 Oct 2026)
+
+Ben's brief: premium industrial-tech, "advanced technology company" not "online store". 70% industrial design, 20% futuristic tech, 10% subtle HUD. The brief assumed physical products (materials, dimensions, account menus); applied to what Teague actually sells.
+
+- [x] Palette: near-black #05070A, graphite #10151B, titanium #C4CDD6, one cyan accent #54D9FF (buttons have near-black text). Amber accent retired; off-white band removed
+- [x] Typography: tighter, larger headings; Michroma technical labels ("TEAGUE INDUSTRIES / BUILT IN SYDNEY / EST. 2026", "01 / FEATURED", "SERVICE 01")
+- [x] Hero: full-screen, faint grid, slow scan line, corner marks on the preview, coordinates label
+- [x] Oversized featured product (the 48-hour audit) with a specification sheet and hover callouts; scroll-driven scale where supported
+- [x] "Under the hood" engineering-detail section: zoomed demo crop beside a spec list
+- [x] Cards: small radii, thin borders, illumination on hover instead of shadows; numbered sections with a hairline that grows in
+- [x] Nav turns into a blurred graphite bar on scroll
+- [ ] Not done, by design: materials/dimensions specs, search and account icons (no accounts exist), a full-screen product video (needs footage), a "lifestyle" photo band (needs real photography)
+- [ ] Demo screenshots (café, trades, salon, retail) are light-themed by nature; only the shop covers follow the dark studio look

@@ -44,7 +44,7 @@ function Pricing() {
                 {s.included.map((f) => (
                   <li key={f} className="flex gap-2 text-sm text-muted-foreground">
                     <Check
-                      className="mt-0.5 h-4 w-4 shrink-0 text-accent-warm"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-accent-tech"
                       aria-hidden="true"
                     />{" "}
                     {f}

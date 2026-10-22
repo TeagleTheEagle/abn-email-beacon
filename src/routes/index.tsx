@@ -34,6 +34,9 @@ import { productsQueryOptions } from "@/lib/product-queries";
 import { formatPrice, shopifyImage, type ShopifyProduct } from "@/lib/shopify";
 import templatesStore from "@/assets/work-templates.jpg";
 
+// The product given the oversized showcase. Falls back to whatever Shopify lists first.
+const FEATURED_HANDLE = "48-hour-website-speed-conversion-audit";
+
 export const Route = createFileRoute("/")({
   head: () => {
     const base = seo(
@@ -78,16 +81,18 @@ export const Route = createFileRoute("/")({
       ],
     };
   },
-  // Product covers further down are a bonus, never a wait: give Shopify 1.5s (usually answered from
-  // the server cache) and render without them if it's slower. Loader data reaches the browser, so
-  // server and client render the same thing; the query cache alone would not.
+  // Products further down are a bonus, never a wait: give Shopify 1.5s (usually answered from the
+  // server cache) and render without them if it's slower. Loader data reaches the browser, so server
+  // and client render the same thing; the query cache alone would not.
   loader: async ({ context }) => {
     await Promise.race([
       context.queryClient.prefetchQuery(productsQueryOptions),
       new Promise((resolve) => setTimeout(resolve, 1500)),
     ]);
     const products = context.queryClient.getQueryData(productsQueryOptions.queryKey) ?? [];
-    return { products: products.slice(0, 4) };
+    const featured = products.find((p) => p.node.handle === FEATURED_HANDLE) ?? products[0] ?? null;
+    const covers = products.filter((p) => p !== featured).slice(0, 4);
+    return { featured, covers };
   },
   component: Home,
 });
@@ -95,7 +100,7 @@ export const Route = createFileRoute("/")({
 function Home() {
   return (
     <>
-      <section className="home-hero">
+      <section className="home-hero scanline">
         <img
           src={earth}
           alt=""
@@ -105,16 +110,17 @@ function Home() {
           className="hero-earth"
         />
         <div className="hero-shade" />
+        <div className="tech-grid absolute inset-0 opacity-70" aria-hidden="true" />
         <div className="hero-glow" aria-hidden="true" />
         <div className="home-hero-inner">
           <div className="min-w-0 animate-rise">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-              <p className="label text-primary-soft">Sydney · Australia</p>
-              <span className="inline-flex items-center rounded-full border border-accent-warm/40 bg-accent-warm/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.15em] text-accent-warm">
+              <p className="label">Teague Industries / Built in Sydney / {site.est}</p>
+              <span className="label inline-flex items-center rounded-[2px] border border-accent-tech/40 bg-accent-tech/10 px-2.5 py-1 !text-[9px] !text-accent-tech">
                 Free preview first
               </span>
             </div>
-            <h1 className="hero-heading mt-5">
+            <h1 className="hero-heading mt-6">
               Websites and Stores.
               <br />
               <span className="text-primary-soft">Built for your next chapter.</span>
@@ -125,10 +131,10 @@ function Home() {
             </p>
             <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
               <span>
-                Websites <strong className="text-accent-warm">A$500</strong>
+                Websites <strong className="text-accent-tech">A$500</strong>
               </span>
               <span>
-                Stores <strong className="text-accent-warm">from A$1,200</strong>
+                Stores <strong className="text-accent-tech">from A$1,200</strong>
               </span>
             </div>
             <div className="mt-7 max-w-md">
@@ -144,10 +150,13 @@ function Home() {
             </div>
           </div>
           <div className="min-w-0 animate-rise">
-            <WebsitePreview />
-            <p className="mt-3 text-right text-xs text-muted-foreground">
-              Interactive concepts · Not client projects
-            </p>
+            <div className="corner-marks p-3">
+              <WebsitePreview />
+            </div>
+            <div className="mt-2 flex items-center justify-between gap-4 px-3 text-xs text-muted-foreground">
+              <span className="label !text-[9px]">LAT 33.84 S / LON 151.21 E</span>
+              <span>Interactive concepts · Not client projects</span>
+            </div>
           </div>
         </div>
       </section>
@@ -172,37 +181,44 @@ function Home() {
           ))}
         </div>
       </section>
-      <Section label="The difference" title="From “we really should fix the website” to this.">
-        <p className="mb-8 max-w-2xl text-muted-foreground">
-          The same café, before and after. One is a page people leave. The other is a place they
-          want to visit.
-        </p>
-        <BeforeAfter />
-      </Section>
-      <Section
-        label="See what's possible"
-        title="Your business. A better first impression."
-        action={
-          <Link to="/work" className="inline-flex items-center gap-2 text-sm text-primary-soft">
-            All work <ArrowRight className="h-4 w-4" />
-          </Link>
-        }
-      >
-        <p className="mb-8 max-w-2xl text-muted-foreground">
-          Explore a café, trades business, salon or store. These are working concepts, not client
-          case studies.
-        </p>
-        <div className="grid gap-6 md:grid-cols-2">
-          {projects
-            .filter((p) => p.demoKind)
-            .map((project, i) => (
-              <Reveal key={project.title} delay={i * 0.06}>
-                <ProjectCard project={project} />
-              </Reveal>
-            ))}
+      <FeaturedProduct />
+      <Section index="02" label="Engineering" title="Under the hood.">
+        <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
+          <Reveal>
+            <div className="corner-marks p-3">
+              <div className="relative aspect-[4/3] overflow-hidden border border-border bg-surface-2">
+                <img
+                  src={demos.cafe.image}
+                  alt="Close-up of the café demo's header and menu"
+                  width={1024}
+                  height={640}
+                  loading="lazy"
+                  className="absolute left-0 top-0 w-[180%] max-w-none origin-top-left"
+                />
+                <span className="label absolute bottom-3 left-3 rounded-[2px] bg-background/80 px-2 py-1 !text-[9px] backdrop-blur">
+                  Detail · 180%
+                </span>
+              </div>
+            </div>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="max-w-lg text-muted-foreground">
+              Looks are the easy part. Every build ships with the things you don’t see.
+            </p>
+            <dl className="mt-8 divide-y divide-border border-y border-border">
+              <SpecRow k="Mobile-first" v="Laid out for phones first, then desktop" />
+              <SpecRow
+                k="Search-ready"
+                v="Titles, descriptions and structured data on every page"
+              />
+              <SpecRow k="Secure" v="HTTPS on your own domain" />
+              <SpecRow k="Fast" v="Optimised images, self-hosted fonts, nothing render-blocking" />
+              <SpecRow k="Yours" v="Your content, domain and accounts, from day one" />
+            </dl>
+          </Reveal>
         </div>
       </Section>
-      <Section label="Our services" title="A clear scope. An honest price." surface>
+      <Section index="03" label="Services" title="A clear scope. An honest price." surface>
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {services.map((service, i) => (
             <Reveal key={service.id} delay={i * 0.05} className="h-full">
@@ -224,8 +240,8 @@ function Home() {
                   className="service-card-image"
                 />
                 <div className="flex flex-1 flex-col p-6">
-                  <service.icon className="h-6 w-6 text-primary-soft" />
-                  <h3 className="mt-4 text-xl">{service.title}</h3>
+                  <p className="label !text-[9px]">Service 0{i + 1}</p>
+                  <h3 className="mt-3 text-xl">{service.title}</h3>
                   <p className="mt-3 text-sm text-muted-foreground">{service.short}</p>
                   <Price price={service.price} monthly={service.monthly} className="mt-5" />
                   <p className="mt-1 text-xs text-muted-foreground">
@@ -238,7 +254,7 @@ function Home() {
                   <ul className="mb-6 mt-6 flex-1 space-y-3">
                     {service.included.map((item) => (
                       <li key={item} className="flex gap-2 text-xs text-muted-foreground">
-                        <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-warm" />
+                        <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-tech" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -278,7 +294,42 @@ function Home() {
           ))}
         </div>
       </Section>
-      <Section label="Simple from the start" title="Preview. Approve. Launch." tone="light">
+      <Section
+        index="04"
+        label="The difference"
+        title="From “we really should fix the website” to this."
+      >
+        <p className="mb-8 max-w-2xl text-muted-foreground">
+          The same café, before and after. One is a page people leave. The other is a place they
+          want to visit.
+        </p>
+        <BeforeAfter />
+      </Section>
+      <Section
+        index="05"
+        label="Work"
+        title="Your business. A better first impression."
+        action={
+          <Link to="/work" className="inline-flex items-center gap-2 text-sm text-primary-soft">
+            All work <ArrowRight className="h-4 w-4" />
+          </Link>
+        }
+      >
+        <p className="mb-8 max-w-2xl text-muted-foreground">
+          Explore a café, trades business, salon or store. These are working concepts, not client
+          case studies.
+        </p>
+        <div className="grid gap-6 md:grid-cols-2">
+          {projects
+            .filter((p) => p.demoKind)
+            .map((project, i) => (
+              <Reveal key={project.title} delay={i * 0.06}>
+                <ProjectCard project={project} />
+              </Reveal>
+            ))}
+        </div>
+      </Section>
+      <Section index="06" label="Process" title="Preview. Approve. Launch." surface>
         <ProjectJourney />
         <div className="mt-10 grid gap-5 border-t border-border pt-6 sm:grid-cols-3">
           {[
@@ -302,17 +353,19 @@ function Home() {
       </Section>
       <section className="border-y border-border bg-surface/50 px-6 py-16 sm:py-20">
         <div className="mx-auto grid max-w-5xl items-center gap-8 md:grid-cols-[240px_minmax(0,1fr)]">
-          <img
-            src={founder.url}
-            alt="Ben Teague, founder"
-            width={768}
-            height={1152}
-            loading="lazy"
-            className="mx-auto aspect-[4/5] w-full max-w-[240px] rounded-lg border border-border object-cover object-top"
-          />
+          <div className="corner-marks mx-auto w-full max-w-[264px] p-3">
+            <img
+              src={founder.url}
+              alt="Ben Teague, founder"
+              width={768}
+              height={1152}
+              loading="lazy"
+              className="aspect-[4/5] w-full border border-border object-cover object-top"
+            />
+          </div>
           <div className="min-w-0">
             <p className="label">Meet the founder</p>
-            <h2 className="mt-4 text-3xl">Hi, I’m Ben.</h2>
+            <h2 className="mt-4 text-3xl sm:text-4xl">Hi, I’m Ben.</h2>
             <blockquote className="mt-5 border-l-2 border-primary pl-4 text-xl text-primary-soft">
               “I’d rather show you than sell you.”
             </blockquote>
@@ -335,7 +388,11 @@ function Home() {
           </div>
         </div>
       </section>
-      <Section label="Smart Store Setup" title="Less admin. More time for your business.">
+      <Section
+        index="07"
+        label="Smart Store Setup"
+        title="Less admin. More time for your business."
+      >
         <div className="grid gap-x-12 gap-y-8 sm:grid-cols-2">
           {[
             {
@@ -366,7 +423,7 @@ function Home() {
         </p>
       </Section>
       <ShopStrip />
-      <Section label="Good questions" title="Before we get started.">
+      <Section index="09" label="Good questions" title="Before we get started.">
         <div className="max-w-3xl">
           <Accordion type="single" collapsible>
             {faqs.map((faq, i) => (
@@ -386,29 +443,30 @@ function Home() {
 }
 
 function Section({
+  index,
   label,
   title,
   children,
   action,
   surface = false,
-  tone,
 }: {
+  index?: string;
   label: string;
   title: string;
   children: React.ReactNode;
   action?: React.ReactNode;
   surface?: boolean;
-  tone?: "light";
 }) {
   return (
     <section
-      className={`px-6 py-16 sm:py-20 ${surface ? "border-y border-border bg-surface/40" : ""} ${tone === "light" ? "band-light border-y border-border" : ""}`}
+      className={`px-6 py-16 sm:py-24 ${surface ? "border-y border-border bg-surface/40" : ""}`}
     >
       <div className="mx-auto max-w-6xl">
-        <div className="mb-8 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-5">
+        <div className="mb-10 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-5">
           <div className="min-w-0">
-            <p className="label">{label}</p>
-            <h2 className="mt-3 text-3xl sm:text-4xl">{title}</h2>
+            <p className="label">{index ? `${index} / ${label}` : label}</p>
+            <h2 className="mt-4 text-4xl sm:text-5xl">{title}</h2>
+            <div className="tech-line mt-6 max-w-[160px]" aria-hidden="true" />
           </div>
           {action}
         </div>
@@ -418,9 +476,19 @@ function Section({
   );
 }
 
+// A row of an engineering-style specification sheet.
+function SpecRow({ k, v }: { k: string; v: string }) {
+  return (
+    <div className="grid grid-cols-[112px_minmax(0,1fr)] items-baseline gap-4 py-3 text-sm sm:grid-cols-[140px_minmax(0,1fr)]">
+      <dt className="label !text-[9px]">{k}</dt>
+      <dd className="text-foreground">{v}</dd>
+    </div>
+  );
+}
+
 export function CtaBand() {
   return (
-    <section className="relative overflow-hidden border-t border-border px-6 py-16 text-center sm:py-20">
+    <section className="relative overflow-hidden border-t border-border px-6 py-16 text-center sm:py-24">
       <img
         src={earth}
         alt=""
@@ -432,7 +500,7 @@ export function CtaBand() {
       />
       <div className="relative">
         <p className="label">Your next chapter starts here</p>
-        <h2 className="mx-auto mt-4 max-w-2xl text-3xl sm:text-4xl">Ready for a better website?</h2>
+        <h2 className="mx-auto mt-4 max-w-2xl text-4xl sm:text-5xl">Ready for a better website?</h2>
         <p className="mt-4 text-muted-foreground">Free preview first. No obligation.</p>
         <Button asChild size="lg" className="mt-7 h-12">
           <Link to="/contact">
@@ -444,38 +512,114 @@ export function CtaBand() {
   );
 }
 
+// One product, nearly a screen tall: a huge cover on one side and a specification sheet on the other.
+function FeaturedProduct() {
+  const { featured } = Route.useLoaderData();
+  if (!featured) return null;
+  const node = featured.node;
+  const image = node.images.edges[0]?.node;
+  const price = node.priceRange.minVariantPrice;
+  const audit = node.handle.includes("audit");
+  const firstSentence = node.description.split(/(?<=\.)\s/)[0] ?? node.description;
+  return (
+    <section className="border-y border-border bg-surface px-6 py-20 sm:py-28">
+      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.15fr_1fr]">
+        <Reveal>
+          <Link
+            to="/product/$handle"
+            params={{ handle: node.handle }}
+            className="group corner-marks block p-4"
+            aria-label={`View ${node.title}`}
+          >
+            <div className="cinematic-scale relative aspect-square overflow-hidden border border-border bg-surface-2">
+              {image && (
+                <img
+                  src={shopifyImage(image.url, 900)}
+                  srcSet={`${shopifyImage(image.url, 600)} 600w, ${shopifyImage(image.url, 900)} 900w, ${shopifyImage(image.url, 1200)} 1200w`}
+                  sizes="(max-width: 1023px) 92vw, 640px"
+                  alt={image.altText || node.title}
+                  width={900}
+                  height={900}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+              )}
+              {/* Callouts fade in on hover, like labels on a drawing. */}
+              <Callout className="left-[7%] top-[9%]">
+                01 / {audit ? "Video review" : "Digital download"}
+              </Callout>
+              <Callout className="bottom-[9%] right-[7%]">Teague Industries · Sydney</Callout>
+            </div>
+          </Link>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <p className="label">01 / Featured</p>
+          <h2 className="mt-4 text-4xl sm:text-5xl">{node.title}</h2>
+          <p className="mt-5 max-w-lg text-muted-foreground">{firstSentence}</p>
+          <dl className="mt-8 divide-y divide-border border-y border-border">
+            <SpecRow k="Format" v={audit ? "Video review + 1-page roadmap" : "Digital download"} />
+            <SpecRow k="Delivery" v={audit ? "Within 48 hours" : "Instant"} />
+            <SpecRow k="Price" v={formatPrice(price.amount, price.currencyCode)} />
+            <SpecRow k="Made by" v="Teague Industries, Sydney" />
+          </dl>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link to="/product/$handle" params={{ handle: node.handle }} className="btn-primary">
+              Explore product <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link to="/shop" className="btn-chrome">
+              All products
+            </Link>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function Callout({ className, children }: { className: string; children: React.ReactNode }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`label pointer-events-none absolute inline-flex items-center gap-2 rounded-[2px] border border-primary/40 bg-background/80 px-2.5 py-1 !text-[9px] !text-primary-soft opacity-0 backdrop-blur transition-opacity duration-500 group-hover:opacity-100 ${className}`}
+    >
+      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+      {children}
+    </span>
+  );
+}
+
 // The shop's covers are the most striking pictures on the site, so the home page shows a few of
 // them. Renders with just the heading and button if Shopify hasn't answered.
 function ShopStrip() {
-  const picks = Route.useLoaderData().products;
+  const picks = Route.useLoaderData().covers;
   return (
-    <section className="border-y border-border bg-surface px-6 py-16 sm:py-20">
-      <div className="mx-auto max-w-6xl">
-        <div className="grid items-center gap-6 md:grid-cols-[minmax(0,1fr)_auto]">
-          <div>
-            <p className="label">The digital shop</p>
-            <h2 className="mt-3 text-3xl">Tools for your next chapter.</h2>
-            <p className="mt-4 max-w-xl text-muted-foreground">
-              Templates, guides and practical resources for Australian businesses and creators.
-            </p>
-          </div>
-          <Button asChild size="lg" variant="outline" className="h-12">
-            <Link to="/shop">
-              Explore our products <ArrowRight />
-            </Link>
-          </Button>
+    <Section
+      index="08"
+      label="The digital shop"
+      title="Tools for your next chapter."
+      surface
+      action={
+        <Button asChild size="lg" variant="outline" className="h-12">
+          <Link to="/shop">
+            Explore our products <ArrowRight />
+          </Link>
+        </Button>
+      }
+    >
+      <p className="max-w-xl text-muted-foreground">
+        Templates, guides and practical resources for Australian businesses and creators.
+      </p>
+      {picks.length > 0 && (
+        <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
+          {picks.map((product, i) => (
+            <Reveal key={product.node.id} delay={i * 0.05} className="h-full">
+              <ProductCover product={product} />
+            </Reveal>
+          ))}
         </div>
-        {picks.length > 0 && (
-          <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
-            {picks.map((product, i) => (
-              <Reveal key={product.node.id} delay={i * 0.05} className="h-full">
-                <ProductCover product={product} />
-              </Reveal>
-            ))}
-          </div>
-        )}
-      </div>
-    </section>
+      )}
+    </Section>
   );
 }
 
@@ -487,7 +631,7 @@ function ProductCover({ product }: { product: ShopifyProduct }) {
     <Link
       to="/product/$handle"
       params={{ handle: node.handle }}
-      className="glass glass-hover group flex h-full flex-col overflow-hidden rounded-2xl"
+      className="glass glass-hover group flex h-full flex-col overflow-hidden"
     >
       <div className="aspect-square overflow-hidden bg-surface-2">
         {image && (
@@ -506,7 +650,7 @@ function ProductCover({ product }: { product: ShopifyProduct }) {
       </div>
       <div className="flex flex-1 flex-col gap-2 p-4">
         <span className="text-sm font-medium leading-snug">{node.title}</span>
-        <span className="mt-auto text-sm font-semibold text-accent-warm">
+        <span className="mt-auto text-sm font-semibold text-accent-tech">
           {formatPrice(price.amount, price.currencyCode)}
         </span>
       </div>
