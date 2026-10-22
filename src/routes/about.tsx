@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { site } from "@/content/site";
-import { Users, Cpu, Sunrise } from "lucide-react";
 import { PageHeader, Reveal } from "@/components/Reveal";
 import { seo } from "@/lib/seo";
 import founderAsset from "@/assets/founder.webp.asset.json";
@@ -15,10 +14,16 @@ export const Route = createFileRoute("/about")({
   component: About,
 });
 
-const values = [
-  { icon: Users, t: "People", d: "Real support, in plain English." },
-  { icon: Cpu, t: "Technology", d: "Modern, fast and built around you." },
-  { icon: Sunrise, t: "A Brighter Tomorrow", d: "Helping local businesses grow." },
+// Four facts with numbers instead of generic values. Keep in step with services.ts and the FAQs.
+const facts = [
+  {
+    n: "A$500",
+    t: "Fixed-price website",
+    d: "One-off. Nothing to pay until you approve the preview.",
+  },
+  { n: "5–7 days", t: "Standard turnaround", d: "From go-ahead to live for a standard website." },
+  { n: "2 rounds", t: "Revisions included", d: "Text, image and layout tweaks within scope." },
+  { n: "100%", t: "Yours to keep", d: "Your content, your domain, your accounts." },
 ];
 
 function About() {
@@ -32,18 +37,18 @@ function About() {
           tools.
         </p>
       </Reveal>
-      <div className="mx-auto mt-20 grid max-w-5xl gap-6 px-6 md:grid-cols-3">
-        {values.map(({ icon: I, t, d }, i) => (
-          <Reveal key={t} delay={i * 0.08}>
-            <div className="glass glass-hover h-full p-8 text-center">
-              <I className="mx-auto h-8 w-8 text-primary-soft" aria-hidden="true" />
-              <h2 className="mt-6 text-xs tracking-[0.2em]">{t}</h2>
-              <p className="mt-3 text-sm text-muted-foreground">{d}</p>
+      <div className="mx-auto mt-16 grid max-w-5xl gap-5 px-6 sm:grid-cols-2 lg:grid-cols-4">
+        {facts.map((fact, i) => (
+          <Reveal key={fact.t} delay={i * 0.08}>
+            <div className="glass glass-hover h-full p-7">
+              <p className="text-3xl font-bold tracking-tight text-accent-warm">{fact.n}</p>
+              <h2 className="mt-3 text-base">{fact.t}</h2>
+              <p className="mt-2 text-sm text-muted-foreground">{fact.d}</p>
             </div>
           </Reveal>
         ))}
       </div>
-      <Reveal className="mx-auto mt-20 max-w-5xl px-6">
+      <Reveal className="mx-auto mt-16 max-w-5xl px-6">
         <div className="glass glass-hover flex flex-col gap-10 p-8 md:flex-row md:items-stretch md:gap-12 md:p-12">
           <div className="mx-auto w-full max-w-[280px] shrink-0 md:mx-0 md:w-[380px]">
             <div

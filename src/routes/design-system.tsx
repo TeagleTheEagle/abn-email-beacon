@@ -38,6 +38,7 @@ const coreTokens = [
   { name: "--surface-2", use: "Inputs, raised panels" },
   { name: "--primary", use: "Buttons, links, glow" },
   { name: "--primary-soft", use: "Icons, highlights, hover text" },
+  { name: "--accent-warm", use: "Prices, ticks, free-preview badge" },
   { name: "--foreground", use: "Body text" },
   { name: "--muted-foreground", use: "Secondary text, labels" },
   { name: "--border", use: "Hairlines on cards and inputs" },
@@ -260,7 +261,7 @@ function DesignSystem() {
             <Spec title="Sans" note="Inter · default">
               <p className="text-lg">Readable headings and body text.</p>
               <p className="mt-2 text-xs text-muted-foreground">
-                Weights 400–800 loaded. Prices use text-chrome at display sizes.
+                Weights 400–800 loaded. Prices are bold Inter in accent-warm (the Price component).
               </p>
             </Spec>
             <Spec title="Accent script" note="Caveat · .font-hand">
@@ -289,7 +290,10 @@ function DesignSystem() {
                 Muted foreground: supporting copy, labels, captions.
               </p>
               <p className="text-primary-soft">Primary-soft: icons, links, highlighted words.</p>
-              <p className="text-chrome text-xl">Chrome gradient: headings and prices.</p>
+              <p className="text-chrome text-xl">Chrome gradient: page headings.</p>
+              <p className="text-xl font-bold text-accent-warm">
+                Accent warm: prices, ticks and the free-preview badge.
+              </p>
               <p className="rounded-lg bg-primary px-3 py-2 text-primary-foreground">
                 White on primary: button text.
               </p>
@@ -325,6 +329,19 @@ function DesignSystem() {
             <div className="chrome-line my-6" />
             <p className="text-xs text-muted-foreground">
               1px divider under page headers and above the footer. Fades out at both ends.
+            </p>
+          </Spec>
+          <Spec title="Light band" note=".band-light">
+            <div className="band-light rounded-lg border border-border p-5">
+              <p className="label">Section label</p>
+              <p className="mt-2 font-semibold">Dark text on an off-white band.</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Every token is remapped inside, so the usual classes just work.
+              </p>
+            </div>
+            <p className="mt-5 text-xs text-muted-foreground">
+              Breaks up the dark sections. One per page at most ("Preview. Approve. Launch." on the
+              home page).
             </p>
           </Spec>
           <Spec title="Glass" note=".glass · .glass-hover">

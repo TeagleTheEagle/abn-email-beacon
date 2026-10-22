@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check } from "lucide-react";
 import { PageHeader, Reveal } from "@/components/Reveal";
+import { Price } from "@/components/Price";
 import { EstimateCalculator } from "@/components/EstimateCalculator";
 import { services } from "@/content/services";
 import { seo } from "@/lib/seo";
@@ -35,12 +36,17 @@ function Pricing() {
                 </span>
               )}
               <h2 className="text-xs tracking-[0.2em]">{s.title}</h2>
-              <p className="mt-6 font-display text-2xl text-chrome">{s.price}</p>
-              {s.priceNote && <p className="mt-2 text-xs text-muted-foreground">{s.priceNote}</p>}
+              <Price price={s.price} monthly={s.monthly} size="lg" className="mt-6" />
+              {s.priceNote && !s.monthly && (
+                <p className="mt-2 text-xs text-muted-foreground">{s.priceNote}</p>
+              )}
               <ul className="mt-8 flex-1 space-y-3">
                 {s.included.map((f) => (
                   <li key={f} className="flex gap-2 text-sm text-muted-foreground">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />{" "}
+                    <Check
+                      className="mt-0.5 h-4 w-4 shrink-0 text-accent-warm"
+                      aria-hidden="true"
+                    />{" "}
                     {f}
                   </li>
                 ))}

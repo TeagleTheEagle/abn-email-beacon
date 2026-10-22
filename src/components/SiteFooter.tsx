@@ -4,7 +4,7 @@ import { nav, site } from "@/content/site";
 
 export function SiteFooter() {
   return (
-    <footer className="relative mt-24 px-6 pb-10">
+    <footer className="relative mt-24 px-6 pb-24 sm:pb-10">
       <div className="chrome-line mx-auto mb-16 max-w-6xl" />
       <div className="mx-auto grid max-w-6xl gap-12 md:grid-cols-3">
         <div>

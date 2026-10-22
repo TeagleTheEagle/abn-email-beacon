@@ -28,6 +28,11 @@ import { projects } from "@/content/projects";
 import { demos } from "@/content/demos";
 import { seo, SITE_URL, OG_IMAGE } from "@/lib/seo";
 import { QuickLeadForm } from "@/components/QuickLeadForm";
+import { BeforeAfter } from "@/components/BeforeAfter";
+import { Price } from "@/components/Price";
+import { productsQueryOptions } from "@/lib/product-queries";
+import { formatPrice, shopifyImage, type ShopifyProduct } from "@/lib/shopify";
+import templatesStore from "@/assets/work-templates.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => {
@@ -73,6 +78,17 @@ export const Route = createFileRoute("/")({
       ],
     };
   },
+  // Product covers further down are a bonus, never a wait: give Shopify 1.5s (usually answered from
+  // the server cache) and render without them if it's slower. Loader data reaches the browser, so
+  // server and client render the same thing; the query cache alone would not.
+  loader: async ({ context }) => {
+    await Promise.race([
+      context.queryClient.prefetchQuery(productsQueryOptions),
+      new Promise((resolve) => setTimeout(resolve, 1500)),
+    ]);
+    const products = context.queryClient.getQueryData(productsQueryOptions.queryKey) ?? [];
+    return { products: products.slice(0, 4) };
+  },
   component: Home,
 });
 
@@ -89,9 +105,15 @@ function Home() {
           className="hero-earth"
         />
         <div className="hero-shade" />
+        <div className="hero-glow" aria-hidden="true" />
         <div className="home-hero-inner">
           <div className="min-w-0 animate-rise">
-            <p className="label text-primary-soft">Sydney · Australia</p>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <p className="label text-primary-soft">Sydney · Australia</p>
+              <span className="inline-flex items-center rounded-full border border-accent-warm/40 bg-accent-warm/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.15em] text-accent-warm">
+                Free preview first
+              </span>
+            </div>
             <h1 className="hero-heading mt-5">
               Websites and Stores.
               <br />
@@ -103,10 +125,10 @@ function Home() {
             </p>
             <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
               <span>
-                Websites <strong className="text-primary-soft">A$500</strong>
+                Websites <strong className="text-accent-warm">A$500</strong>
               </span>
               <span>
-                Stores <strong className="text-primary-soft">from A$1,200</strong>
+                Stores <strong className="text-accent-warm">from A$1,200</strong>
               </span>
             </div>
             <div className="mt-7 max-w-md">
@@ -150,6 +172,13 @@ function Home() {
           ))}
         </div>
       </section>
+      <Section label="The difference" title="From “we really should fix the website” to this.">
+        <p className="mb-8 max-w-2xl text-muted-foreground">
+          The same café, before and after. One is a page people leave. The other is a place they
+          want to visit.
+        </p>
+        <BeforeAfter />
+      </Section>
       <Section
         label="See what's possible"
         title="Your business. A better first impression."
@@ -182,9 +211,11 @@ function Home() {
                   src={
                     i === 0
                       ? demos.cafe.imageSmall
-                      : i === 3
-                        ? demos.tradie.imageSmall
-                        : demos.retail.imageSmall
+                      : i === 1
+                        ? demos.retail.imageSmall
+                        : i === 2
+                          ? templatesStore
+                          : demos.tradie.imageSmall
                   }
                   alt={`${service.title} illustrative example`}
                   width={640}
@@ -196,12 +227,7 @@ function Home() {
                   <service.icon className="h-6 w-6 text-primary-soft" />
                   <h3 className="mt-4 text-xl">{service.title}</h3>
                   <p className="mt-3 text-sm text-muted-foreground">{service.short}</p>
-                  <p className="mt-5 text-2xl font-bold text-primary-soft">
-                    {service.price}
-                    <span className="text-sm font-normal">
-                      {service.id === "care-plan" ? "/mo" : ""}
-                    </span>
-                  </p>
+                  <Price price={service.price} monthly={service.monthly} className="mt-5" />
                   <p className="mt-1 text-xs text-muted-foreground">
                     {service.id === "website-build"
                       ? "One-off · Free preview first"
@@ -212,7 +238,7 @@ function Home() {
                   <ul className="mb-6 mt-6 flex-1 space-y-3">
                     {service.included.map((item) => (
                       <li key={item} className="flex gap-2 text-xs text-muted-foreground">
-                        <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary-soft" />
+                        <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-warm" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -233,8 +259,26 @@ function Home() {
             Full pricing details
           </Link>
         </p>
+        <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-border pt-8">
+          <p className="label">Works with</p>
+          {[
+            "Google Maps",
+            "Google Business Profile",
+            "Instagram",
+            "PayPal",
+            "Apple Pay",
+            "Google Pay",
+          ].map((name) => (
+            <span
+              key={name}
+              className="text-sm font-semibold tracking-wide text-muted-foreground/80"
+            >
+              {name}
+            </span>
+          ))}
+        </div>
       </Section>
-      <Section label="Simple from the start" title="Preview. Approve. Launch.">
+      <Section label="Simple from the start" title="Preview. Approve. Launch." tone="light">
         <ProjectJourney />
         <div className="mt-10 grid gap-5 border-t border-border pt-6 sm:grid-cols-3">
           {[
@@ -321,22 +365,7 @@ function Home() {
           Built on the store platform’s own tools. No extra monthly app fees from us.
         </p>
       </Section>
-      <section className="border-y border-border bg-surface px-6 py-14">
-        <div className="mx-auto grid max-w-6xl items-center gap-6 md:grid-cols-[minmax(0,1fr)_auto]">
-          <div>
-            <p className="label">The digital shop</p>
-            <h2 className="mt-3 text-3xl">Tools for your next chapter.</h2>
-            <p className="mt-4 max-w-xl text-muted-foreground">
-              Templates, guides and practical resources for Australian businesses and creators.
-            </p>
-          </div>
-          <Button asChild size="lg" variant="outline" className="h-12">
-            <Link to="/shop">
-              Explore our products <ArrowRight />
-            </Link>
-          </Button>
-        </div>
-      </section>
+      <ShopStrip />
       <Section label="Good questions" title="Before we get started.">
         <div className="max-w-3xl">
           <Accordion type="single" collapsible>
@@ -362,16 +391,18 @@ function Section({
   children,
   action,
   surface = false,
+  tone,
 }: {
   label: string;
   title: string;
   children: React.ReactNode;
   action?: React.ReactNode;
   surface?: boolean;
+  tone?: "light";
 }) {
   return (
     <section
-      className={`px-6 py-16 sm:py-20 ${surface ? "border-y border-border bg-surface/40" : ""}`}
+      className={`px-6 py-16 sm:py-20 ${surface ? "border-y border-border bg-surface/40" : ""} ${tone === "light" ? "band-light border-y border-border" : ""}`}
     >
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-5">
@@ -410,5 +441,75 @@ export function CtaBand() {
         </Button>
       </div>
     </section>
+  );
+}
+
+// The shop's covers are the most striking pictures on the site, so the home page shows a few of
+// them. Renders with just the heading and button if Shopify hasn't answered.
+function ShopStrip() {
+  const picks = Route.useLoaderData().products;
+  return (
+    <section className="border-y border-border bg-surface px-6 py-16 sm:py-20">
+      <div className="mx-auto max-w-6xl">
+        <div className="grid items-center gap-6 md:grid-cols-[minmax(0,1fr)_auto]">
+          <div>
+            <p className="label">The digital shop</p>
+            <h2 className="mt-3 text-3xl">Tools for your next chapter.</h2>
+            <p className="mt-4 max-w-xl text-muted-foreground">
+              Templates, guides and practical resources for Australian businesses and creators.
+            </p>
+          </div>
+          <Button asChild size="lg" variant="outline" className="h-12">
+            <Link to="/shop">
+              Explore our products <ArrowRight />
+            </Link>
+          </Button>
+        </div>
+        {picks.length > 0 && (
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
+            {picks.map((product, i) => (
+              <Reveal key={product.node.id} delay={i * 0.05} className="h-full">
+                <ProductCover product={product} />
+              </Reveal>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function ProductCover({ product }: { product: ShopifyProduct }) {
+  const node = product.node;
+  const image = node.images.edges[0]?.node;
+  const price = node.priceRange.minVariantPrice;
+  return (
+    <Link
+      to="/product/$handle"
+      params={{ handle: node.handle }}
+      className="glass glass-hover group flex h-full flex-col overflow-hidden rounded-2xl"
+    >
+      <div className="aspect-square overflow-hidden bg-surface-2">
+        {image && (
+          <img
+            src={shopifyImage(image.url, 500)}
+            srcSet={`${shopifyImage(image.url, 320)} 320w, ${shopifyImage(image.url, 500)} 500w, ${shopifyImage(image.url, 700)} 700w`}
+            sizes="(max-width: 639px) 46vw, (max-width: 1023px) 30vw, 270px"
+            alt={image.altText || node.title}
+            width={500}
+            height={500}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        )}
+      </div>
+      <div className="flex flex-1 flex-col gap-2 p-4">
+        <span className="text-sm font-medium leading-snug">{node.title}</span>
+        <span className="mt-auto text-sm font-semibold text-accent-warm">
+          {formatPrice(price.amount, price.currencyCode)}
+        </span>
+      </div>
+    </Link>
   );
 }

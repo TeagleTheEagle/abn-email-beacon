@@ -1,15 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { PackageOpen } from "lucide-react";
 import { PageHeader, Reveal } from "@/components/Reveal";
 import { ProductCard } from "@/components/ProductCard";
-import { fetchProducts, type ShopifyProduct } from "@/lib/shopify";
+import type { ShopifyProduct } from "@/lib/shopify";
+import { productsQueryOptions } from "@/lib/product-queries";
 import { seo } from "@/lib/seo";
-
-const productsQueryOptions = queryOptions({
-  queryKey: ["shopify-products"],
-  queryFn: () => fetchProducts(),
-});
 
 export const Route = createFileRoute("/shop")({
   head: () =>

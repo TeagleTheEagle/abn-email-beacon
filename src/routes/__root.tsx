@@ -14,6 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
+import { MobileCta } from "@/components/MobileCta";
 import { Toaster } from "@/components/ui/sonner";
 import { useCartSync } from "@/hooks/useCartSync";
 import { analyticsScripts, trackPageView } from "@/lib/analytics";
@@ -155,6 +156,7 @@ function RootComponent() {
         <Outlet />
       </main>
       <SiteFooter />
+      <MobileCta />
       <Toaster position="top-center" />
     </QueryClientProvider>
   );

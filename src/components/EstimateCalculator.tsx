@@ -156,7 +156,7 @@ export function EstimateCalculator({ guided = false }: { guided?: boolean }) {
                   <span className="min-w-0 flex-1">
                     <span className="flex flex-wrap items-baseline justify-between gap-3">
                       <span className="text-sm font-medium">{b.title}</span>
-                      <span className="text-sm text-chrome">{b.price}</span>
+                      <span className="text-sm font-semibold text-accent-warm">{b.price}</span>
                     </span>
                     <span className="mt-0.5 block text-xs text-muted-foreground">{b.short}</span>
                   </span>
@@ -180,7 +180,7 @@ export function EstimateCalculator({ guided = false }: { guided?: boolean }) {
                 <span className="min-w-0 flex-1">
                   <span className="flex flex-wrap items-baseline justify-between gap-3">
                     <span className="text-sm font-medium">{carePlan.title}</span>
-                    <span className="text-sm text-chrome">
+                    <span className="text-sm font-semibold text-accent-warm">
                       {carePlan.price}
                       {carePlan.priceNote}
                     </span>

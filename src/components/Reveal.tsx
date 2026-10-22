@@ -56,14 +56,14 @@ export function Reveal({
 
 export function PageHeader({ label, title, sub }: { label: string; title: string; sub?: string }) {
   return (
-    <header className="relative px-6 pb-16 pt-40 text-center">
+    <header className="relative px-6 pb-10 pt-28 text-center sm:pt-32">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-[radial-gradient(ellipse_at_top,rgba(59,140,255,0.18),transparent_70%)]" />
       <div className="animate-rise">
         <p className="label">{label}</p>
         <h1 className="mx-auto mt-5 max-w-3xl text-2xl text-chrome sm:text-4xl">{title}</h1>
         {sub && <p className="mx-auto mt-6 max-w-xl text-muted-foreground">{sub}</p>}
       </div>
-      <div className="chrome-line mx-auto mt-14 max-w-3xl" />
+      <div className="chrome-line mx-auto mt-8 max-w-3xl" />
     </header>
   );
 }

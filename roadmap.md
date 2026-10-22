@@ -87,3 +87,22 @@ Read this first: it's where the business is heading. Lovable, Claude and Shopify
 ## Wording (22 Oct 2026)
 
 - [x] "Small business" dropped from all visitor-facing copy (page titles, descriptions, About, MCP description): the audience is now "businesses of every size" / "all businesses", so outreach never reads as sizing anyone up
+
+## Visual refresh (22 Oct 2026)
+
+Ben asked for every item on the eye-catching list. Done in code:
+
+- [x] Product covers on the home page (four from the shop, read from Shopify with a 1.5s cap so the page never waits)
+- [x] Prices solid, bold and warm everywhere (new `Price` component; `--accent-warm` token for prices, ticks and the free-preview badge)
+- [x] Off-white "Preview. Approve. Launch." band (`band-light` utility remaps the tokens; one per page)
+- [x] Hero: moving glow, free-preview badge, preview cycles Café → Trades → Salon → Retail and scrolls on its own until touched (stands in for a video)
+- [x] Secondary text lightened (`--muted-foreground`), page headers trimmed, wordmark larger
+- [x] Phone headline sized to keep "Websites and Stores." on one line
+- [x] Services photos varied (Smart Store now shows the templates store)
+- [x] Before/after section on the home page (dated café page built in markup next to the demo)
+- [x] "Works with" row (Google Maps, Google Business Profile, Instagram, PayPal, Apple Pay, Google Pay) as text, no logos
+- [x] Cards lift on hover and press on tap (`glass-hover`)
+- [x] Sticky "Get a free preview" bar on phones after scrolling past the hero (not on contact or demo pages)
+- [x] About page: four number facts replace the icon cards
+- [ ] Real logos in the "Works with" row need brand assets and permission — Ben to decide
+- [ ] A real 15-second phone recording of a demo site would beat the auto-playing preview — Ben to record or ask Claude to produce one

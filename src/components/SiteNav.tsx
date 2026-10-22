@@ -37,8 +37,8 @@ export function SiteNav() {
           className="flex shrink-0 items-center gap-3"
           aria-label="Teague Industries home"
         >
-          <Logo className="h-7 w-7" />
-          <span className="font-display text-[8px] text-foreground sm:text-[10px]">
+          <Logo className="h-8 w-8" />
+          <span className="font-display text-[10px] text-foreground sm:text-xs">
             Teague Industries
           </span>
         </Link>

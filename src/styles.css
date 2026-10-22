@@ -58,6 +58,8 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-accent-warm: var(--accent-warm);
+  --color-accent-warm-foreground: var(--accent-warm-foreground);
 }
 
 :root {
@@ -76,7 +78,7 @@
   --secondary: #0f1b33;
   --secondary-foreground: #e8f1ff;
   --muted: #0f1b33;
-  --muted-foreground: #b3c0d5;
+  --muted-foreground: #c3cfe2;
   --accent: #0f1b33;
   --accent-foreground: #e8f1ff;
   --destructive: oklch(0.65 0.2 25);
@@ -87,6 +89,9 @@
   --chrome: linear-gradient(180deg, #f4f8ff 0%, #a9b8d0 50%, #5b6b86 100%);
   --glow: 0 0 24px rgba(59, 140, 255, 0.45);
   --glow-soft: 0 0 40px -10px rgba(59, 140, 255, 0.5);
+  /* Warm accent for prices, ticks and the free-preview badge, so the page isn't blue-only. */
+  --accent-warm: #f5b544;
+  --accent-warm-foreground: #1a1200;
 }
 
 @layer base {
@@ -161,10 +166,14 @@
 
 @utility glass-hover {
   &:hover {
+    transform: translateY(-3px);
     border-color: rgba(140, 194, 255, 0.35);
     box-shadow:
       var(--glow-soft),
       inset 0 0 0 1px rgba(140, 194, 255, 0.08);
+  }
+  &:active {
+    transform: translateY(0) scale(0.995);
   }
 }
 
@@ -179,6 +188,20 @@
     transparent
   );
   opacity: 0.5;
+}
+
+/* An off-white band to break up the dark sections. Every colour token is remapped inside it, so the
+   usual bg-/text-/border- classes need no special cases. One per page at most. */
+@utility band-light {
+  --background: #f3f6fb;
+  --foreground: #0a1222;
+  --surface: #ffffff;
+  --surface-2: #e6edf7;
+  --muted-foreground: #4a5a74;
+  --primary-soft: #1d5fc0;
+  --border: rgba(10, 18, 34, 0.12);
+  background: var(--background);
+  color: var(--foreground);
 }
 
 @utility btn-primary {
@@ -354,6 +377,18 @@
       color-mix(in oklab, var(--background) 70%, transparent)
     ),
     linear-gradient(0deg, var(--background), transparent);
+}
+.hero-glow {
+  position: absolute;
+  left: -12%;
+  top: -18%;
+  width: min(60vw, 720px);
+  height: min(60vw, 720px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 140, 255, 0.32), transparent 62%);
+  filter: blur(40px);
+  animation: flare 9s ease-in-out infinite;
+  pointer-events: none;
 }
 .website-preview {
   min-width: 0;
@@ -662,7 +697,7 @@
     gap: 32px;
   }
   .hero-heading {
-    font-size: 38px;
+    font-size: clamp(28px, 8.4vw, 38px);
   }
   .preview-viewport {
     height: 350px;
