@@ -3,7 +3,12 @@ import { storefrontApiRequest, STOREFRONT_QUERY, formatPrice } from "@/lib/shopi
 
 const SITE = "https://www.teagueindustries.com.au";
 
-type Node = { title: string; handle: string; description: string; priceRange: { minVariantPrice: { amount: string; currencyCode: string } } };
+type Node = {
+  title: string;
+  handle: string;
+  description: string;
+  priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
+};
 
 export default defineTool({
   name: "list_products",
@@ -17,12 +22,22 @@ export default defineTool({
     const edges = (data?.data?.products?.edges ?? []) as { node: Node }[];
     const rows = edges.map(({ node }) => ({
       title: node.title,
-      price: formatPrice(node.priceRange.minVariantPrice.amount, node.priceRange.minVariantPrice.currencyCode),
+      price: formatPrice(
+        node.priceRange.minVariantPrice.amount,
+        node.priceRange.minVariantPrice.currencyCode,
+      ),
       url: `${SITE}/product/${node.handle}`,
       description: node.description,
     }));
     return {
-      content: [{ type: "text", text: rows.length ? rows.map((r) => `${r.title} — ${r.price} — ${r.url}`).join("\n") : "No products listed." }],
+      content: [
+        {
+          type: "text",
+          text: rows.length
+            ? rows.map((r) => `${r.title} — ${r.price} — ${r.url}`).join("\n")
+            : "No products listed.",
+        },
+      ],
       structuredContent: { products: rows },
     };
   },

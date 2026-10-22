@@ -5,7 +5,12 @@ import { site } from "@/content/site";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/templates")({
-  head: () => seo("/templates", "Business Templates", "Ready-made invoices, quotes, service agreements, website kits and AI prompt packs built for Australian ABN and GST rules."),
+  head: () =>
+    seo(
+      "/templates",
+      "Business Templates",
+      "Ready-made invoices, quotes, service agreements, website kits and AI prompt packs built for Australian ABN and GST rules.",
+    ),
   component: Templates,
 });
 
@@ -20,7 +25,11 @@ const kinds = [
 function Templates() {
   return (
     <>
-      <PageHeader label="Templates" title="Ready-made for Australian business" sub="Built for Australian ABN and GST rules. Instant download, ready to use today." />
+      <PageHeader
+        label="Templates"
+        title="Ready-made for Australian business"
+        sub="Built for Australian ABN and GST rules. Instant download, ready to use today."
+      />
       <div className="mx-auto grid max-w-4xl grid-cols-2 gap-5 px-6 sm:grid-cols-3 lg:grid-cols-5">
         {kinds.map(({ icon: I, t }, i) => (
           <Reveal key={t} delay={i * 0.06}>

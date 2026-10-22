@@ -3,7 +3,13 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ArrowLeft, Check, Loader2 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
-import { formatPrice, fetchProduct, shopifyImage, type ShopifyProduct, type ShopifyVariant } from "@/lib/shopify";
+import {
+  formatPrice,
+  fetchProduct,
+  shopifyImage,
+  type ShopifyProduct,
+  type ShopifyVariant,
+} from "@/lib/shopify";
 import { cartItemFromVariant, useCartStore } from "@/stores/cartStore";
 import { seo, SITE_URL } from "@/lib/seo";
 import { track } from "@/lib/analytics";
@@ -13,7 +19,9 @@ function ProductNotFound() {
     <div className="mx-auto max-w-md px-6 py-32 text-center">
       <h1 className="text-2xl text-chrome">Product not found</h1>
       <p className="mt-3 text-muted-foreground">This product may have been removed.</p>
-      <Link to="/shop" className="btn-primary mt-8">Back to shop</Link>
+      <Link to="/shop" className="btn-primary mt-8">
+        Back to shop
+      </Link>
     </div>
   );
 }
@@ -61,7 +69,9 @@ export const Route = createFileRoute("/product/$handle")({
               url: `${SITE_URL}${path}`,
               price: product.priceRange.minVariantPrice.amount,
               priceCurrency: product.priceRange.minVariantPrice.currencyCode,
-              availability: inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+              availability: inStock
+                ? "https://schema.org/InStock"
+                : "https://schema.org/OutOfStock",
               seller: { "@type": "Organization", name: "Teague Industries" },
             },
           }),
@@ -94,7 +104,8 @@ function ProductPage() {
   const hasOptions = product.options.length > 0 && variants.length > 1;
   const defaultVariant = variants.find((v) => v.availableForSale) ?? variants[0];
   const selectedVariant =
-    variants.find((v) => v.id === selectedVariantId) ?? (defaultVariant as ShopifyVariant | undefined);
+    variants.find((v) => v.id === selectedVariantId) ??
+    (defaultVariant as ShopifyVariant | undefined);
 
   const images = product.images.edges.map((e) => e.node);
   const outOfStock = !selectedVariant?.availableForSale;
@@ -102,7 +113,13 @@ function ProductPage() {
   const handleAddToCart = async () => {
     if (!selectedVariant) return;
     await addItem(cartItemFromVariant(product, selectedVariant));
-    track("add_to_cart", { currency: selectedVariant.price.currencyCode, value: Number(selectedVariant.price.amount), items: [{ item_name: product.title, price: Number(selectedVariant.price.amount), quantity: 1 }] });
+    track("add_to_cart", {
+      currency: selectedVariant.price.currencyCode,
+      value: Number(selectedVariant.price.amount),
+      items: [
+        { item_name: product.title, price: Number(selectedVariant.price.amount), quantity: 1 },
+      ],
+    });
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 1500);
   };
@@ -112,8 +129,8 @@ function ProductPage() {
       selectedVariant?.selectedOptions.map((o) => (o.name === name ? { ...o, value } : o)) ??
       variants[0]?.selectedOptions.map((o) => ({ ...o }));
     if (!wanted) return;
-    const match = variants.find(
-      (v) => v.selectedOptions.every((o) => wanted.some((n) => n.name === o.name && n.value === o.value)),
+    const match = variants.find((v) =>
+      v.selectedOptions.every((o) => wanted.some((n) => n.name === o.name && n.value === o.value)),
     );
     if (match) setSelectedVariantId(match.id);
   };
@@ -156,10 +173,19 @@ function ProductPage() {
                     onClick={() => setActiveImage(i)}
                     aria-label={`View image ${i + 1}`}
                     className={`h-20 w-20 shrink-0 overflow-hidden rounded-lg border transition-colors ${
-                      i === activeImage ? "border-primary-soft" : "border-border hover:border-muted-foreground"
+                      i === activeImage
+                        ? "border-primary-soft"
+                        : "border-border hover:border-muted-foreground"
                     }`}
                   >
-                    <img src={shopifyImage(img.url, 160)} alt="" width={80} height={80} loading="lazy" className="h-full w-full object-cover" />
+                    <img
+                      src={shopifyImage(img.url, 160)}
+                      alt=""
+                      width={80}
+                      height={80}
+                      loading="lazy"
+                      className="h-full w-full object-cover"
+                    />
                   </button>
                 ))}
               </div>
@@ -174,7 +200,9 @@ function ProductPage() {
               </p>
             )}
             {outOfStock && (
-              <p className="mt-3 font-display text-[10px] tracking-[0.25em] text-muted-foreground">OUT OF STOCK</p>
+              <p className="mt-3 font-display text-[10px] tracking-[0.25em] text-muted-foreground">
+                OUT OF STOCK
+              </p>
             )}
 
             {hasOptions &&
@@ -235,7 +263,9 @@ function ProductPage() {
               />
             ) : product.description ? (
               <div className="mt-10 border-t border-border pt-8">
-                <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">{product.description}</p>
+                <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                  {product.description}
+                </p>
               </div>
             ) : null}
           </div>

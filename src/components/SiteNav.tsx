@@ -4,7 +4,14 @@ import { Menu } from "lucide-react";
 import { Logo } from "./Logo";
 import { CartDrawer } from "./CartDrawer";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { nav } from "@/content/site";
 
 export function SiteNav() {
@@ -25,23 +32,31 @@ export function SiteNav() {
       }`}
     >
       <nav className="mx-auto grid h-16 max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 md:flex md:justify-between lg:h-20">
-        <Link to="/" className="flex shrink-0 items-center gap-3" aria-label="Teague Industries home">
+        <Link
+          to="/"
+          className="flex shrink-0 items-center gap-3"
+          aria-label="Teague Industries home"
+        >
           <Logo className="h-7 w-7" />
-          <span className="font-display text-[8px] text-foreground sm:text-[10px]">Teague Industries</span>
+          <span className="font-display text-[8px] text-foreground sm:text-[10px]">
+            Teague Industries
+          </span>
         </Link>
         <ul className="hidden min-w-0 items-center gap-5 lg:flex">
-          {nav.filter(n => ["/services", "/work", "/pricing", "/about"].includes(n.to)).map((n) => (
-            <li key={n.to}>
-              <Link
-                to={n.to}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-                activeProps={{ className: "text-primary-soft" }}
-                activeOptions={{ exact: true }}
-              >
-                {n.label}
-              </Link>
-            </li>
-          ))}
+          {nav
+            .filter((n) => ["/services", "/work", "/pricing", "/about"].includes(n.to))
+            .map((n) => (
+              <li key={n.to}>
+                <Link
+                  to={n.to}
+                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  activeProps={{ className: "text-primary-soft" }}
+                  activeOptions={{ exact: true }}
+                >
+                  {n.label}
+                </Link>
+              </li>
+            ))}
         </ul>
         <div className="flex shrink-0 items-center gap-3">
           <CartDrawer />
@@ -52,7 +67,12 @@ export function SiteNav() {
               focus moves in and is trapped, the page behind stops scrolling, and focus returns on close. */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-foreground lg:hidden" aria-label="Open menu">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-foreground lg:hidden"
+                aria-label="Open menu"
+              >
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>

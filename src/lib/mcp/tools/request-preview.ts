@@ -14,16 +14,33 @@ export default defineTool({
     phone: z.string().trim().max(30).optional().describe("Contact phone (optional)."),
     message: z.string().trim().max(2000).optional().describe("What the business needs (optional)."),
   },
-  annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false },
+  annotations: {
+    readOnlyHint: false,
+    destructiveHint: false,
+    idempotentHint: false,
+    openWorldHint: false,
+  },
   handler: async ({ name, business_name, email, phone, message }) => {
     const client = supabaseAnon();
     const id = newLeadId();
     const { error } = await client.from("leads").insert({
-      id, name, business_name, email, phone: phone || null, needs: [],
+      id,
+      name,
+      business_name,
+      email,
+      phone: phone || null,
+      needs: [],
       message: `[Sent via AI assistant] ${message ?? ""}`.trim(),
     });
     if (error) throw new ToolError("Couldn't send the enquiry. Please try again.");
     await notifyLead(client, id);
-    return { content: [{ type: "text", text: "Enquiry sent. Teague Industries will be in touch about the free preview." }] };
+    return {
+      content: [
+        {
+          type: "text",
+          text: "Enquiry sent. Teague Industries will be in touch about the free preview.",
+        },
+      ],
+    };
   },
 });

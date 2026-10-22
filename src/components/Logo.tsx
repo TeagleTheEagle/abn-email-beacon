@@ -8,7 +8,14 @@ export function Logo({ className = "", glow = false }: { className?: string; glo
       className={className}
       role="img"
       aria-label="Teague Industries logo"
-      style={glow ? { filter: "drop-shadow(0 0 18px rgba(59,140,255,0.75)) drop-shadow(0 0 4px rgba(140,194,255,0.9))" } : undefined}
+      style={
+        glow
+          ? {
+              filter:
+                "drop-shadow(0 0 18px rgba(59,140,255,0.75)) drop-shadow(0 0 4px rgba(140,194,255,0.9))",
+            }
+          : undefined
+      }
     >
       <defs>
         <linearGradient id={`c${id}`} x1="0" y1="0" x2="0.4" y2="1">

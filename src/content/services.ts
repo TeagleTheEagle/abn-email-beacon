@@ -63,7 +63,7 @@ export const services: Service[] = [
     included: [
       "Everything in Store Setup",
       "Product descriptions, drafted for your approval",
-      "\"You may also like\" product recommendations",
+      '"You may also like" product recommendations',
       "Live chat with FAQ auto-replies and order tracking",
       "Automated emails: welcome, abandoned cart, post-purchase",
       "Built on the store platform's own tools — no extra monthly app fees from us",

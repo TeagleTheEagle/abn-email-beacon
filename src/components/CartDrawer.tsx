@@ -1,6 +1,21 @@
 import { useEffect, useState } from "react";
-import { Minus, Plus, ShoppingBag, ShoppingCart, Trash2, ExternalLink, Loader2 } from "lucide-react";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Minus,
+  Plus,
+  ShoppingBag,
+  ShoppingCart,
+  Trash2,
+  ExternalLink,
+  Loader2,
+} from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { useCartStore } from "@/stores/cartStore";
 import { formatPrice } from "@/lib/shopify";
 import { track } from "@/lib/analytics";
@@ -8,9 +23,13 @@ import { track } from "@/lib/analytics";
 export function CartDrawer() {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const { items, isLoading, isSyncing, updateQuantity, removeItem, getCheckoutUrl, syncCart } = useCartStore();
+  const { items, isLoading, isSyncing, updateQuantity, removeItem, getCheckoutUrl, syncCart } =
+    useCartStore();
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = items.reduce((sum, item) => sum + parseFloat(item.price.amount) * item.quantity, 0);
+  const totalPrice = items.reduce(
+    (sum, item) => sum + parseFloat(item.price.amount) * item.quantity,
+    0,
+  );
   const currency = items[0]?.price.currencyCode ?? "AUD";
 
   // Avoid hydration mismatch: cart state is restored from browser storage.
@@ -24,7 +43,15 @@ export function CartDrawer() {
   const handleCheckout = () => {
     const checkoutUrl = getCheckoutUrl();
     if (checkoutUrl) {
-      track("begin_checkout", { currency, value: Number(totalPrice.toFixed(2)), items: items.map((i) => ({ item_name: i.product.node.title, price: Number(i.price.amount), quantity: i.quantity })) });
+      track("begin_checkout", {
+        currency,
+        value: Number(totalPrice.toFixed(2)),
+        items: items.map((i) => ({
+          item_name: i.product.node.title,
+          price: Number(i.price.amount),
+          quantity: i.quantity,
+        })),
+      });
       window.open(checkoutUrl, "_blank");
       setIsOpen(false);
     }
@@ -47,9 +74,13 @@ export function CartDrawer() {
       </SheetTrigger>
       <SheetContent className="flex h-full w-full flex-col border-l border-border bg-surface sm:max-w-lg">
         <SheetHeader className="shrink-0 text-left">
-          <SheetTitle className="font-display text-sm tracking-[0.25em] text-foreground">YOUR CART</SheetTitle>
+          <SheetTitle className="font-display text-sm tracking-[0.25em] text-foreground">
+            YOUR CART
+          </SheetTitle>
           <SheetDescription className="text-muted-foreground">
-            {totalItems === 0 ? "Your cart is empty." : `${totalItems} item${totalItems !== 1 ? "s" : ""} in your cart.`}
+            {totalItems === 0
+              ? "Your cart is empty."
+              : `${totalItems} item${totalItems !== 1 ? "s" : ""} in your cart.`}
           </SheetDescription>
         </SheetHeader>
         <div className="flex min-h-0 flex-1 flex-col pt-4">
@@ -66,16 +97,31 @@ export function CartDrawer() {
                 {items.map((item) => {
                   const image = item.product.node.images?.edges?.[0]?.node;
                   return (
-                    <div key={item.variantId} className="flex gap-4 rounded-xl border border-border bg-surface-2 p-3">
+                    <div
+                      key={item.variantId}
+                      className="flex gap-4 rounded-xl border border-border bg-surface-2 p-3"
+                    >
                       <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-background">
-                        {image && <img src={image.url} alt={item.product.node.title} className="h-full w-full object-cover" />}
+                        {image && (
+                          <img
+                            src={image.url}
+                            alt={item.product.node.title}
+                            className="h-full w-full object-cover"
+                          />
+                        )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <h4 className="truncate text-sm font-medium text-foreground">{item.product.node.title}</h4>
+                        <h4 className="truncate text-sm font-medium text-foreground">
+                          {item.product.node.title}
+                        </h4>
                         {item.variantTitle !== "Default Title" && (
-                          <p className="truncate text-xs text-muted-foreground">{item.variantTitle}</p>
+                          <p className="truncate text-xs text-muted-foreground">
+                            {item.variantTitle}
+                          </p>
                         )}
-                        <p className="mt-1 text-sm text-chrome">{formatPrice(item.price.amount, item.price.currencyCode)}</p>
+                        <p className="mt-1 text-sm text-chrome">
+                          {formatPrice(item.price.amount, item.price.currencyCode)}
+                        </p>
                       </div>
                       <div className="flex shrink-0 flex-col items-end gap-2">
                         <button
@@ -93,7 +139,9 @@ export function CartDrawer() {
                           >
                             <Minus className="h-3 w-3" />
                           </button>
-                          <span className="w-6 text-center text-sm text-foreground">{item.quantity}</span>
+                          <span className="w-6 text-center text-sm text-foreground">
+                            {item.quantity}
+                          </span>
                           <button
                             className="flex h-6 w-6 items-center justify-center rounded-full border border-border text-foreground"
                             onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
@@ -110,7 +158,9 @@ export function CartDrawer() {
               <div className="mt-4 shrink-0 space-y-4 border-t border-border pt-4">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Total</span>
-                  <span className="text-lg text-chrome">{formatPrice(totalPrice.toFixed(2), currency)}</span>
+                  <span className="text-lg text-chrome">
+                    {formatPrice(totalPrice.toFixed(2), currency)}
+                  </span>
                 </div>
                 <button
                   onClick={handleCheckout}
@@ -125,7 +175,9 @@ export function CartDrawer() {
                     </>
                   )}
                 </button>
-                <p className="text-center text-[10px] text-muted-foreground">Checkout is handled securely by Shopify.</p>
+                <p className="text-center text-[10px] text-muted-foreground">
+                  Checkout is handled securely by Shopify.
+                </p>
               </div>
             </>
           )}

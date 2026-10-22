@@ -5,14 +5,21 @@ import { formatPrice, type ShopifyProduct, shopifyImage } from "@/lib/shopify";
 import { cartItemFromVariant, useCartStore } from "@/stores/cartStore";
 
 // `priority` is for the first card on /shop: it's the largest image on screen, so load it first.
-export function ProductCard({ product, priority = false }: { product: ShopifyProduct; priority?: boolean }) {
+export function ProductCard({
+  product,
+  priority = false,
+}: {
+  product: ShopifyProduct;
+  priority?: boolean;
+}) {
   const addItem = useCartStore((state) => state.addItem);
   const isLoading = useCartStore((state) => state.isLoading);
   const [justAdded, setJustAdded] = useState(false);
 
   const node = product.node;
   const image = node.images.edges[0]?.node;
-  const firstAvailable = node.variants.edges.find((v) => v.node.availableForSale)?.node ?? node.variants.edges[0]?.node;
+  const firstAvailable =
+    node.variants.edges.find((v) => v.node.availableForSale)?.node ?? node.variants.edges[0]?.node;
   const price = node.priceRange.minVariantPrice;
   const outOfStock = !firstAvailable?.availableForSale;
 
@@ -25,7 +32,12 @@ export function ProductCard({ product, priority = false }: { product: ShopifyPro
 
   return (
     <div className="glass glass-hover group flex h-full flex-col overflow-hidden rounded-2xl">
-      <Link to="/product/$handle" params={{ handle: node.handle }} className="block" aria-label={`View ${node.title}`}>
+      <Link
+        to="/product/$handle"
+        params={{ handle: node.handle }}
+        className="block"
+        aria-label={`View ${node.title}`}
+      >
         <div className="relative aspect-square overflow-hidden bg-surface-2">
           {image ? (
             <img
@@ -53,11 +65,17 @@ export function ProductCard({ product, priority = false }: { product: ShopifyPro
         </div>
       </Link>
       <div className="flex flex-1 flex-col gap-3 p-5">
-        <Link to="/product/$handle" params={{ handle: node.handle }} className="text-sm font-medium leading-snug text-foreground hover:text-primary-soft">
+        <Link
+          to="/product/$handle"
+          params={{ handle: node.handle }}
+          className="text-sm font-medium leading-snug text-foreground hover:text-primary-soft"
+        >
           {node.title}
         </Link>
         <div className="mt-auto flex items-center justify-between gap-3">
-          <span className="text-sm text-chrome">{formatPrice(price.amount, price.currencyCode)}</span>
+          <span className="text-sm text-chrome">
+            {formatPrice(price.amount, price.currencyCode)}
+          </span>
           <button
             onClick={handleAddToCart}
             disabled={isLoading || outOfStock}

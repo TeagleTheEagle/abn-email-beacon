@@ -20,7 +20,11 @@ export function analyticsScripts() {
 }
 
 export function trackPageView(path: string) {
-  window.gtag?.("event", "page_view", { page_path: path, page_location: window.location.href, page_title: document.title });
+  window.gtag?.("event", "page_view", {
+    page_path: path,
+    page_location: window.location.href,
+    page_title: document.title,
+  });
 }
 
 // GA4 recommended event names: generate_lead, add_to_cart, begin_checkout.

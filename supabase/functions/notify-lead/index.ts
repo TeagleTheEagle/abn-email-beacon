@@ -17,9 +17,16 @@ const cors = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+const esc = (s: string) =>
+  s.replace(
+    /[&<>"']/g,
+    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!,
+  );
 const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { ...cors, "Content-Type": "application/json" },
+  });
 
 async function sendEmail(apiKey: string, payload: Record<string, unknown>) {
   const res = await fetch("https://api.resend.com/emails", {
@@ -38,12 +45,18 @@ Deno.serve(async (req) => {
   if (!apiKey) return json({ error: "RESEND_API_KEY is not set" }, 500);
 
   const { id } = await req.json().catch(() => ({}));
-  if (typeof id !== "string" || !/^[0-9a-f-]{36}$/i.test(id)) return json({ error: "A lead id is required" }, 400);
+  if (typeof id !== "string" || !/^[0-9a-f-]{36}$/i.test(id))
+    return json({ error: "A lead id is required" }, 400);
 
-  const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+  const db = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+  );
   const { data: lead, error } = await db
     .from("leads")
-    .select("id, created_at, name, business_name, email, phone, business_type, needs, current_website, message")
+    .select(
+      "id, created_at, name, business_name, email, phone, business_type, needs, current_website, message",
+    )
     .eq("id", id)
     .gte("created_at", new Date(Date.now() - 15 * 60 * 1000).toISOString())
     .maybeSingle();
@@ -61,13 +74,19 @@ Deno.serve(async (req) => {
     ["Needs", (lead.needs ?? []).join(", ")],
     ["Current website", lead.current_website],
     ["Message", lead.message],
-    ["Received", new Date(lead.created_at).toLocaleString("en-AU", { timeZone: "Australia/Sydney" })],
+    [
+      "Received",
+      new Date(lead.created_at).toLocaleString("en-AU", { timeZone: "Australia/Sydney" }),
+    ],
   ];
   const filled = rows.filter(([, v]) => v && String(v).trim());
   const text = filled.map(([k, v]) => `${k}: ${v}`).join("\n");
   const html = `<p>New enquiry from <strong>${esc(lead.business_name)}</strong>. Reply to this email to answer them.</p>
 <table style="border-collapse:collapse">${filled
-    .map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#555">${esc(k)}</td><td style="padding:4px 0">${esc(String(v))}</td></tr>`)
+    .map(
+      ([k, v]) =>
+        `<tr><td style="padding:4px 12px 4px 0;color:#555">${esc(k)}</td><td style="padding:4px 0">${esc(String(v))}</td></tr>`,
+    )
     .join("")}</table>`;
 
   await sendEmail(apiKey, {

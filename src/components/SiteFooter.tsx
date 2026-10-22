@@ -19,7 +19,9 @@ export function SiteFooter() {
           <ul className="grid grid-cols-2 gap-2 text-sm">
             {nav.map((n) => (
               <li key={n.to}>
-                <Link to={n.to} className="text-muted-foreground hover:text-foreground">{n.label}</Link>
+                <Link to={n.to} className="text-muted-foreground hover:text-foreground">
+                  {n.label}
+                </Link>
               </li>
             ))}
           </ul>
@@ -33,7 +35,9 @@ export function SiteFooter() {
             </a>
           </p>
           <p>
-            <a href={`mailto:${site.email}`} className="text-foreground hover:text-primary-soft">{site.email}</a>
+            <a href={`mailto:${site.email}`} className="text-foreground hover:text-primary-soft">
+              {site.email}
+            </a>
           </p>
           <p>ABN: {site.abn}</p>
           <p>{site.location}</p>
@@ -42,8 +46,12 @@ export function SiteFooter() {
       <div className="mx-auto mt-14 flex max-w-6xl flex-col items-center justify-between gap-4 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row">
         <p>© 2026 Teague Industries</p>
         <div className="flex gap-6">
-          <Link to="/privacy" className="hover:text-foreground">Privacy Policy</Link>
-          <Link to="/terms" className="hover:text-foreground">Terms</Link>
+          <Link to="/privacy" className="hover:text-foreground">
+            Privacy Policy
+          </Link>
+          <Link to="/terms" className="hover:text-foreground">
+            Terms
+          </Link>
         </div>
       </div>
     </footer>

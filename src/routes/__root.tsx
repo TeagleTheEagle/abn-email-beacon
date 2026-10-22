@@ -27,7 +27,9 @@ function NotFoundComponent() {
       <div className="max-w-md text-center">
         <h1 className="text-5xl text-chrome">404</h1>
         <p className="mt-4 text-muted-foreground">This page drifted off into space.</p>
-        <Link to="/" className="btn-primary mt-8">Go home</Link>
+        <Link to="/" className="btn-primary mt-8">
+          Go home
+        </Link>
       </div>
     </div>
   );
@@ -43,10 +45,22 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl text-foreground">This page didn't load</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Something went wrong. Try refreshing or head back home.</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Something went wrong. Try refreshing or head back home.
+        </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <button onClick={() => { router.invalidate(); reset(); }} className="btn-primary">Try again</button>
-          <a href="/" className="btn-chrome">Go home</a>
+          <button
+            onClick={() => {
+              router.invalidate();
+              reset();
+            }}
+            className="btn-primary"
+          >
+            Try again
+          </button>
+          <a href="/" className="btn-chrome">
+            Go home
+          </a>
         </div>
       </div>
     </div>
@@ -59,7 +73,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Teague Industries — Websites and Stores for Australian Businesses" },
-      { name: "description", content: "Websites, online stores and practical tools for Australian small businesses." },
+      {
+        name: "description",
+        content: "Websites, online stores and practical tools for Australian small businesses.",
+      },
       { name: "author", content: "Teague Industries" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -75,8 +92,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "manifest", href: "/manifest.webmanifest" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       // Fonts are self-hosted (see styles.css); preload the two used above the fold on every page.
-      { rel: "preload", href: "/fonts/inter-latin.woff2", as: "font", type: "font/woff2", crossOrigin: "anonymous" },
-      { rel: "preload", href: "/fonts/michroma-latin.woff2", as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+      {
+        rel: "preload",
+        href: "/fonts/inter-latin.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "preload",
+        href: "/fonts/michroma-latin.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
+      },
     ],
     scripts: analyticsScripts(),
   }),
@@ -108,12 +137,16 @@ function RootComponent() {
   useEffect(() => {
     trackPageView(window.location.pathname + window.location.search);
     return router.subscribe("onResolved", (e) => {
-      if (e.fromLocation && e.hrefChanged) trackPageView(e.toLocation.pathname + e.toLocation.searchStr);
+      if (e.fromLocation && e.hrefChanged)
+        trackPageView(e.toLocation.pathname + e.toLocation.searchStr);
     });
   }, [router]);
   return (
     <QueryClientProvider client={queryClient}>
-      <a href="#main" className="sr-only z-[60] rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4">
+      <a
+        href="#main"
+        className="sr-only z-[60] rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+      >
         Skip to content
       </a>
       <SiteNav />

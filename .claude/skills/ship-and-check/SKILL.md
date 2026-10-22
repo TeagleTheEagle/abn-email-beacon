@@ -9,12 +9,12 @@ This repo is the Teague Industries site (see CLAUDE.md). It is connected to Lova
 
 There are three jobs. Do the ones the request asks for:
 
-| Request | Do |
-|---|---|
-| "commit and push", "ship it" | 1. Ship, then offer 2 once they've published |
-| "is the live site up to date?", "are both up to date?" | 2. Verify live (and check git is pushed) |
-| "test the site", "check mobile", "broken links?" | 3. Site check |
-| "ship it and check it" | 1 → (user publishes) → 2 → 3 against live |
+| Request                                                | Do                                           |
+| ------------------------------------------------------ | -------------------------------------------- |
+| "commit and push", "ship it"                           | 1. Ship, then offer 2 once they've published |
+| "is the live site up to date?", "are both up to date?" | 2. Verify live (and check git is pushed)     |
+| "test the site", "check mobile", "broken links?"       | 3. Site check                                |
+| "ship it and check it"                                 | 1 → (user publishes) → 2 → 3 against live    |
 
 Scripts are in `.claude/skills/ship-and-check/scripts/`. They need Node 22+ and Chrome or Edge (set `CHROME_PATH` if it's somewhere unusual). Write their output to the session scratchpad, not the repo.
 
@@ -28,9 +28,10 @@ Scripts are in `.claude/skills/ship-and-check/scripts/`. They need Node 22+ and 
    - `npx tsc --noEmit`
    - `npm test`
    - `npm run build` if code changed (skip for docs-only changes). It catches build failures that the dev server hides.
-   - Lint: `npm run lint` reports hundreds of Prettier formatting errors across the whole repo. They're old, because Lovable doesn't format, so ignore them. Only fix non-Prettier errors in files you changed: `npx eslint <files> | grep -v prettier/prettier`.
+   - `npm run lint` must report 0 errors (warnings in `src/components/ui` are fine). The repo was fully Prettier-formatted on 22 Oct 2026, but Lovable doesn't format its commits, so after pulling run `npm run format` and include any reformatted files in your commit. Generated files (`src/integrations/supabase`, `.lovable`, `AGENTS.md`, `routeTree.gen.ts`) are in `.prettierignore` and stay as Lovable writes them.
 
    If something fails, fix it or tell the user. Don't push a broken `main`.
+
 4. **Commit** with a plain-language summary line, plus a short body explaining why. End the message with the attribution lines this session's instructions specify. If the change completes something in `roadmap.md`, tick it off in the same commit, since the repo tracks the user's requests there.
 5. **Sync, then push.** Run `git fetch origin main`. If Lovable has pushed new commits, run `git pull --rebase origin main`. That only replays your new, unpushed commits on top of theirs, which is safe. If it conflicts, stop and explain. Then `git push origin main`. Never use `--force`, and never amend, rebase or squash commits that are already on GitHub.
 6. **Tell the user** the commit hash and what's in it. Make clear it's on GitHub and in Lovable but **not live until they click Publish → Update** in Lovable, and offer to check the live site once they have.
@@ -61,6 +62,7 @@ node .claude/skills/ship-and-check/scripts/site-check.mjs --base https://www.tea
 ```
 
 For every page in that site's `sitemap.xml`, at desktop (1440×900) and phone (390×844), it records:
+
 - the HTTP status
 - how long the main heading takes to become visible (flagged over 2.5s or never)
 - console errors and exceptions
@@ -71,6 +73,7 @@ For every page in that site's `sitemap.xml`, at desktop (1440×900) and phone (3
 It saves top-of-page and full-page screenshots, checks that an unknown URL returns the 404 page, and checks every internal link, including `#anchors`. A whole-site run takes about 2–3 minutes; give the command a 10-minute timeout. It writes `report.md` and `report.json` and prints the report.
 
 Then:
+
 1. Read the report. Open screenshots with the Read tool: always the home page (desktop and phone), plus every page with a problem. Look for things a script can't judge: overlapping or misaligned elements, cut-off text, odd gaps, images missing.
 2. Before calling something a bug, rule out known noise:
    - **The live server can take about 4s on its first request** (a hosting cold start), then about 0.5s after that. The "Server response" column shows this, and a slow heading caused by it is labelled as server time. Re-check that page before blaming the page itself.
@@ -85,6 +88,7 @@ Then:
 ## Reporting back
 
 The user runs the business and isn't necessarily a developer, so keep it short and plain:
+
 - **Shipped:** the commit hash and a one-line summary, plus the Publish → Update reminder.
 - **Live vs code:** up to date or not, and which pages differ.
 - **Site check:** a table of pages (✓ or the problem), the real problems with a suggested fix for each, and the known noise kept separate.

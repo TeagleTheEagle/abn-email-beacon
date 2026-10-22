@@ -37,7 +37,9 @@ export function formatPrice(amount: string, currencyCode: string) {
   const value = parseFloat(amount);
   if (currencyCode === "AUD") return `A$${value.toFixed(2)}`;
   try {
-    return new Intl.NumberFormat("en-AU", { style: "currency", currency: currencyCode }).format(value);
+    return new Intl.NumberFormat("en-AU", { style: "currency", currency: currencyCode }).format(
+      value,
+    );
   } catch {
     return `${currencyCode} ${value.toFixed(2)}`;
   }
@@ -56,8 +58,7 @@ export async function storefrontApiRequest(query: string, variables: Record<stri
 
   if (response.status === 402) {
     toast.error("Store temporarily unavailable", {
-      description:
-        "Please try again later or contact us for help with your order.",
+      description: "Please try again later or contact us for help with your order.",
     });
     return undefined;
   }
@@ -69,7 +70,9 @@ export async function storefrontApiRequest(query: string, variables: Record<stri
   const data = await response.json();
 
   if (data.errors) {
-    throw new Error(`Error calling Shopify: ${data.errors.map((e: { message: string }) => e.message).join(", ")}`);
+    throw new Error(
+      `Error calling Shopify: ${data.errors.map((e: { message: string }) => e.message).join(", ")}`,
+    );
   }
 
   return data;
@@ -203,9 +206,13 @@ function formatCheckoutUrl(checkoutUrl: string): string {
   }
 }
 
-function isCartNotFoundError(userErrors: Array<{ field: string[] | null; message: string }>): boolean {
+function isCartNotFoundError(
+  userErrors: Array<{ field: string[] | null; message: string }>,
+): boolean {
   return userErrors.some(
-    (e) => e.message.toLowerCase().includes("cart not found") || e.message.toLowerCase().includes("does not exist"),
+    (e) =>
+      e.message.toLowerCase().includes("cart not found") ||
+      e.message.toLowerCase().includes("does not exist"),
   );
 }
 
@@ -249,7 +256,8 @@ export async function addLineToShopifyCart(
 
   const lines = data?.data?.cartLinesAdd?.cart?.lines?.edges || [];
   const newLine = lines.find(
-    (l: { node: { id: string; merchandise: { id: string } } }) => l.node.merchandise.id === item.variantId,
+    (l: { node: { id: string; merchandise: { id: string } } }) =>
+      l.node.merchandise.id === item.variantId,
   );
   return { success: true, lineId: newLine?.node?.id };
 }
@@ -277,7 +285,10 @@ export async function removeLineFromShopifyCart(
   cartId: string,
   lineId: string,
 ): Promise<{ success: boolean; cartNotFound?: boolean }> {
-  const data = await storefrontApiRequest(CART_LINES_REMOVE_MUTATION, { cartId, lineIds: [lineId] });
+  const data = await storefrontApiRequest(CART_LINES_REMOVE_MUTATION, {
+    cartId,
+    lineIds: [lineId],
+  });
 
   const userErrors = data?.data?.cartLinesRemove?.userErrors || [];
   if (isCartNotFoundError(userErrors)) return { success: false, cartNotFound: true };

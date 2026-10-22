@@ -48,7 +48,11 @@ function ShopPage() {
       )}
       <Reveal className="mx-auto mt-20 max-w-3xl px-6 pb-24 text-center">
         <p className="text-sm text-muted-foreground">
-          Need something custom? <a href="/contact" className="text-primary-soft hover:underline">Ask about a custom build</a> — we make templates and practical tools for Australian business.
+          Need something custom?{" "}
+          <a href="/contact" className="text-primary-soft hover:underline">
+            Ask about a custom build
+          </a>{" "}
+          — we make templates and practical tools for Australian business.
         </p>
       </Reveal>
     </>

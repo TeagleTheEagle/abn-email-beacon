@@ -9,11 +9,26 @@ export default defineTool({
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: () => {
     const rows = services.map((s) => ({
-      id: s.id, title: s.title, summary: s.short, price: s.price, priceNote: s.priceNote ?? "",
-      included: [...s.included], whoFor: s.whoFor,
+      id: s.id,
+      title: s.title,
+      summary: s.short,
+      price: s.price,
+      priceNote: s.priceNote ?? "",
+      included: [...s.included],
+      whoFor: s.whoFor,
     }));
     return {
-      content: [{ type: "text", text: rows.map((r) => `${r.title} — ${r.price} ${r.priceNote}\n${r.summary}\nIncludes: ${r.included.join("; ")}`).join("\n\n") }],
+      content: [
+        {
+          type: "text",
+          text: rows
+            .map(
+              (r) =>
+                `${r.title} — ${r.price} ${r.priceNote}\n${r.summary}\nIncludes: ${r.included.join("; ")}`,
+            )
+            .join("\n\n"),
+        },
+      ],
       structuredContent: { services: rows },
     };
   },

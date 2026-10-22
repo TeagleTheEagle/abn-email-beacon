@@ -13,7 +13,12 @@ import { newLeadId, notifyLead } from "@/lib/leads";
 import { track } from "@/lib/analytics";
 
 export const Route = createFileRoute("/contact")({
-  head: () => seo("/contact", "Get a Free Preview", "Tell us about your business and we'll build a free preview of your new website or store — no obligation."),
+  head: () =>
+    seo(
+      "/contact",
+      "Get a Free Preview",
+      "Tell us about your business and we'll build a free preview of your new website or store — no obligation.",
+    ),
   component: Contact,
 });
 
@@ -44,7 +49,10 @@ const schema = z.object({
     .trim()
     .max(255)
     .optional()
-    .refine((v) => !v || normaliseWebsite(v) !== null, "Please enter your website address, e.g. mysite.com.au"),
+    .refine(
+      (v) => !v || normaliseWebsite(v) !== null,
+      "Please enter your website address, e.g. mysite.com.au",
+    ),
   message: z.string().trim().max(2000).optional(),
 });
 type FormValues = z.infer<typeof schema>;
@@ -52,14 +60,21 @@ type FormValues = z.infer<typeof schema>;
 function Contact() {
   const [done, setDone] = useState(false);
   const [err, setErr] = useState<string | null>(null);
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormValues>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: { needs: [] },
   });
 
   const trapRef = useRef<HTMLInputElement>(null);
   const onSubmit = async (v: FormValues) => {
-    if (trapRef.current?.value) { setDone(true); return; }
+    if (trapRef.current?.value) {
+      setDone(true);
+      return;
+    }
     setErr(null);
     const id = newLeadId();
     const { error } = await supabase.from("leads").insert({
@@ -84,7 +99,11 @@ function Contact() {
 
   return (
     <>
-      <PageHeader label="Contact" title="Get a free preview" sub="Tell us a little about your business. No cost, no obligation." />
+      <PageHeader
+        label="Contact"
+        title="Get a free preview"
+        sub="Tell us a little about your business. No cost, no obligation."
+      />
       <div className="mx-auto grid max-w-5xl gap-8 px-6 lg:grid-cols-[1.6fr_1fr]">
         <Reveal>
           <div className="glass p-6 sm:p-10">
@@ -94,30 +113,83 @@ function Contact() {
                 <p className="mt-6 text-lg">Thanks! We'll be in touch within 1–2 business days.</p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="grid gap-5 sm:grid-cols-2" noValidate>
-<input ref={trapRef} type="text" name="company_website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
-                <Field label="Name *" error={errors.name?.message}><input className="field" autoComplete="name" {...register("name")} /></Field>
-                <Field label="Business name *" error={errors.business_name?.message}><input className="field" {...register("business_name")} autoComplete="organization" /></Field>
-                <Field label="Email *" error={errors.email?.message}><input type="email" className="field" autoComplete="email" {...register("email")} /></Field>
-                <Field label="Phone" error={errors.phone?.message}><input type="tel" className="field" autoComplete="tel" {...register("phone")} /></Field>
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="grid gap-5 sm:grid-cols-2"
+                noValidate
+              >
+                <input
+                  ref={trapRef}
+                  type="text"
+                  name="company_website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="absolute -left-[9999px] h-0 w-0 opacity-0"
+                />
+                <Field label="Name *" error={errors.name?.message}>
+                  <input className="field" autoComplete="name" {...register("name")} />
+                </Field>
+                <Field label="Business name *" error={errors.business_name?.message}>
+                  <input
+                    className="field"
+                    {...register("business_name")}
+                    autoComplete="organization"
+                  />
+                </Field>
+                <Field label="Email *" error={errors.email?.message}>
+                  <input
+                    type="email"
+                    className="field"
+                    autoComplete="email"
+                    {...register("email")}
+                  />
+                </Field>
+                <Field label="Phone" error={errors.phone?.message}>
+                  <input type="tel" className="field" autoComplete="tel" {...register("phone")} />
+                </Field>
                 <Field label="Business type" className="sm:col-span-2">
                   <select className="field" {...register("business_type")} defaultValue="">
                     <option value="">Select…</option>
-                    {businessTypes.map((b) => <option key={b} value={b}>{b}</option>)}
+                    {businessTypes.map((b) => (
+                      <option key={b} value={b}>
+                        {b}
+                      </option>
+                    ))}
                   </select>
                 </Field>
                 <fieldset className="sm:col-span-2">
                   <legend className="label mb-3">What you need</legend>
                   <div className="flex flex-wrap gap-3">
                     {needOptions.map((n) => (
-                      <label key={n} className="flex cursor-pointer items-center gap-2 rounded-full border border-input px-4 py-2 text-sm has-[:checked]:border-primary has-[:checked]:bg-primary/15">
-                        <input type="checkbox" value={n} className="accent-primary" {...register("needs")} /> {n}
+                      <label
+                        key={n}
+                        className="flex cursor-pointer items-center gap-2 rounded-full border border-input px-4 py-2 text-sm has-[:checked]:border-primary has-[:checked]:bg-primary/15"
+                      >
+                        <input
+                          type="checkbox"
+                          value={n}
+                          className="accent-primary"
+                          {...register("needs")}
+                        />{" "}
+                        {n}
                       </label>
                     ))}
                   </div>
                 </fieldset>
-                <Field label="Current website (optional)" error={errors.current_website?.message} className="sm:col-span-2">
-                  <input type="text" inputMode="url" autoComplete="url" placeholder="mysite.com.au" className="field" {...register("current_website")} />
+                <Field
+                  label="Current website (optional)"
+                  error={errors.current_website?.message}
+                  className="sm:col-span-2"
+                >
+                  <input
+                    type="text"
+                    inputMode="url"
+                    autoComplete="url"
+                    placeholder="mysite.com.au"
+                    className="field"
+                    {...register("current_website")}
+                  />
                 </Field>
                 <Field label="Message" error={errors.message?.message} className="sm:col-span-2">
                   <textarea rows={5} className="field" {...register("message")} />
@@ -134,11 +206,22 @@ function Contact() {
           <div className="glass space-y-6 p-8">
             <div className="flex items-start gap-3">
               <Mail className="mt-1 h-5 w-5 text-primary-soft" aria-hidden="true" />
-              <div><p className="label">Email</p><a href={`mailto:${site.email}`} className="mt-1 block break-all hover:text-primary-soft">{site.email}</a></div>
+              <div>
+                <p className="label">Email</p>
+                <a
+                  href={`mailto:${site.email}`}
+                  className="mt-1 block break-all hover:text-primary-soft"
+                >
+                  {site.email}
+                </a>
+              </div>
             </div>
             <div className="flex items-start gap-3">
               <MapPin className="mt-1 h-5 w-5 text-primary-soft" aria-hidden="true" />
-              <div><p className="label">Location</p><p className="mt-1">{site.location}</p></div>
+              <div>
+                <p className="label">Location</p>
+                <p className="mt-1">{site.location}</p>
+              </div>
             </div>
             <p className="text-sm text-muted-foreground">ABN: {site.abn}</p>
           </div>
@@ -155,16 +238,35 @@ function Contact() {
   );
 }
 
-function Field({ label, error, className = "", children }: { label: string; error?: string | undefined; className?: string; children: React.ReactNode }) {
+function Field({
+  label,
+  error,
+  className = "",
+  children,
+}: {
+  label: string;
+  error?: string | undefined;
+  className?: string;
+  children: React.ReactNode;
+}) {
   const id = useId();
   const required = label.trim().endsWith("*");
   return (
     <label htmlFor={id} className={`block ${className}`}>
       <span className="label mb-2 block">{label}</span>
       {isValidElement(children)
-        ? cloneElement(children as ReactElement<Record<string, unknown>>, { id, "aria-invalid": error ? true : undefined, "aria-required": required || undefined, "aria-describedby": error ? `${id}-error` : undefined })
+        ? cloneElement(children as ReactElement<Record<string, unknown>>, {
+            id,
+            "aria-invalid": error ? true : undefined,
+            "aria-required": required || undefined,
+            "aria-describedby": error ? `${id}-error` : undefined,
+          })
         : children}
-      {error && <span id={`${id}-error`} role="alert" className="mt-1 block text-xs text-destructive">{error}</span>}
+      {error && (
+        <span id={`${id}-error`} role="alert" className="mt-1 block text-xs text-destructive">
+          {error}
+        </span>
+      )}
     </label>
   );
 }

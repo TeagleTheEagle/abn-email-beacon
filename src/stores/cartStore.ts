@@ -50,7 +50,10 @@ export const useCartStore = create<CartStore>()(
         set({ isLoading: true });
         try {
           if (!cartId) {
-            const result = await createShopifyCart({ quantity: item.quantity, variantId: item.variantId });
+            const result = await createShopifyCart({
+              quantity: item.quantity,
+              variantId: item.variantId,
+            });
             if (result) {
               set({
                 cartId: result.cartId,
@@ -76,7 +79,10 @@ export const useCartStore = create<CartStore>()(
               clearCart();
             }
           } else {
-            const result = await addLineToShopifyCart(cartId, { quantity: item.quantity, variantId: item.variantId });
+            const result = await addLineToShopifyCart(cartId, {
+              quantity: item.quantity,
+              variantId: item.variantId,
+            });
             if (result.success) {
               const currentItems = get().items; // Re-fetch to avoid stale state after async operation
               set({ items: [...currentItems, { ...item, lineId: result.lineId ?? null }] });
@@ -130,7 +136,11 @@ export const useCartStore = create<CartStore>()(
           if (result.success) {
             const currentItems = get().items;
             const newItems = currentItems.filter((i) => i.variantId !== variantId);
-            newItems.length === 0 ? clearCart() : set({ items: newItems });
+            if (newItems.length === 0) {
+              clearCart();
+            } else {
+              set({ items: newItems });
+            }
           } else if (result.cartNotFound) {
             clearCart();
           }
@@ -162,7 +172,11 @@ export const useCartStore = create<CartStore>()(
     {
       name: "shopify-cart",
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ items: state.items, cartId: state.cartId, checkoutUrl: state.checkoutUrl }),
+      partialize: (state) => ({
+        items: state.items,
+        cartId: state.cartId,
+        checkoutUrl: state.checkoutUrl,
+      }),
     },
   ),
 );

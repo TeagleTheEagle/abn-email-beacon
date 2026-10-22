@@ -2,7 +2,15 @@ import { useLayoutEffect, useRef, type ReactNode } from "react";
 
 // Content already on screen at load stays visible from the first paint (it is server-rendered,
 // so it must not wait for JavaScript). Only content that starts below the fold fades in on scroll.
-export function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
+export function Reveal({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: ReactNode;
+  delay?: number;
+  className?: string;
+}) {
   const ref = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -17,12 +25,18 @@ export function Reveal({ children, delay = 0, className = "" }: { children: Reac
         if (!entries.some((e) => e.isIntersecting)) return;
         io.disconnect();
         el.style.opacity = "";
-        el.animate([{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "none" }], {
-          duration: 400,
-          delay: delay * 1000,
-          easing: "ease-out",
-          fill: "backwards",
-        });
+        el.animate(
+          [
+            { opacity: 0, transform: "translateY(12px)" },
+            { opacity: 1, transform: "none" },
+          ],
+          {
+            duration: 400,
+            delay: delay * 1000,
+            easing: "ease-out",
+            fill: "backwards",
+          },
+        );
       },
       { rootMargin: "0px 0px -40px 0px" },
     );
