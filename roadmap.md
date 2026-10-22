@@ -10,6 +10,7 @@ Read this first: it's where the business is heading. Lovable, Claude and Shopify
 
 ## Open issues
 
+- [x] Ben's 100%-off checkout test discount: unlimited uses (Ben's request, code kept private). Shopify set an end date of 22 Oct 2027.
 - [x] Add a guided free-preview builder on Services and replace visitor-facing Shopify branding with Websites and Stores; preserve store and checkout connections. Provider identity remains in Privacy; technical URLs stay intact. Two store product names updated live.
 - [x] Remove AI-made positioning from service descriptions while keeping actual automation inclusions clear. Live goods do not claim AI-made; the genuine AI prompt product still describes its purpose.
 - [x] Requested visual refresh: readable typography, visible desktop navigation, preview-led hero, early portfolio, detailed service cards, founder introduction and working interactive demos.
