@@ -28,7 +28,7 @@ export const projects: Project[] = [
     link: { label: "View live", href: "/shop", external: false },
   },
   {
-    title: "Café Website Starter Kit (Demo)",
+    title: "Café Website (Demo)",
     category: "Website",
     tag: "Demo",
     description:

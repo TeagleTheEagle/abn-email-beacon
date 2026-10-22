@@ -25,8 +25,8 @@ function ShopPage() {
     <>
       <PageHeader
         label="Shop"
-        title="Instant-download templates"
-        sub="Pay securely through our checkout and download straight away."
+        title="Templates, playbooks and tools"
+        sub="Instant downloads, plus the 48-hour audit delivered to your inbox. Secure checkout."
       />
       {products.length === 0 ? (
         <div className="mx-auto max-w-md px-6 py-24 text-center">

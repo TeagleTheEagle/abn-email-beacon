@@ -91,13 +91,7 @@ export function DemoSite({
       </div>
       <section id={`demo-items-${kind}-${compact ? "compact" : "full"}`} className="demo-items">
         <div className="demo-section-heading">
-          <h3>
-            {kind === "cafe"
-              ? "Made for your morning."
-              : kind === "retail"
-                ? "The essentials."
-                : "A little expertise goes a long way."}
-          </h3>
+          <h3>{demo.itemsTitle}</h3>
           {kind === "cafe" && (
             <div className="demo-filters">
               {["All", "Coffee", "Kitchen"].map((value) => (

@@ -57,6 +57,9 @@ export function ProductCard({
               <span className="font-display text-3xl text-muted-foreground/40">TI</span>
             </div>
           )}
+          <span className="label absolute left-3 top-3 rounded-[2px] bg-background/80 px-2 py-1 !text-[9px] backdrop-blur">
+            {node.handle.includes("audit") ? "Delivered in 48 hours" : "Instant download"}
+          </span>
           {outOfStock && (
             <span className="absolute right-3 top-3 rounded-full bg-surface px-3 py-1 font-display text-[9px] tracking-[0.2em] text-muted-foreground">
               SOLD OUT

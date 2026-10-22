@@ -3,7 +3,14 @@ import { Check } from "lucide-react";
 import { PageHeader, Reveal } from "@/components/Reveal";
 import { Price } from "@/components/Price";
 import { EstimateCalculator } from "@/components/EstimateCalculator";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { services } from "@/content/services";
+import { faqs } from "@/content/site";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/pricing")({
@@ -15,6 +22,9 @@ export const Route = createFileRoute("/pricing")({
     ),
   component: Pricing,
 });
+
+// The money questions from the shared FAQ list, so this page answers them without a second copy.
+const pricingFaqs = faqs.filter((f) => /cost|pay|platform|owns|changes|own my domain/i.test(f.q));
 
 function Pricing() {
   return (
@@ -60,6 +70,37 @@ function Pricing() {
       </div>
       <Reveal className="mx-auto mt-16 max-w-5xl px-6">
         <EstimateCalculator />
+      </Reveal>
+      <Reveal className="mx-auto mt-16 max-w-5xl px-6">
+        <div className="grid gap-6 lg:grid-cols-[1fr_1.4fr]">
+          <div className="glass corner-marks p-8">
+            <p className="label">Why A$500?</p>
+            <h2 className="mt-4 text-2xl">Because you see it before you pay for it.</h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              There is no office, no account manager and no sales call. You brief me in two minutes,
+              I build the preview, and I only finish what you have already said yes to. That keeps
+              the price fixed and the work focused on your business.
+            </p>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Nothing is due until you approve the preview. Stores and Smart Stores start from the
+              prices shown because every catalogue is different; you get a fixed quote with the
+              preview.
+            </p>
+          </div>
+          <div>
+            <p className="label">Money questions</p>
+            <Accordion type="single" collapsible className="mt-2">
+              {pricingFaqs.map((faq, i) => (
+                <AccordionItem key={faq.q} value={`p${i}`}>
+                  <AccordionTrigger className="text-left text-base hover:no-underline">
+                    {faq.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">{faq.a}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </div>
       </Reveal>
       <Reveal className="mx-auto mt-14 max-w-2xl space-y-3 px-6 text-center text-sm text-muted-foreground">
         <p>Prices in AUD. Teague Industries is not registered for GST, so no GST is charged.</p>

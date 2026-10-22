@@ -97,6 +97,8 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
+// Page order: lead with the website offer (packages, what's under them, examples, process), then
+// the people, then the audit for those who already have a site, then the shop.
 function Home() {
   return (
     <>
@@ -126,17 +128,10 @@ function Home() {
               <span className="text-primary-soft">Built for your next chapter.</span>
             </h1>
             <p className="mt-6 max-w-lg text-lg text-muted-foreground">
-              A better home for your business online. Custom websites, online stores and smart tools
-              — with a free preview before you pay.
+              Custom websites from <strong className="text-accent-tech">A$500</strong> and online
+              stores from <strong className="text-accent-tech">A$1,200</strong> for Australian
+              businesses of every size — with a free preview before you pay.
             </p>
-            <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-              <span>
-                Websites <strong className="text-accent-tech">A$500</strong>
-              </span>
-              <span>
-                Stores <strong className="text-accent-tech">from A$1,200</strong>
-              </span>
-            </div>
             <div className="mt-7 max-w-md">
               <QuickLeadForm />
             </div>
@@ -155,7 +150,7 @@ function Home() {
             </div>
             <div className="mt-2 flex items-center justify-between gap-4 px-3 text-xs text-muted-foreground">
               <span className="label !text-[9px]">LAT 33.84 S / LON 151.21 E</span>
-              <span>Interactive concepts · Not client projects</span>
+              <span>Interactive concept · click around · not a client project</span>
             </div>
           </div>
         </div>
@@ -181,44 +176,7 @@ function Home() {
           ))}
         </div>
       </section>
-      <FeaturedProduct />
-      <Section index="02" label="Engineering" title="Under the hood.">
-        <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
-          <Reveal>
-            <div className="corner-marks p-3">
-              <div className="relative aspect-[4/3] overflow-hidden border border-border bg-surface-2">
-                <img
-                  src={demos.cafe.image}
-                  alt="Close-up of the café demo's header and menu"
-                  width={1024}
-                  height={640}
-                  loading="lazy"
-                  className="absolute left-0 top-0 w-[180%] max-w-none origin-top-left"
-                />
-                <span className="label absolute bottom-3 left-3 rounded-[2px] bg-background/80 px-2 py-1 !text-[9px] backdrop-blur">
-                  Detail · 180%
-                </span>
-              </div>
-            </div>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="max-w-lg text-muted-foreground">
-              Looks are the easy part. Every build ships with the things you don’t see.
-            </p>
-            <dl className="mt-8 divide-y divide-border border-y border-border">
-              <SpecRow k="Mobile-first" v="Laid out for phones first, then desktop" />
-              <SpecRow
-                k="Search-ready"
-                v="Titles, descriptions and structured data on every page"
-              />
-              <SpecRow k="Secure" v="HTTPS on your own domain" />
-              <SpecRow k="Fast" v="Optimised images, self-hosted fonts, nothing render-blocking" />
-              <SpecRow k="Yours" v="Your content, domain and accounts, from day one" />
-            </dl>
-          </Reveal>
-        </div>
-      </Section>
-      <Section index="03" label="Services" title="A clear scope. An honest price." surface>
+      <Section index="01" label="Services" title="A clear scope. An honest price." surface>
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {services.map((service, i) => (
             <Reveal key={service.id} delay={i * 0.05} className="h-full">
@@ -270,7 +228,7 @@ function Home() {
           ))}
         </div>
         <p className="mt-6 text-sm text-muted-foreground">
-          All prices in AUD. Not GST registered.{" "}
+          All prices in AUD. No GST is charged.{" "}
           <Link to="/pricing" className="text-primary-soft underline underline-offset-4">
             Full pricing details
           </Link>
@@ -294,14 +252,85 @@ function Home() {
           ))}
         </div>
       </Section>
+      <Section index="02" label="Engineering" title="Under the hood.">
+        <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
+          <Reveal>
+            <div className="corner-marks p-3">
+              <div className="relative aspect-[4/3] overflow-hidden border border-border bg-surface-2">
+                <img
+                  src={demos.salon.image}
+                  alt="Close-up of the salon demo's header and booking section"
+                  width={1024}
+                  height={640}
+                  loading="lazy"
+                  className="absolute left-0 top-0 w-[180%] max-w-none origin-top-left"
+                />
+                <span className="label absolute bottom-3 left-3 rounded-[2px] bg-background/80 px-2 py-1 !text-[9px] backdrop-blur">
+                  Detail · 180%
+                </span>
+              </div>
+            </div>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="max-w-lg text-muted-foreground">
+              Looks are the easy part. Every build ships with the things you don’t see.
+            </p>
+            <dl className="mt-8 divide-y divide-border border-y border-border">
+              <SpecRow k="Mobile-first" v="Laid out for phones first, then desktop" />
+              <SpecRow
+                k="Search-ready"
+                v="Titles, descriptions and structured data on every page"
+              />
+              <SpecRow k="Secure" v="HTTPS on your own domain" />
+              <SpecRow k="Fast" v="Optimised images and self-hosted fonts" />
+              <SpecRow k="Yours" v="Your content, domain and accounts, from day one" />
+            </dl>
+          </Reveal>
+        </div>
+      </Section>
+      <Section
+        index="03"
+        label="Smart Store Setup"
+        title="Less admin. More time for your business."
+      >
+        <div className="grid gap-x-12 gap-y-8 sm:grid-cols-2">
+          {[
+            {
+              t: "Product descriptions, drafted for you",
+              b: "Clear, search-friendly copy for every product, ready for you to check and approve.",
+            },
+            {
+              t: "Related products, recommended",
+              b: "“You may also like” suggestions on product and cart pages to help customers find more of what they need.",
+            },
+            {
+              t: "Common questions, answered",
+              b: "Live chat for FAQs and order-tracking questions, even outside business hours.",
+            },
+            {
+              t: "Follow-up emails, automated",
+              b: "Welcome, abandoned-cart and post-purchase emails that go out on their own.",
+            },
+          ].map((item) => (
+            <div key={item.t} className="border-t border-border pt-6">
+              <h3 className="text-xl">{item.t}</h3>
+              <p className="mt-3 text-muted-foreground">{item.b}</p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-8 text-sm text-muted-foreground">
+          Built on the store platform’s own tools. No extra monthly app fees from us.
+        </p>
+      </Section>
       <Section
         index="04"
         label="The difference"
         title="From “we really should fix the website” to this."
+        surface
       >
         <p className="mb-8 max-w-2xl text-muted-foreground">
           The same café, before and after. One is a page people leave. The other is a place they
-          want to visit.
+          want to visit. Both are illustrative concepts, not client sites.
         </p>
         <BeforeAfter />
       </Section>
@@ -388,40 +417,7 @@ function Home() {
           </div>
         </div>
       </section>
-      <Section
-        index="07"
-        label="Smart Store Setup"
-        title="Less admin. More time for your business."
-      >
-        <div className="grid gap-x-12 gap-y-8 sm:grid-cols-2">
-          {[
-            {
-              t: "Product descriptions, drafted for you",
-              b: "Clear, search-friendly copy for every product, ready for you to check and approve.",
-            },
-            {
-              t: "Related products, recommended",
-              b: "“You may also like” suggestions on product and cart pages to help customers find more of what they need.",
-            },
-            {
-              t: "Common questions, answered",
-              b: "Live chat for FAQs and order-tracking questions, even outside business hours.",
-            },
-            {
-              t: "Follow-up emails, automated",
-              b: "Welcome, abandoned-cart and post-purchase emails that go out on their own.",
-            },
-          ].map((item) => (
-            <div key={item.t} className="border-t border-border pt-6">
-              <h3 className="text-xl">{item.t}</h3>
-              <p className="mt-3 text-muted-foreground">{item.b}</p>
-            </div>
-          ))}
-        </div>
-        <p className="mt-8 text-sm text-muted-foreground">
-          Built on the store platform’s own tools. No extra monthly app fees from us.
-        </p>
-      </Section>
+      <FeaturedProduct />
       <ShopStrip />
       <Section index="09" label="Good questions" title="Before we get started.">
         <div className="max-w-3xl">
@@ -513,6 +509,7 @@ export function CtaBand() {
 }
 
 // One product, nearly a screen tall: a huge cover on one side and a specification sheet on the other.
+// It sits after the website offer because it's for people who already have a site.
 function FeaturedProduct() {
   const { featured } = Route.useLoaderData();
   if (!featured) return null;
@@ -554,7 +551,7 @@ function FeaturedProduct() {
           </Link>
         </Reveal>
         <Reveal delay={0.1}>
-          <p className="label">01 / Featured</p>
+          <p className="label">07 / {audit ? "Already have a website?" : "Featured"}</p>
           <h2 className="mt-4 text-4xl sm:text-5xl">{node.title}</h2>
           <p className="mt-5 max-w-lg text-muted-foreground">{firstSentence}</p>
           <dl className="mt-8 divide-y divide-border border-y border-border">
@@ -598,7 +595,6 @@ function ShopStrip() {
       index="08"
       label="The digital shop"
       title="Tools for your next chapter."
-      surface
       action={
         <Button asChild size="lg" variant="outline" className="h-12">
           <Link to="/shop">

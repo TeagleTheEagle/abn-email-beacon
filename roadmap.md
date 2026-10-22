@@ -121,3 +121,38 @@ Ben's brief: premium industrial-tech, "advanced technology company" not "online 
 - [x] Nav turns into a blurred graphite bar on scroll
 - [ ] Not done, by design: materials/dimensions specs, search and account icons (no accounts exist), a full-screen product video (needs footage), a "lifestyle" photo band (needs real photography)
 - [ ] Demo screenshots (café, trades, salon, retail) are light-themed by nature; only the shop covers follow the dark studio look
+
+## Two outside reviews (22 Oct 2026)
+
+Ben pasted a ChatGPT review and a Gemini review. Claims were checked against the code first; several were wrong (the hero already defaulted to the café, not retail). Fixed now:
+
+- [x] Shop added to the main navigation
+- [x] Home page reordered: packages, engineering, smart store, before/after, work, process, founder, then the audit (now introduced as "Already have a website?"), shop, FAQs
+- [x] Hero sub-copy states the A$500 and A$1,200 prices and the audience
+- [x] Before/after is a realistic dated page (no visitor counter or "nephew" joke) and both sides are labelled illustrative concepts
+- [x] "Nothing render-blocking" narrowed to "optimised images and self-hosted fonts"; engineering crop now uses the salon demo so the café isn't on screen five times
+- [x] Trades and salon demos no longer share the "A little expertise goes a long way" heading (DemoSite reads `itemsTitle` from demos.ts)
+- [x] "Café Website Starter Kit (Demo)" renamed "Café Website (Demo)" so it isn't confused with shop kits; founding-clients card highlighted
+- [x] Services H1 is "Websites and online stores built to win more customers"; home page says "No GST is charged" (pricing page keeps the full explanation)
+- [x] Pricing page differs from Services: "Why A$500?" box and the money-related FAQs, reused from the shared list
+- [x] Contact step 01 no longer says "two fields" beside an eight-field form; email link on Contact sized so it stays on one line
+- [x] Footer: duplicate "Templates store → Shop" line removed
+- [x] Shop header no longer calls everything an instant download; cards show "Instant download" or "Delivered in 48 hours"
+- [x] About page lists the Lower North Shore suburbs
+
+Ben's decisions (not done):
+
+- [ ] Google Search Console: Gemini says 0 pages indexed. Still blocked on Ben connecting Search Console and submitting the sitemap (existing item)
+- [ ] Footer slogan "PEOPLE | TECHNOLOGY | A BRIGHTER TOMORROW": Gemini wants something local and plain. Brand call; note the audience rule (no "small businesses")
+- [ ] "We" vs "I": company voice on steps/FAQs, Ben's voice on About and the founder section. Consistent enough as a pattern; change only if Ben wants first person everywhere
+- [ ] Scope caps for store tiers (e.g. "up to 25 products loaded, CSV import for more") and measurable promises per package; needs Ben's numbers
+- [ ] Ongoing costs (hosting, domain renewal, platform plan) spelled out beside the prices; needs Ben's hosting setup
+- [ ] What the free preview includes (homepage concept or full build) and exactly when payment is due; FAQ says "only pay if you go ahead", Ben to confirm the detail
+- [ ] Product pages: who it's for, contents, actual previews, file format, software needed, licence. Needs real screenshots of the files and Ben to set format in Shopify
+- [ ] Shop line-up: both reviews say the creator products (media kit, bio-link kit, Solo Hustle OS) sit oddly next to products for business owners. Options: hide them, move them to a separate collection, or replace with local-business toolkits
+- [ ] Move the A$149 audit onto Services/Pricing as an entry-level diagnostic (it is already featured on the home page)
+- [ ] New products suggested by both reviews: industry website starter kits (DIY, with the A$500 build as the done-for-you upgrade), Google Business Profile & review kit, enquiry tracker spreadsheet, quote-to-cash SMS/email script vault, local SEO playbook. All test prices, no demand evidence
+- [ ] New services suggested: business email setup, booking system setup, missed-call text-back, quote/invoice chaser automation, Google Maps & review engine, website fix sprint (implement the audit's findings), product listing pack, a second Care Plan tier around A$149/mo
+- [ ] Testimonials and case studies once real clients launch (permission-based)
+- [ ] Measuring the buying journey: page views, preview requests, add-to-cart and begin-checkout are already tracked in GA4; completed purchases need GA4 connected in the Shopify checkout settings (Ben, in Shopify admin)
+- [ ] Not taken up: "Most popular" badge on Pricing (Ben had it removed earlier); replacing the space/rocket cover art (Ben chose it); midnight-navy palette (the industrial-tech brief is newer)

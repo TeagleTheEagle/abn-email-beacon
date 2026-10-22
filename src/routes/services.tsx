@@ -38,7 +38,7 @@ function Services() {
     <>
       <PageHeader
         label="Services"
-        title="Everything you need to sell online"
+        title="Websites and online stores built to win more customers"
         sub="Clear scope, honest pricing and a free preview before you commit."
       />
       <section className="mx-auto mb-16 max-w-6xl px-6">

@@ -203,16 +203,18 @@ function Contact() {
           </div>
         </Reveal>
         <Reveal delay={0.1}>
-          <div className="glass space-y-6 p-8">
+          <div className="glass space-y-6 p-6 sm:p-8">
             <div className="flex items-start gap-3">
               <Mail className="mt-1 h-5 w-5 text-primary-soft" aria-hidden="true" />
               <div>
                 <p className="label">Email</p>
                 <a
                   href={`mailto:${site.email}`}
-                  className="mt-1 block break-all hover:text-primary-soft"
+                  className="mt-1 block text-sm [overflow-wrap:anywhere] hover:text-primary-soft"
                 >
-                  {site.email}
+                  {/* If it must wrap on a narrow phone, break after the @ rather than mid-word. */}
+                  {site.email.split("@")[0]}@<wbr />
+                  {site.email.split("@")[1]}
                 </a>
               </div>
             </div>

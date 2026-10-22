@@ -18,6 +18,7 @@ export const demos = {
     image: cafe,
     imageSmall: cafeSmall,
     action: "Explore the menu",
+    itemsTitle: "Made for your morning.",
     items: [
       { name: "Flat white", detail: "Coffee", price: 5 },
       { name: "Iced latte", detail: "Coffee", price: 6 },
@@ -34,6 +35,7 @@ export const demos = {
     image: tradie,
     imageSmall: tradieSmall,
     action: "Request a job",
+    itemsTitle: "Repairs, lighting and upgrades.",
     items: [
       { name: "Repairs & fault finding", detail: "Find the problem. Get it sorted.", price: 0 },
       { name: "Lighting installation", detail: "A brighter, better space.", price: 0 },
@@ -49,6 +51,7 @@ export const demos = {
     image: salon,
     imageSmall: salonSmall,
     action: "Book an appointment",
+    itemsTitle: "Cuts, colour and care.",
     items: [
       { name: "Cut & finish", detail: "Shape, style and a fresh start.", price: 85 },
       { name: "Colour refresh", detail: "A colour that feels like you.", price: 140 },
@@ -64,6 +67,7 @@ export const demos = {
     image: retail,
     imageSmall: retailSmall,
     action: "Shop essentials",
+    itemsTitle: "The essentials.",
     items: [
       { name: "Everyday canvas tote", detail: "Olive · Cotton canvas", price: 39 },
       { name: "The everyday tee", detail: "Natural · Organic cotton", price: 45 },

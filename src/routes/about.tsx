@@ -36,6 +36,10 @@ function About() {
           size get online properly — with honest pricing, a free preview first, and practical modern
           tools.
         </p>
+        <p className="mt-5 text-sm">
+          Based on Sydney’s Lower North Shore ({site.suburbs.join(", ")}) and working online with
+          businesses anywhere in Australia.
+        </p>
       </Reveal>
       <div className="mx-auto mt-16 grid max-w-5xl gap-5 px-6 sm:grid-cols-2 lg:grid-cols-4">
         {facts.map((fact, i) => (

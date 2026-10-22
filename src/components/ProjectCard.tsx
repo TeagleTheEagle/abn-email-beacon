@@ -24,7 +24,7 @@ export function ProjectCard({ project: p }: { project: Project }) {
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-[radial-gradient(circle_at_center,var(--surface-2),var(--background))]">
             <Sparkles className="h-8 w-8 text-primary-soft" aria-hidden="true" />
-            <span className="label">Coming soon</span>
+            <span className="label">Free preview · No upfront cost</span>
           </div>
         )}
         {p.tag && (
@@ -45,7 +45,7 @@ export function ProjectCard({ project: p }: { project: Project }) {
       </div>
     </>
   );
-  const cls = "group glass glass-hover flex h-full flex-col";
+  const cls = `group glass glass-hover flex h-full flex-col ${p.placeholder ? "border-primary/50 shadow-[var(--glow-soft)]" : ""}`;
   if (!p.link) return <div className={cls}>{inner}</div>;
   if (isExternal)
     return (

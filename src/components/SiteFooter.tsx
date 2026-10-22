@@ -29,12 +29,6 @@ export function SiteFooter() {
         <div className="space-y-2 text-sm text-muted-foreground">
           <p className="label mb-4">Contact</p>
           <p>
-            Templates store →{" "}
-            <a href={site.storeUrl} className="text-primary-soft hover:underline">
-              Shop
-            </a>
-          </p>
-          <p>
             <a href={`mailto:${site.email}`} className="text-foreground hover:text-primary-soft">
               {site.email}
             </a>

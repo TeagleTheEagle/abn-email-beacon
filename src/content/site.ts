@@ -35,7 +35,7 @@ export const steps = [
   {
     n: "01",
     title: "Tell us about your business",
-    body: "Two fields, two minutes. We reply within 1–2 business days.",
+    body: "A short brief about your business. We reply within 1–2 business days.",
     when: "Today",
   },
   {
