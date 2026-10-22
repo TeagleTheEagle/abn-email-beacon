@@ -12,7 +12,7 @@ describe("guided preview enquiry", () => {
   it("sends the selected business, store and care plan through the existing lead flow", async () => {
     render(<EstimateCalculator guided />);
     expect(screen.getByRole("button", { name: "Continue" })).toBeDisabled();
-    fireEvent.click(screen.getByRole("button", { name: "Trades", exact: true }));
+    fireEvent.click(screen.getByRole("button", { name: "Trades" }));
     fireEvent.click(screen.getByRole("button", { name: "Continue" }));
     const radios = screen.getAllByRole("radio");
     const store = radios[1];
@@ -21,7 +21,7 @@ describe("guided preview enquiry", () => {
     fireEvent.click(screen.getByRole("button", { name: "Continue" }));
     fireEvent.click(screen.getByRole("checkbox"));
     fireEvent.change(screen.getByRole("textbox", { name: "Business name" }), { target: { value: "Example Electrical" } });
-    fireEvent.change(screen.getByRole("textbox", { name: "Email", exact: true }), { target: { value: "example@example.com" } });
+    fireEvent.change(screen.getByRole("textbox", { name: "Email" }), { target: { value: "example@example.com" } });
     fireEvent.click(screen.getByRole("button", { name: "Get my free preview" }));
     await waitFor(() => expect(insert).toHaveBeenCalledWith(expect.objectContaining({
       business_name: "Example Electrical", business_type: "Trades", email: "example@example.com",
