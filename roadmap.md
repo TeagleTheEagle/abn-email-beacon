@@ -83,3 +83,7 @@ Read this first: it's where the business is heading. Lovable, Claude and Shopify
 - [ ] Store Setup and Smart Store Setup share the retail demo photo on /services — Ben to say if he wants a different image for one of them
 - [x] Shop and product pages cache the Shopify answer on the server for 60s (22 Oct 2026, `src/lib/ttl-cache.ts`): repeat visits render without waiting on Shopify; empty or failed answers are never kept, and the cart is never cached. Product edits in Shopify can take up to a minute to show
 - [ ] Lovable's hosting replaces the 5-minute HTML cache header from src/start.ts with no-cache. Hosting setting, nothing to change in the repo
+
+## Wording (22 Oct 2026)
+
+- [x] "Small business" dropped from all visitor-facing copy (page titles, descriptions, About, MCP description): the audience is now "businesses of every size" / "all businesses", so outreach never reads as sizing anyone up

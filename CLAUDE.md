@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Marketing site + shop for **Teague Industries** (Sydney-based studio selling websites, Shopify stores and AI tools to Australian small businesses). Production domain is `https://www.teagueindustries.com.au`; also published at `https://abn-email-beacon.lovable.app`. There are no user accounts — the only database write is lead/enquiry inserts.
+Marketing site + shop for **Teague Industries** (Sydney-based studio selling websites, Shopify stores and AI tools to Australian businesses of every size; never call the audience "small businesses" in visitor-facing copy). Production domain is `https://www.teagueindustries.com.au`; also published at `https://abn-email-beacon.lovable.app`. There are no user accounts — the only database write is lead/enquiry inserts.
 
 **This repo is connected to Lovable.** Every push to `main` syncs into the Lovable editor, and Lovable commits straight back here. Never force-push, rebase, amend or squash commits that are already pushed (it destroys the user's Lovable history), and keep `main` in a working state. `roadmap.md` tracks the user's outstanding requests and audit follow-ups.
 

@@ -11,7 +11,7 @@ export const Route = createFileRoute("/services")({
     seo(
       "/services",
       "Websites and Stores",
-      "Website builds, online store setup, smart stores and monthly care plans for Australian small businesses.",
+      "Website builds, online store setup, smart stores and monthly care plans for Australian businesses of every size.",
     ),
   component: Services,
 });

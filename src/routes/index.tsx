@@ -33,8 +33,8 @@ export const Route = createFileRoute("/")({
   head: () => {
     const base = seo(
       "/",
-      "Websites and Stores for Australian Small Businesses",
-      "Websites from A$500, online stores and smart tools for small businesses on Sydney's Lower North Shore and across Australia. Free preview first.",
+      "Websites and Stores for All Australian Businesses",
+      "Websites from A$500, online stores and smart tools for businesses of every size on Sydney's Lower North Shore and across Australia. Free preview first.",
     );
     return {
       ...base,

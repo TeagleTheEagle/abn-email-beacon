@@ -75,7 +75,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Teague Industries — Websites and Stores for Australian Businesses" },
       {
         name: "description",
-        content: "Websites, online stores and practical tools for Australian small businesses.",
+        content:
+          "Websites, online stores and practical tools for Australian businesses of every size.",
       },
       { name: "author", content: "Teague Industries" },
       { property: "og:type", content: "website" },

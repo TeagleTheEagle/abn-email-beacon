@@ -10,7 +10,7 @@ export const Route = createFileRoute("/about")({
     seo(
       "/about",
       "About",
-      "Teague Industries is an Australian business founded in 2026 to help small businesses get online properly.",
+      "Teague Industries is an Australian business founded in 2026 to help businesses of every size get online properly.",
     ),
   component: About,
 });
@@ -27,8 +27,9 @@ function About() {
       <PageHeader label="About" title="Our story" />
       <Reveal className="mx-auto max-w-2xl px-6 text-center text-lg text-muted-foreground">
         <p>
-          Teague Industries is an Australian business founded in 2026 to help small businesses get
-          online properly — with honest pricing, a free preview first, and practical modern tools.
+          Teague Industries is an Australian business founded in 2026 to help businesses of every
+          size get online properly — with honest pricing, a free preview first, and practical modern
+          tools.
         </p>
       </Reveal>
       <div className="mx-auto mt-20 grid max-w-5xl gap-6 px-6 md:grid-cols-3">

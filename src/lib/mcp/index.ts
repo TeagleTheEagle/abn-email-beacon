@@ -9,6 +9,6 @@ export default defineMcp({
   title: "Abn Email Beacon",
   version: "0.1.0",
   instructions:
-    "Public tools for Teague Industries, an Australian studio building Websites and Stores for small businesses. Read services, prices, FAQs and shop products, or send a free-preview enquiry. Prices are in AUD; not GST registered.",
+    "Public tools for Teague Industries, an Australian studio building Websites and Stores for all businesses. Read services, prices, FAQs and shop products, or send a free-preview enquiry. Prices are in AUD; not GST registered.",
   tools: [listServices, listFaqs, listProducts, requestPreview],
 });
