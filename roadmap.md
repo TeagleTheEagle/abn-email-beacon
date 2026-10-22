@@ -54,7 +54,7 @@ Read this first: it's where the business is heading. Lovable, Claude and Shopify
 - [x] Both domains active; HTTPS and bare-to-www redirect checked without DNS changes
 - [x] Reviewed published Privacy and Terms: business details/refund match; privacy access/tracking claims need confirmation, not legal approval
 - [x] Checked growth readiness: shop buttons correct; sitemap omits shop/products; recommended Search Console then five-business-owner outreach
-- [ ] Google indexing/performance verification — blocked until Ben connects Google Search Console
+- [x] Google Search Console connected by Ben (22 Oct 2026): property verified, sitemap submitted, indexing requested for home, services, pricing and shop. Check indexing status in a week
 
 ## Photo and wording follow-ups
 
@@ -142,7 +142,7 @@ Ben pasted a ChatGPT review and a Gemini review. Claims were checked against the
 
 Ben's decisions (not done):
 
-- [ ] Google Search Console: Gemini says 0 pages indexed. Still blocked on Ben connecting Search Console and submitting the sitemap (existing item)
+- [x] Google Search Console: verified and sitemap submitted by Ben (22 Oct 2026)
 - [ ] Footer slogan "PEOPLE | TECHNOLOGY | A BRIGHTER TOMORROW": Gemini wants something local and plain. Brand call; note the audience rule (no "small businesses")
 - [ ] "We" vs "I": company voice on steps/FAQs, Ben's voice on About and the founder section. Consistent enough as a pattern; change only if Ben wants first person everywhere
 - [ ] Scope caps for store tiers (e.g. "up to 25 products loaded, CSV import for more") and measurable promises per package; needs Ben's numbers
