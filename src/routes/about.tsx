@@ -12,7 +12,7 @@ export const Route = createFileRoute("/about")({
 
 const values = [
   { icon: Users, t: "People", d: "Real support, in plain English." },
-  { icon: Cpu, t: "Technology", d: "Modern, fast and AI-assisted." },
+  { icon: Cpu, t: "Technology", d: "Modern, fast and built around you." },
   { icon: Sunrise, t: "A Brighter Tomorrow", d: "Helping local businesses grow." },
 ];
 
@@ -22,7 +22,7 @@ function About() {
       <PageHeader label="About" title="Our story" />
       <Reveal className="mx-auto max-w-2xl px-6 text-center text-lg text-muted-foreground">
         <p>
-          Teague Industries is an Australian business founded in 2026 to help small businesses get online properly — with honest pricing, a free preview first, and modern tools including AI.
+          Teague Industries is an Australian business founded in 2026 to help small businesses get online properly — with honest pricing, a free preview first, and practical modern tools.
         </p>
       </Reveal>
       <div className="mx-auto mt-20 grid max-w-5xl gap-6 px-6 md:grid-cols-3">
@@ -51,7 +51,7 @@ function About() {
           <div className="min-w-0">
             <p className="label">Meet the Founder</p>
             <h2 className="mt-3 text-xl md:text-2xl">Ben Teague</h2>
-            <p className="mt-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">Founder · Websites &amp; Shopify stores</p>
+            <p className="mt-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">Founder · Websites and Stores</p>
             <blockquote className="mt-6 border-l-2 border-primary pl-4 text-lg text-primary-soft md:text-xl">
               “I’d rather show you than sell you.”
             </blockquote>

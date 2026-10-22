@@ -145,7 +145,7 @@ function DesignSystem() {
               <div><h1 className="text-2xl text-chrome sm:text-4xl">Honest, simple pricing</h1><code className="text-xs text-muted-foreground">h1 · text-2xl sm:text-4xl · .text-chrome (page headers)</code></div>
               <div><h2 className="text-2xl">A clear scope. An honest price.</h2><code className="text-xs text-muted-foreground">h2 · text-2xl (section titles)</code></div>
               <div><h3 className="text-sm font-semibold">Website Build</h3><code className="text-xs text-muted-foreground">h3 · text-sm font-semibold (card titles)</code></div>
-              <div><p className="text-muted-foreground">A better home for your business online. Custom websites, Shopify stores and smart tools, with a free preview before you pay.</p><code className="text-xs text-muted-foreground">body · 16px, line-height 1.65, text-muted-foreground for supporting copy</code></div>
+              <div><p className="text-muted-foreground">A better home for your business online. Custom websites, online stores and smart tools, with a free preview before you pay.</p><code className="text-xs text-muted-foreground">body · 16px, line-height 1.65, text-muted-foreground for supporting copy</code></div>
               <div><p className="label">What we do</p><code className="text-xs text-muted-foreground">.label · 11px uppercase, 0.3em tracking (eyebrows above headings)</code></div>
               <div><p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Founded 2026 · ABN {site.abn}</p><code className="text-xs text-muted-foreground">micro · 10px uppercase 0.2em (fact strips)</code></div>
             </div>

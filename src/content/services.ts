@@ -39,8 +39,8 @@ export const services: Service[] = [
   {
     id: "shopify-store",
     icon: ShoppingBag,
-    title: "Shopify Store Setup",
-    short: "A Shopify store, built and ready to take orders.",
+    title: "Store Setup",
+    short: "An online store, built and ready to take orders.",
     price: "From A$1,200",
     fromAud: 1200,
     included: [
@@ -56,17 +56,17 @@ export const services: Service[] = [
   {
     id: "smart-store",
     icon: Sparkles,
-    title: "Smart Store Setup (AI)",
-    short: "Your store plus AI tools that sell while you sleep.",
+    title: "Smart Store Setup",
+    short: "Your store with useful automation to reduce everyday admin.",
     price: "From A$2,000",
     fromAud: 2000,
     included: [
-      "Everything in Shopify Store Setup",
-      "AI-written product descriptions",
+      "Everything in Store Setup",
+      "Product descriptions, drafted for your approval",
       "\"You may also like\" product recommendations",
       "Live chat with FAQ auto-replies and order tracking",
       "Automated emails: welcome, abandoned cart, post-purchase",
-      "Built on Shopify's own tools — no extra monthly app fees",
+      "Built on the store platform's own tools — no extra monthly app fees from us",
     ],
     whoFor: "Store owners who want more sales with less admin.",
   },

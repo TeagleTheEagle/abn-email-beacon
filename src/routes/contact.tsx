@@ -18,7 +18,7 @@ export const Route = createFileRoute("/contact")({
 });
 
 const businessTypes = ["Café/Restaurant", "Trades", "Beauty/Salon", "Retail", "Other"];
-const needOptions = ["Website", "Shopify store", "AI features", "Not sure"];
+const needOptions = ["Website", "Online store", "Store automation", "Not sure"];
 
 // People type "mysite.com.au"; add the https:// for them rather than rejecting it.
 function normaliseWebsite(value: string | undefined): string | null {

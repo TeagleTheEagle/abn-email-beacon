@@ -4,9 +4,10 @@ import { PageHeader, Reveal } from "@/components/Reveal";
 import { demos } from "@/content/demos";
 import { services } from "@/content/services";
 import { seo } from "@/lib/seo";
+import { EstimateCalculator } from "@/components/EstimateCalculator";
 
 export const Route = createFileRoute("/services")({
-  head: () => seo("/services", "Services", "Website builds, Shopify store setup, AI-powered smart stores and monthly care plans for Australian small businesses."),
+  head: () => seo("/services", "Websites and Stores", "Website builds, online store setup, smart stores and monthly care plans for Australian small businesses."),
   component: Services,
 });
 
@@ -14,6 +15,7 @@ function Services() {
   return (
     <>
       <PageHeader label="Services" title="Everything you need to sell online" sub="Clear scope, honest pricing and a free preview before you commit." />
+      <section className="mx-auto mb-16 max-w-6xl px-6"><EstimateCalculator guided /></section>
       <div className="mx-auto flex max-w-5xl flex-col gap-10 px-6">
         {services.map((s) => (
           <Reveal key={s.id}>

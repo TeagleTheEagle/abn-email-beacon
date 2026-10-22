@@ -20,9 +20,9 @@ export type Project = {
 export const projects: Project[] = [
   {
     title: "Teague Industries Templates Store",
-    category: "Shopify Store",
+    category: "Online Store",
     tag: "Live",
-    description: "A Shopify store selling ready-made Australian business templates.",
+    description: "An online store selling ready-made Australian business templates.",
     image: templatesImg,
     imageAlt: "Laptop on a dark desk showing an online store of business document templates",
     link: { label: "View live", href: "/shop", external: false },
@@ -58,8 +58,8 @@ export const projects: Project[] = [
     link: { label: "Open interactive demo", href: "/demo/salon" },
   },
   {
-    title: "Retail Shopify Store (Demo)",
-    category: "Shopify Store",
+    title: "Retail Store (Demo)",
+    category: "Online Store",
     tag: "Demo",
     description: "A boutique store concept with an essentials collection and a demo shopping bag. No payments are taken.",
     image: retailImg,
