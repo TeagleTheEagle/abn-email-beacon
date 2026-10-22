@@ -95,12 +95,24 @@ function diff(a, b) {
   return { onlyLocal: only(ca, cb), onlyLive: only(cb, ca) };
 }
 
+// The live host can take several seconds to wake from a cold start, so one slow
+// answer gets a second try with a longer wait instead of aborting the whole run.
 const fetchHtml = async (url) => {
-  const res = await fetch(url, {
-    headers: { "user-agent": "Mozilla/5.0 compare-live" },
-    signal: AbortSignal.timeout(20000),
-  });
-  return { status: res.status, html: await res.text() };
+  for (const [attempt, timeoutMs] of [
+    [1, 20000],
+    [2, 60000],
+  ]) {
+    try {
+      const res = await fetch(url, {
+        headers: { "user-agent": "Mozilla/5.0 compare-live" },
+        signal: AbortSignal.timeout(timeoutMs),
+      });
+      return { status: res.status, html: await res.text() };
+    } catch (err) {
+      if (attempt === 2) return { status: `error (${err.name ?? err})`, html: "" };
+      console.log(`  … ${url} did not answer within ${timeoutMs / 1000}s, trying once more`);
+    }
+  }
 };
 
 console.log(
