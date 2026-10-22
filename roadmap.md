@@ -81,5 +81,5 @@ Read this first: it's where the business is heading. Lovable, Claude and Shopify
 
 - [x] Care Plan price note now reads "/month" everywhere (calculator showed "A$49/ month" while the FAQ said "A$49/month")
 - [ ] Store Setup and Smart Store Setup share the retail demo photo on /services — Ben to say if he wants a different image for one of them
-- [ ] Shop and product pages ask Shopify on every visit (warm 0.3–1.2s vs ~0.1s elsewhere). A short server-side cache of the Shopify response would make them feel like the rest of the site — not yet requested
+- [x] Shop and product pages cache the Shopify answer on the server for 60s (22 Oct 2026, `src/lib/ttl-cache.ts`): repeat visits render without waiting on Shopify; empty or failed answers are never kept, and the cart is never cached. Product edits in Shopify can take up to a minute to show
 - [ ] Lovable's hosting replaces the 5-minute HTML cache header from src/start.ts with no-cache. Hosting setting, nothing to change in the repo

@@ -1,5 +1,9 @@
 // Shopify Storefront API client — 2026-10 API version.
 import { toast } from "sonner";
+import { cachedOnServer } from "@/lib/ttl-cache";
+
+// How long a server-rendered page may reuse a Shopify answer before asking again.
+const PRODUCT_CACHE_MS = 60_000;
 
 export const SHOPIFY_API_VERSION = "2026-10";
 export const SHOPIFY_STORE_PERMANENT_DOMAIN = "jk1j1p-c5.myshopify.com";
@@ -133,16 +137,34 @@ export const PRODUCT_BY_HANDLE_QUERY = `
   }
 `;
 
-export async function fetchProducts(query?: string): Promise<ShopifyProduct[]> {
-  const data = await storefrontApiRequest(STOREFRONT_QUERY, { first: 50, query: query ?? null });
-  return data?.data?.products?.edges ?? [];
+export function fetchProducts(query?: string): Promise<ShopifyProduct[]> {
+  return cachedOnServer(
+    `products:${query ?? ""}`,
+    PRODUCT_CACHE_MS,
+    async () => {
+      const data = await storefrontApiRequest(STOREFRONT_QUERY, {
+        first: 50,
+        query: query ?? null,
+      });
+      return (data?.data?.products?.edges ?? []) as ShopifyProduct[];
+    },
+    (products) => products.length > 0,
+  );
 }
 
-export async function fetchProduct(
+export function fetchProduct(
   handle: string,
 ): Promise<(ShopifyProduct["node"] & { descriptionHtml?: string }) | null> {
-  const data = await storefrontApiRequest(PRODUCT_BY_HANDLE_QUERY, { handle });
-  return data?.data?.product ?? null;
+  return cachedOnServer(
+    `product:${handle}`,
+    PRODUCT_CACHE_MS,
+    async () => {
+      const data = await storefrontApiRequest(PRODUCT_BY_HANDLE_QUERY, { handle });
+      return (data?.data?.product ?? null) as
+        (ShopifyProduct["node"] & { descriptionHtml?: string }) | null;
+    },
+    (product) => product !== null,
+  );
 }
 
 // ---- Cart mutations (Storefront API checkout — never manual URLs) ----
