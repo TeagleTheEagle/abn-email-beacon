@@ -102,12 +102,20 @@ async function connect(wsUrl) {
     }
   });
   return {
-    send(method, params = {}) {
+    // Every command gets a deadline, so a tab that stops answering fails this page's
+    // check instead of hanging the whole run.
+    send(method, params = {}, timeoutMs = 45000) {
       return new Promise((res, rej) => {
-        pending.set(++id, (m) =>
-          m.error ? rej(new Error(`${method}: ${m.error.message}`)) : res(m.result),
-        );
-        ws.send(JSON.stringify({ id, method, params }));
+        const myId = ++id;
+        const timer = setTimeout(() => {
+          pending.delete(myId);
+          rej(new Error(`${method}: no reply from Chrome after ${timeoutMs / 1000}s`));
+        }, timeoutMs);
+        pending.set(myId, (m) => {
+          clearTimeout(timer);
+          m.error ? rej(new Error(`${method}: ${m.error.message}`)) : res(m.result);
+        });
+        ws.send(JSON.stringify({ id: myId, method, params }));
       });
     },
     on(method, fn) {
@@ -165,7 +173,10 @@ const PAGE_FACTS = `(() => ({
 
 async function checkPage(port, path, vp) {
   const target = await (
-    await fetch(`http://127.0.0.1:${port}/json/new?about:blank`, { method: "PUT" })
+    await fetch(`http://127.0.0.1:${port}/json/new?about:blank`, {
+      method: "PUT",
+      signal: AbortSignal.timeout(30000),
+    })
   ).json();
   const cdp = await connect(target.webSocketDebuggerUrl);
   const result = {
