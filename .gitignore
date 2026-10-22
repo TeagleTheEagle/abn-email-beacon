@@ -33,3 +33,6 @@ dist-ssr
 
 # bun.lock is the lockfile; ignore npm's
 package-lock.json
+
+# Sellable product files live here on Ben's machine only; they are attached in Shopify, never published with the site.
+products/
