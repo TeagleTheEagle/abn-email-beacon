@@ -181,8 +181,8 @@ Built as real files in `products/` (git-ignored; on Ben's machine only) and crea
 | Google Business Profile & Review Kit (guide PDF, 10 request scripts, response templates, A5 counter sign; Word files) | A$39  | google-business-profile-review-kit | products/Google-Business-Profile-Review-Kit.zip |
 | Small Business Enquiry Tracker (Excel/Google Sheets workbook with dashboard)                                          | A$49  | small-business-enquiry-tracker     | products/Small-Business-Enquiry-Tracker.zip     |
 
-- [ ] **Ben, per product (two minutes):** Shopify admin → Apps → Digital Products → open the product → attach the zip from `products/`; then Products → open it → Status: Active → Save. Shopify's upload tool can only open a file picker on Ben's side, so Claude can't attach the files
-- [ ] Once a product is Active, tell Claude so its page goes into `public/sitemap.xml`
+- [x] **Ben, per product (two minutes):** Shopify admin → Apps → Digital Products → open the product → attach the zip from `products/`; then Products → open it → Status: Active → Save. Shopify's upload tool can only open a file picker on Ben's side, so Claude can't attach the files
+- [x] All three Active and published to the Online Store and Lovable channels (22 Oct 2026); pages added to `public/sitemap.xml`
 - [ ] Ben to open each file once before selling it (the Word templates and the spreadsheet especially) and say if any wording should change; Claude regenerates them from source
 - [ ] Next batch when these show sales: industry social media kits, café menu & QR kit, pricing/estimate calculator, client onboarding kit, brand essentials kit, local SEO playbook, quote-to-cash script vault
 
