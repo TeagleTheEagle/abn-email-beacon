@@ -56,13 +56,13 @@ export const services: Service[] = [
   {
     id: "smart-store",
     icon: Sparkles,
-    title: "Smart Store Setup (AI)",
-    short: "Your store plus AI tools that sell while you sleep.",
+    title: "Smart Store Setup",
+    short: "Your store with useful automation to reduce everyday admin.",
     price: "From A$2,000",
     fromAud: 2000,
     included: [
       "Everything in Store Setup",
-      "AI-written product descriptions",
+      "Product descriptions, drafted for your approval",
       "\"You may also like\" product recommendations",
       "Live chat with FAQ auto-replies and order tracking",
       "Automated emails: welcome, abandoned cart, post-purchase",

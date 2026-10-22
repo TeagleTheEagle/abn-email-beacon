@@ -58,8 +58,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Teague Industries — Websites & Shopify Stores for Australian Businesses" },
-      { name: "description", content: "Websites, Shopify stores and AI-powered tools for Australian small businesses." },
+      { title: "Teague Industries — Websites and Stores for Australian Businesses" },
+      { name: "description", content: "Websites, online stores and practical tools for Australian small businesses." },
       { name: "author", content: "Teague Industries" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -55,9 +55,9 @@ export async function storefrontApiRequest(query: string, variables: Record<stri
   });
 
   if (response.status === 402) {
-    toast.error("Shopify: Payment required", {
+    toast.error("Store temporarily unavailable", {
       description:
-        "Shopify API access requires an active Shopify billing plan. Visit https://admin.shopify.com to upgrade.",
+        "Please try again later or contact us for help with your order.",
     });
     return undefined;
   }

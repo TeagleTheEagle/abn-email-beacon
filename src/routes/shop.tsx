@@ -16,7 +16,7 @@ export const Route = createFileRoute("/shop")({
     seo(
       "/shop",
       "Shop",
-      "Teague Industries template shop — instant-download business templates and digital products, checkout handled securely by Shopify.",
+      "Teague Industries template shop — instant-download business templates and digital products, secure checkout.",
     ),
   loader: ({ context }) => context.queryClient.ensureQueryData(productsQueryOptions),
   component: ShopPage,
@@ -30,7 +30,7 @@ function ShopPage() {
       <PageHeader
         label="Shop"
         title="Instant-download templates"
-        sub="Pay securely through Shopify checkout and download straight away."
+        sub="Pay securely through our checkout and download straight away."
       />
       {products.length === 0 ? (
         <div className="mx-auto max-w-md px-6 py-24 text-center">
@@ -48,7 +48,7 @@ function ShopPage() {
       )}
       <Reveal className="mx-auto mt-20 max-w-3xl px-6 pb-24 text-center">
         <p className="text-sm text-muted-foreground">
-          Need something custom? <a href="/contact" className="text-primary-soft hover:underline">Ask about a custom build</a> — we make templates and AI tools for Australian business.
+          Need something custom? <a href="/contact" className="text-primary-soft hover:underline">Ask about a custom build</a> — we make templates and practical tools for Australian business.
         </p>
       </Reveal>
     </>

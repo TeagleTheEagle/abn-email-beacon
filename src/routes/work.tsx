@@ -5,7 +5,7 @@ import { projects } from "@/content/projects";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/work")({
-  head: () => seo("/work", "Our Work", "Websites and Shopify stores built by Teague Industries for Australian businesses."),
+  head: () => seo("/work", "Our Work", "Websites and stores built by Teague Industries for Australian businesses."),
   component: Work,
 });
 

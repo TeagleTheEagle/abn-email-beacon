@@ -224,7 +224,7 @@ function ProductPage() {
               )}
             </button>
             <p className="mt-3 text-xs text-muted-foreground">
-              Instant download. Checkout is handled securely by Shopify.
+              Instant download. Secure checkout through our store platform.
             </p>
 
             {product.descriptionHtml ? (

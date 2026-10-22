@@ -7,7 +7,7 @@ import { seo } from "@/lib/seo";
 import { EstimateCalculator } from "@/components/EstimateCalculator";
 
 export const Route = createFileRoute("/services")({
-  head: () => seo("/services", "Websites and Stores", "Website builds, online store setup, AI-powered smart stores and monthly care plans for Australian small businesses."),
+  head: () => seo("/services", "Websites and Stores", "Website builds, online store setup, smart stores and monthly care plans for Australian small businesses."),
   component: Services,
 });
 
