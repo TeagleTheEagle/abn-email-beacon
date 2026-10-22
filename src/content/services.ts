@@ -76,7 +76,7 @@ export const services: Service[] = [
     title: "Care Plan",
     short: "Monthly care so your site stays fast, safe and up to date.",
     price: "From A$49",
-    priceNote: "/ month",
+    priceNote: "/month",
     fromAud: 49,
     monthly: true,
     included: [

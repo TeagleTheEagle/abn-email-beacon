@@ -13,12 +13,12 @@ Read this first: it's where the business is heading. Lovable, Claude and Shopify
 - [x] Add a guided free-preview builder on Services and replace visitor-facing Shopify branding with Websites and Stores; preserve store and checkout connections. Provider identity remains in Privacy; technical URLs stay intact. Two store product names updated live.
 - [x] Remove AI-made positioning from service descriptions while keeping actual automation inclusions clear. Live goods do not claim AI-made; the genuine AI prompt product still describes its purpose.
 - [x] Requested visual refresh: readable typography, visible desktop navigation, preview-led hero, early portfolio, detailed service cards, founder introduction and working interactive demos.
-- [ ] Branded email remains blocked until Ben provides the address; keep Gmail meanwhile.
+- [x] Branded email set up (22 Oct 2026): benteague@teagueindustries.com.au is now the public contact address in src/content/site.ts (footer, contact page, structured data, MCP). Lead notifications still go to Gmail until `LEAD_NOTIFY_TO` is set in Lovable Cloud
 - [x] **Checkout fixed (20 Oct 2026):** Shopify's primary domain was www.teagueindustries.com.au (served by Lovable), so checkout links hit the site's 404 page. Primary domain is now jk1j1p-c5.myshopify.com; re-tested live: Add to cart → Checkout opens Shopify checkout with the product, A$29.00, and Shop Pay/PayPal/Google Pay/card.
 - [x] Branded checkout live (20 Oct 2026): shop.teagueindustries.com.au connected in Shopify and set as primary; record present on all three nameservers; HTTPS works; cart → checkout tested on the live site. Shopify may still warn about the A-record value, but checkout works — leave the DNS as is.
 - [x] Lead notification emails built (20 Oct 2026): forms call the `notify-lead` edge function after saving; it emails Ben (reply-to = enquirer) and, once a sender domain is verified, an auto-reply. Also fires from the MCP `request_free_preview` tool.
 - [x] Lead emails switched on (20 Oct 2026): Resend key added, `notify-lead` deployed, live test enquiry "TEST – email check (delete me)" sent and the function returned ok — Ben to delete that test lead
-- [ ] Customer auto-reply: verify teagueindustries.com.au in Resend (DNS records) and set `LEAD_FROM` secret, e.g. `Teague Industries <hello@teagueindustries.com.au>` — Ben
+- [ ] Customer auto-reply: verify teagueindustries.com.au in Resend (DNS records) and set `LEAD_FROM` secret to `Teague Industries <benteague@teagueindustries.com.au>` — Ben
 - [x] Google Analytics 4 wired up (20 Oct 2026): page views plus generate_lead / add_to_cart / begin_checkout events; Privacy policy updated. Off until an ID is set.
 - [x] Analytics switched on (20 Oct 2026): measurement ID G-C323SX5LEQ in `.env`, tag confirmed on the live site
 - [x] Site test follow-ups (20 Oct 2026): contact "Current website" accepts `mysite.com.au` (https:// added automatically); unknown product URLs return a real 404; Product structured data (price/availability) on product pages; H1 on each demo page; menu button label toggles; form fields flagged `aria-invalid` with `role="alert"` errors; shop image links labelled
@@ -41,7 +41,7 @@ Read this first: it's where the business is heading. Lovable, Claude and Shopify
 - [x] Hide Lovable badge; tab title; remove legal "template" banner; store links -> /shop; remove "Most popular"; care plan price label; flag emoji
 - [x] Privacy: Shopify checkout, analytics, cookies
 - [x] Terms: download refunds + ABN
-- [ ] Business email on own domain — Ben to set up
+- [x] Business email on own domain — benteague@teagueindustries.com.au (22 Oct 2026)
 - [x] Starting prices
 - [x] Founder photo on About page; phone number left off at Ben's request; suburbs done
 - [x] Demo sites, structured data, 404 title, honeypot, WebP hero
@@ -76,3 +76,10 @@ Read this first: it's where the business is heading. Lovable, Claude and Shopify
 - [x] Live interactive demo pages for café, tradie, salon and retail; local-only menu filtering, sample request/booking forms and demonstration bag.
 - [ ] Optional real booking link — requires Ben's chosen booking service URL.
 - [ ] Google Business Profile (service-area, Lower North Shore) — Ben to set up
+
+## Site check follow-ups (22 Oct 2026)
+
+- [x] Care Plan price note now reads "/month" everywhere (calculator showed "A$49/ month" while the FAQ said "A$49/month")
+- [ ] Store Setup and Smart Store Setup share the retail demo photo on /services — Ben to say if he wants a different image for one of them
+- [ ] Shop and product pages ask Shopify on every visit (warm 0.3–1.2s vs ~0.1s elsewhere). A short server-side cache of the Shopify response would make them feel like the rest of the site — not yet requested
+- [ ] Lovable's hosting replaces the 5-minute HTML cache header from src/start.ts with no-cache. Hosting setting, nothing to change in the repo

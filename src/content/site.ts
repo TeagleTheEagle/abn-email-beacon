@@ -2,7 +2,7 @@ export const site = {
   name: "Teague Industries",
   tagline: "PEOPLE | TECHNOLOGY | A BRIGHTER TOMORROW",
   est: "EST. 2026",
-  email: "benteaguey6@gmail.com",
+  email: "benteague@teagueindustries.com.au",
   abn: "64 813 107 974",
   storeUrl: "/shop",
   storeLabel: "teagueindustries.com.au",
