@@ -13,3 +13,4 @@
 - Interactive demo content lives in src/content/demos.ts and renders through DemoSite; portfolio, hero and /demo/$kind share it so previews match their full destinations. Demo bookings and bags stay local and never send leads or payments.
 - Use the global sans heading style for readable content; reserve font-display for branding, and keep theme colours in src/styles.css.
 - The guided Services preview builder shares the estimate calculator and service prices; all enquiry submissions use the existing lead flow to avoid duplicate pricing or delivery logic.
+- Keep patched transitive dependency overrides until upstream packages adopt compatible fixed releases; this prevents known vulnerable versions returning during installs.
