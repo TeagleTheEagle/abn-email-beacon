@@ -176,7 +176,7 @@ export function CartDrawer() {
                   )}
                 </button>
                 <p className="text-center text-[10px] text-muted-foreground">
-                  Checkout is handled securely by Shopify.
+                  Continue to secure checkout.
                 </p>
               </div>
             </>
