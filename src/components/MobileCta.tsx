@@ -15,7 +15,12 @@ export function MobileCta() {
     return () => window.removeEventListener("scroll", on);
   }, []);
 
-  if (pathname === "/contact" || pathname.startsWith("/demo/") || pathname === "/design-system")
+  if (
+    pathname === "/contact" ||
+    pathname.startsWith("/demo/") ||
+    pathname.startsWith("/preview/") ||
+    pathname === "/design-system"
+  )
     return null;
 
   return (

@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
   HeadContent,
   Scripts,
   type ErrorComponentProps,
@@ -135,6 +136,10 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
   useCartSync();
+  // Client previews (/preview/<slug>) are a prospect's own website, so they render without the
+  // Teague Industries nav and footer; the preview page carries its own thin band instead.
+  const pathname = useLocation({ select: (l) => l.pathname });
+  const bare = pathname.startsWith("/preview/");
   // One page_view per page: the first on load, then one per client-side navigation.
   useEffect(() => {
     trackPageView(window.location.pathname + window.location.search);
@@ -151,12 +156,12 @@ function RootComponent() {
       >
         Skip to content
       </a>
-      <SiteNav />
+      {!bare && <SiteNav />}
       <main id="main" tabIndex={-1}>
         <Outlet />
       </main>
-      <SiteFooter />
-      <MobileCta />
+      {!bare && <SiteFooter />}
+      {!bare && <MobileCta />}
       <Toaster position="top-center" />
     </QueryClientProvider>
   );

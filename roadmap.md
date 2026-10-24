@@ -193,3 +193,10 @@ Built as real files in `products/` (git-ignored; on Ben's machine only) and crea
 - [x] Palette moved from near-black to midnight navy (#070C17 background, #0E1626 surfaces); cyan accent and titanium labels unchanged; manifest and theme colour updated
 - [x] Cover art replaced: all nine shop products now have consistent covers in the site's style (navy studio background, faint grid, corner marks, a clean UI mock-up of what the product is). The AI "space" art is removed from the products. Generated from `covers2.js` in Claude's scratchpad; PNGs kept in `products/covers/`
 - [ ] Second batch of digital products stays parked until the first three show sales, as both reviews advised
+
+## Outreach: first five clients (24 Oct 2026)
+
+- [x] Prospect list: 16 Lower North Shore businesses with no website (cafés, barbers, nail salons, dry cleaner, alterations, one electrician), each verified open on Google Maps, with a ready-to-send message per business. Lives in `outreach/` on Ben's machine, deliberately untracked (other businesses' contact details)
+- [x] Free previews pre-built for the three strongest prospects so the first message carries a link: `/preview/frank-and-michael`, `/preview/lil-lane-eatery`, `/preview/birdwood-cafe`. Content in `src/content/previews.ts`, page in `src/components/ClientPreview.tsx`; noindex, no nav or footer, not in the sitemap. Photos are placeholders until the client supplies theirs
+- [ ] Ben to send the messages (email, DM or walk-in; Google lists phones, not emails) and name whoever says yes; Claude builds that preview next
+- [ ] When a preview is approved: swap in the client's photos, confirm services, prices and hours, connect their domain and launch
