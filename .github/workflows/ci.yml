@@ -18,18 +18,25 @@ jobs:
       VITE_SUPABASE_PROJECT_ID: placeholder
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Use Node.js 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22
 
+      # Install from bun.lock, the same lockfile Lovable uses. bun.lock and the 24h
+      # minimumReleaseAge guard in bunfig.toml both need Bun 1.3 or newer.
+      - name: Use Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
       - name: Install dependencies
-        run: npm install
+        run: bun install --frozen-lockfile
 
       - name: Typecheck
-        run: npx tsc --noEmit
+        run: bunx tsc --noEmit
 
       - name: Tests
-        run: npm test
+        run: bun run test
