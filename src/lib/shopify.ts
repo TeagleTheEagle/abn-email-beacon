@@ -28,7 +28,49 @@ export interface ShopifyProduct {
     images: { edges: Array<{ node: { url: string; altText: string | null } }> };
     variants: { edges: Array<{ node: ShopifyVariant }> };
     options: Array<{ name: string; values: string[] }>;
+    details?: Array<{ key: string; value: string } | null>;
   };
+}
+
+// The product detail fields (namespace "details") are edited in the Shopify admin on each product.
+const DETAIL_KEYS = ["audience", "includes", "format", "requirements", "delivery", "licence"];
+const DETAILS_FIELD = `details: metafields(identifiers: [${DETAIL_KEYS.map(
+  (k) => `{ namespace: "details", key: "${k}" }`,
+).join(", ")}]) { key value }`;
+
+export interface ProductDetails {
+  audience?: string;
+  includes: string[];
+  format?: string;
+  requirements?: string;
+  delivery?: string;
+  licence?: string;
+}
+
+export function productDetails(node: Pick<ShopifyProduct["node"], "details">): ProductDetails {
+  const out: ProductDetails = { includes: [] };
+  for (const field of node.details ?? []) {
+    if (!field?.value) continue;
+    if (field.key === "includes") {
+      try {
+        const list: unknown = JSON.parse(field.value);
+        if (Array.isArray(list)) out.includes = list.filter((v) => typeof v === "string");
+      } catch {
+        // A malformed list just isn't shown.
+      }
+    } else if (DETAIL_KEYS.includes(field.key)) {
+      out[field.key as Exclude<keyof ProductDetails, "includes">] = field.value;
+    }
+  }
+  return out;
+}
+
+// What the shop card and product page say about delivery when the Delivery field is empty.
+export function deliveryLabel(node: Pick<ShopifyProduct["node"], "details" | "handle">) {
+  return (
+    productDetails(node).delivery ??
+    (node.handle.includes("audit") ? "Delivered within 48 hours" : "Instant download")
+  );
 }
 
 // Shopify's CDN resizes on request: ask for the width a slot needs instead of the 1024px original.
@@ -105,6 +147,7 @@ export const STOREFRONT_QUERY = `
             }
           }
           options { name values }
+          ${DETAILS_FIELD}
         }
       }
     }
@@ -133,6 +176,7 @@ export const PRODUCT_BY_HANDLE_QUERY = `
         }
       }
       options { name values }
+      ${DETAILS_FIELD}
     }
   }
 `;

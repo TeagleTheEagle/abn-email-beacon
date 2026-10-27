@@ -76,7 +76,8 @@ Read this first: it's where the business is heading. Lovable, Claude and Shopify
 - [x] Three new shop products (Launch Kit A$39, Conversion Playbook A$49, 48-Hour Audit A$149) with dark-space covers; sitemap updated with their pages
 - [ ] Cover artwork for the original Invoice/Quote/Agreement templates product — not yet requested
 - [x] Live interactive demo pages for café, tradie, salon and retail; local-only menu filtering, sample request/booking forms and demonstration bag.
-- [ ] Optional real booking link — requires Ben's chosen booking service URL.
+- [x] Booking (27 Oct 2026): "Book a 15-minute call" on Contact, About, home, Pricing and the footer, going to a call-request form at /book (saved as a lead with needs "Call request", emails Ben like any enquiry). Privacy lists the form; /book is in the sitemap
+- [ ] Real booking page: when Ben has a Calendly / Cal.com / Google appointment link, paste it into `bookingUrl` in src/content/site.ts and every button opens it
 - [ ] Google Business Profile (service-area, Lower North Shore) — Ben to set up
 
 ## Site check follow-ups (22 Oct 2026)
@@ -149,9 +150,12 @@ Ben's decisions (not done):
 - [ ] Scope caps for store tiers (e.g. "up to 25 products loaded, CSV import for more") and measurable promises per package; needs Ben's numbers
 - [ ] Ongoing costs (hosting, domain renewal, platform plan) spelled out beside the prices; needs Ben's hosting setup
 - [ ] What the free preview includes (homepage concept or full build) and exactly when payment is due; FAQ says "only pay if you go ahead", Ben to confirm the detail
-- [ ] Product pages: who it's for, contents, actual previews, file format, software needed, licence. Needs real screenshots of the files and Ben to set format in Shopify
+- [x] Product pages show a specification sheet (27 Oct 2026): who it's for, what's inside, format, what you need, delivery, licence. Stored in six Shopify product fields (namespace `details`, visible on each product in the Shopify admin), filled for all nine products from their existing descriptions. Shop cards read Delivery from the same field
+- [ ] Ben to confirm the licence line ("For use in your own business. Please don't resell or share the files.") on the six older products; it was copied from the newer ones
+- [ ] **Four products have no download file attached** (checked 27 Oct 2026 in the Digital Products app): Website Launch & Copywriting Kit, Store Conversion Playbook, AI Prompt Engine, Launch in 48 Hours Speedrun Guide. A buyer would pay and receive nothing. Ben to decide: set them to Draft, or have Claude build the files
+- [ ] Actual previews (screenshots of the files inside) on product pages
 - [ ] Shop line-up: both reviews say the creator products (media kit, bio-link kit, Solo Hustle OS) sit oddly next to products for business owners. Options: hide them, move them to a separate collection, or replace with local-business toolkits
-- [ ] Move the A$149 audit onto Services/Pricing as an entry-level diagnostic (it is already featured on the home page)
+- [x] A$149 audit is now the entry offer on Services and Pricing ("Already have a website? Start with the 48-Hour Website Audit", 27 Oct 2026); it moved out of the add-ons list there to avoid showing it twice. Pricing's "no sales call" now reads "no sales pitch", since calls are bookable
 - [ ] New products suggested by both reviews: industry website starter kits (DIY, with the A$500 build as the done-for-you upgrade), Google Business Profile & review kit, enquiry tracker spreadsheet, quote-to-cash SMS/email script vault, local SEO playbook. All test prices, no demand evidence
 - [ ] New services suggested: business email setup, booking system setup, missed-call text-back, quote/invoice chaser automation, Google Maps & review engine, website fix sprint (implement the audit's findings), product listing pack, a second Care Plan tier around A$149/mo
 - [ ] Testimonials and case studies once real clients launch (permission-based)

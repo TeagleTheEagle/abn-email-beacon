@@ -6,6 +6,9 @@ export const site = {
   abn: "64 813 107 974",
   storeUrl: "/shop",
   storeLabel: "teagueindustries.com.au",
+  // Paste a Calendly / Cal.com / Google appointment page here and every "Book a call" button opens
+  // it. While it's empty they go to the call-request form at /book.
+  bookingUrl: "",
   location: "Based on Sydney's Lower North Shore",
   suburbs: [
     "North Sydney",

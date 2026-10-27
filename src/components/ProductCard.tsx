@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Loader2, Plus } from "lucide-react";
 import { useState } from "react";
-import { formatPrice, type ShopifyProduct, shopifyImage } from "@/lib/shopify";
+import { deliveryLabel, formatPrice, type ShopifyProduct, shopifyImage } from "@/lib/shopify";
 import { cartItemFromVariant, useCartStore } from "@/stores/cartStore";
 
 // `priority` is for the first card on /shop: it's the largest image on screen, so load it first.
@@ -58,7 +58,7 @@ export function ProductCard({
             </div>
           )}
           <span className="label absolute left-3 top-3 rounded-[2px] bg-background/80 px-2 py-1 !text-[9px] backdrop-blur">
-            {node.handle.includes("audit") ? "Delivered in 48 hours" : "Instant download"}
+            {deliveryLabel(node)}
           </span>
           {outOfStock && (
             <span className="absolute right-3 top-3 rounded-full bg-surface px-3 py-1 font-display text-[9px] tracking-[0.2em] text-muted-foreground">

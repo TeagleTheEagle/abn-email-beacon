@@ -4,6 +4,7 @@ import { PageHeader, Reveal } from "@/components/Reveal";
 import { Price } from "@/components/Price";
 import { CarePlans } from "@/components/CarePlans";
 import { AddOns } from "@/components/AddOns";
+import { AuditOffer } from "@/components/AuditOffer";
 import { demos } from "@/content/demos";
 import { services } from "@/content/services";
 import { seo } from "@/lib/seo";
@@ -96,6 +97,11 @@ function Services() {
           );
         })}
       </div>
+      <Reveal className="mx-auto mt-20 max-w-5xl scroll-mt-28 px-6">
+        <div id="audit">
+          <AuditOffer />
+        </div>
+      </Reveal>
       <Reveal className="mx-auto mt-20 max-w-5xl scroll-mt-28 px-6">
         <div id="care-plan">
           <CarePlans />

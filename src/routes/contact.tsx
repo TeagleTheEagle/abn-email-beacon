@@ -1,11 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { cloneElement, isValidElement, useId, useRef, useState, type ReactElement } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { CheckCircle2, Mail, MapPin } from "lucide-react";
 import { PageHeader, Reveal } from "@/components/Reveal";
 import { ProjectJourney } from "@/components/ProjectJourney";
+import { Field } from "@/components/FormField";
+import { BookCallLink } from "@/components/BookCallLink";
 import { supabase } from "@/integrations/supabase/client";
 import { site } from "@/content/site";
 import { seo } from "@/lib/seo";
@@ -227,6 +229,13 @@ function Contact() {
             </div>
             <p className="text-sm text-muted-foreground">ABN: {site.abn}</p>
           </div>
+          <div className="glass mt-6 p-6 sm:p-8">
+            <p className="label">Prefer to talk first?</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              A free 15-minute call to talk through what you need. No sales pitch.
+            </p>
+            <BookCallLink className="btn-chrome mt-5" />
+          </div>
           <div className="glass mt-6 p-8">
             <p className="label">What happens next</p>
             <h2 className="mt-3 text-lg">From first message to live site</h2>
@@ -237,38 +246,5 @@ function Contact() {
         </Reveal>
       </div>
     </>
-  );
-}
-
-function Field({
-  label,
-  error,
-  className = "",
-  children,
-}: {
-  label: string;
-  error?: string | undefined;
-  className?: string;
-  children: React.ReactNode;
-}) {
-  const id = useId();
-  const required = label.trim().endsWith("*");
-  return (
-    <label htmlFor={id} className={`block ${className}`}>
-      <span className="label mb-2 block">{label}</span>
-      {isValidElement(children)
-        ? cloneElement(children as ReactElement<Record<string, unknown>>, {
-            id,
-            "aria-invalid": error ? true : undefined,
-            "aria-required": required || undefined,
-            "aria-describedby": error ? `${id}-error` : undefined,
-          })
-        : children}
-      {error && (
-        <span id={`${id}-error`} role="alert" className="mt-1 block text-xs text-destructive">
-          {error}
-        </span>
-      )}
-    </label>
   );
 }

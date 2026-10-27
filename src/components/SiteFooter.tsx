@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Logo } from "./Logo";
+import { BookCallLink } from "./BookCallLink";
 import { nav, site } from "@/content/site";
 
 export function SiteFooter() {
@@ -32,6 +33,11 @@ export function SiteFooter() {
             <a href={`mailto:${site.email}`} className="text-foreground hover:text-primary-soft">
               {site.email}
             </a>
+          </p>
+          <p>
+            <BookCallLink className="text-foreground hover:text-primary-soft">
+              Book a 15-minute call
+            </BookCallLink>
           </p>
           <p>ABN: {site.abn}</p>
           <p>{site.location}</p>

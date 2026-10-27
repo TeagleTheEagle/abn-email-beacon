@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as BookRouteImport } from './routes/book'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as McpRouteImport } from './routes/mcp'
@@ -34,6 +35,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookRoute = BookRouteImport.update({
+  id: '/book',
+  path: '/book',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -111,6 +117,7 @@ const ProductHandleRoute = ProductHandleRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/book': typeof BookRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
   '/mcp': typeof McpRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/book': typeof BookRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
   '/mcp': typeof McpRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/book': typeof BookRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
   '/mcp': typeof McpRoute
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/book'
     | '/contact'
     | '/design-system'
     | '/mcp'
@@ -186,6 +196,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/book'
     | '/contact'
     | '/design-system'
     | '/mcp'
@@ -204,6 +215,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/book'
     | '/contact'
     | '/design-system'
     | '/mcp'
@@ -223,6 +235,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  BookRoute: typeof BookRoute
   ContactRoute: typeof ContactRoute
   DesignSystemRoute: typeof DesignSystemRoute
   McpRoute: typeof McpRoute
@@ -253,6 +266,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book': {
+      id: '/book'
+      path: '/book'
+      fullPath: '/book'
+      preLoaderRoute: typeof BookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -359,6 +379,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  BookRoute: BookRoute,
   ContactRoute: ContactRoute,
   DesignSystemRoute: DesignSystemRoute,
   McpRoute: McpRoute,

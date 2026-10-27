@@ -2,6 +2,9 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight, Check } from "lucide-react";
 import { addOns } from "@/content/services";
 
+// The audit has its own entry-offer panel (AuditOffer) on the pages that show this list.
+const listed = addOns.filter((a) => a.id !== "audit");
+
 // Fixed-scope add-ons as a specification list: one row per job, with the deliverable and the price.
 export function AddOns() {
   return (
@@ -15,7 +18,7 @@ export function AddOns() {
         is a defined deliverable, quoted up front.
       </p>
       <div className="mt-8 divide-y divide-border border-y border-border">
-        {addOns.map((a, i) => (
+        {listed.map((a, i) => (
           <div
             key={a.id}
             className="grid gap-3 py-5 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.4fr)_auto] md:items-start md:gap-8"
@@ -41,7 +44,7 @@ export function AddOns() {
                   href={a.href}
                   className="mt-2 inline-flex items-center gap-1 text-sm text-primary-soft"
                 >
-                  Buy the audit <ArrowRight className="h-3.5 w-3.5" />
+                  Buy now <ArrowRight className="h-3.5 w-3.5" />
                 </a>
               ) : (
                 <Link

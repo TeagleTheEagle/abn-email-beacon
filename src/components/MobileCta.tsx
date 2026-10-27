@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
 // On phones, keep "Get a free preview" one tap away once the visitor has scrolled past the hero.
-// Hidden on the contact page (it's already the form) and inside the demos (they have their own UI).
+// Hidden on the contact and booking pages (they're already forms) and inside the demos (they have their own UI).
 export function MobileCta() {
   const pathname = useLocation({ select: (l) => l.pathname });
   const [shown, setShown] = useState(false);
@@ -17,6 +17,7 @@ export function MobileCta() {
 
   if (
     pathname === "/contact" ||
+    pathname === "/book" ||
     pathname.startsWith("/demo/") ||
     pathname.startsWith("/preview/") ||
     pathname === "/design-system"

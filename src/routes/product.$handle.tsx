@@ -3,9 +3,12 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ArrowLeft, Check, Loader2 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
+import { ProductSpecs } from "@/components/ProductSpecs";
 import {
+  deliveryLabel,
   formatPrice,
   fetchProduct,
+  productDetails,
   shopifyImage,
   type ShopifyProduct,
   type ShopifyVariant,
@@ -252,8 +255,10 @@ function ProductPage() {
               )}
             </button>
             <p className="mt-3 text-xs text-muted-foreground">
-              Instant download. Secure checkout through our store platform.
+              {deliveryLabel(product)}. Secure checkout through our store platform.
             </p>
+
+            <ProductSpecs details={productDetails(product)} />
 
             {product.descriptionHtml ? (
               <div

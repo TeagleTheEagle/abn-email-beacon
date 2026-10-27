@@ -5,6 +5,8 @@ import { Price } from "@/components/Price";
 import { EstimateCalculator } from "@/components/EstimateCalculator";
 import { CarePlans } from "@/components/CarePlans";
 import { AddOns } from "@/components/AddOns";
+import { AuditOffer } from "@/components/AuditOffer";
+import { BookCallLink } from "@/components/BookCallLink";
 import {
   Accordion,
   AccordionContent,
@@ -76,6 +78,9 @@ function Pricing() {
         ))}
       </div>
       <Reveal className="mx-auto mt-16 max-w-6xl px-6">
+        <AuditOffer />
+      </Reveal>
+      <Reveal className="mx-auto mt-16 max-w-6xl px-6">
         <CarePlans />
       </Reveal>
       <Reveal className="mx-auto mt-16 max-w-6xl px-6">
@@ -90,9 +95,9 @@ function Pricing() {
             <p className="label">Why A$500?</p>
             <h2 className="mt-4 text-2xl">Because you see it before you pay for it.</h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              There is no office, no account manager and no sales call. You brief me in two minutes,
-              I build the preview, and I only finish what you have already said yes to. That keeps
-              the price fixed and the work focused on your business.
+              There is no office, no account manager and no sales pitch. You brief me in two
+              minutes, I build the preview, and I only finish what you have already said yes to.
+              That keeps the price fixed and the work focused on your business.
             </p>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               Nothing is due until you approve the preview. Stores and Smart Stores start from the
@@ -122,7 +127,11 @@ function Pricing() {
           <Link to="/contact" className="text-primary-soft hover:underline">
             Get a free preview
           </Link>{" "}
-          and we'll recommend the right option.
+          and we'll recommend the right option, or{" "}
+          <BookCallLink className="text-primary-soft hover:underline">
+            book a 15-minute call
+          </BookCallLink>
+          .
         </p>
       </Reveal>
     </>

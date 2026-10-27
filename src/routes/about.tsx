@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { site } from "@/content/site";
 import { PageHeader, Reveal } from "@/components/Reveal";
+import { BookCallLink } from "@/components/BookCallLink";
 import { seo } from "@/lib/seo";
 import founderAsset from "@/assets/founder.webp.asset.json";
 
@@ -109,6 +110,7 @@ function About() {
               <Link to="/contact" className="btn-primary">
                 Get a free preview
               </Link>
+              <BookCallLink className="btn-chrome">Book a call with Ben</BookCallLink>
               <a href={`mailto:${site.email}`} className="btn-chrome">
                 Email Ben
               </a>

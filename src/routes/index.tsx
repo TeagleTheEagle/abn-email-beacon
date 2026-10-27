@@ -17,6 +17,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ProjectCard } from "@/components/ProjectCard";
+import { BookCallLink } from "@/components/BookCallLink";
 import { WebsitePreview } from "@/components/WebsitePreview";
 import { Button } from "@/components/ui/button";
 import earth from "@/assets/earth-horizon.webp";
@@ -31,7 +32,13 @@ import { QuickLeadForm } from "@/components/QuickLeadForm";
 import { BeforeAfter } from "@/components/BeforeAfter";
 import { Price } from "@/components/Price";
 import { productsQueryOptions } from "@/lib/product-queries";
-import { formatPrice, shopifyImage, type ShopifyProduct } from "@/lib/shopify";
+import {
+  deliveryLabel,
+  formatPrice,
+  productDetails,
+  shopifyImage,
+  type ShopifyProduct,
+} from "@/lib/shopify";
 import templatesStore from "@/assets/work-templates.jpg";
 
 // The product given the oversized showcase. Falls back to whatever Shopify lists first.
@@ -498,11 +505,16 @@ export function CtaBand() {
         <p className="label">Your next chapter starts here</p>
         <h2 className="mx-auto mt-4 max-w-2xl text-4xl sm:text-5xl">Ready for a better website?</h2>
         <p className="mt-4 text-muted-foreground">Free preview first. No obligation.</p>
-        <Button asChild size="lg" className="mt-7 h-12">
-          <Link to="/contact">
-            Get a free preview <ArrowRight />
-          </Link>
-        </Button>
+        <div className="mt-7 flex flex-wrap justify-center gap-3">
+          <Button asChild size="lg" className="h-12">
+            <Link to="/contact">
+              Get a free preview <ArrowRight />
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="h-12">
+            <BookCallLink />
+          </Button>
+        </div>
       </div>
     </section>
   );
@@ -517,6 +529,7 @@ function FeaturedProduct() {
   const image = node.images.edges[0]?.node;
   const price = node.priceRange.minVariantPrice;
   const audit = node.handle.includes("audit");
+  const details = productDetails(node);
   const firstSentence = node.description.split(/(?<=\.)\s/)[0] ?? node.description;
   return (
     <section className="border-y border-border bg-surface px-6 py-20 sm:py-28">
@@ -555,8 +568,11 @@ function FeaturedProduct() {
           <h2 className="mt-4 text-4xl sm:text-5xl">{node.title}</h2>
           <p className="mt-5 max-w-lg text-muted-foreground">{firstSentence}</p>
           <dl className="mt-8 divide-y divide-border border-y border-border">
-            <SpecRow k="Format" v={audit ? "Video review + 1-page roadmap" : "Digital download"} />
-            <SpecRow k="Delivery" v={audit ? "Within 48 hours" : "Instant"} />
+            <SpecRow
+              k="Format"
+              v={details.format ?? (audit ? "Video review + 1-page roadmap" : "Digital download")}
+            />
+            <SpecRow k="Delivery" v={deliveryLabel(node)} />
             <SpecRow k="Price" v={formatPrice(price.amount, price.currencyCode)} />
             <SpecRow k="Made by" v="Teague Industries, Sydney" />
           </dl>

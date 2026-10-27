@@ -23,9 +23,11 @@ function Privacy() {
           <p className="mt-3">
             When you use our contact form we collect your name, business name, email, phone
             (optional), business type, what you need, your current website (optional) and your
-            message. The quick form on the home page collects your business name and email. The
-            estimate tools on the pricing and services pages collect your business name and email
-            together with the business type and services you selected.
+            message. The call-request form collects your name, business name, email, phone, a
+            preferred time and anything you'd like to talk about. The quick form on the home page
+            collects your business name and email. The estimate tools on the pricing and services
+            pages collect your business name and email together with the business type and services
+            you selected.
           </p>
         </section>
         <section>

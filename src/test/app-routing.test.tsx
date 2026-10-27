@@ -16,6 +16,10 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
+  it("matches the call-request page at /book", () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    expect(router.matchRoutes("/book").at(-1)?.routeId).toBe("/book");
+  });
   it.each(["cafe", "tradie", "salon", "retail"])("matches the interactive %s demo", (kind) => {
     const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
     expect(router.matchRoutes(`/demo/${kind}`).at(-1)?.routeId).toBe("/demo/$kind");

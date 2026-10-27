@@ -5,6 +5,8 @@ import { toast } from "sonner";
 import { Logo } from "@/components/Logo";
 import { PageHeader, Reveal } from "@/components/Reveal";
 import { ProjectCard } from "@/components/ProjectCard";
+import { ProductSpecs } from "@/components/ProductSpecs";
+import { AuditOffer } from "@/components/AuditOffer";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -520,6 +522,21 @@ function DesignSystem() {
               </ul>
               <button className="btn-chrome mt-6 w-full">Get a free preview</button>
             </div>
+          </Spec>
+        </div>
+        <div className="mt-6 grid gap-6 md:grid-cols-[1fr_2fr]">
+          <Spec title="Product spec sheet" note="<ProductSpecs /> · Shopify details.* fields">
+            <ProductSpecs
+              details={{
+                audience: "Who the product is for, in one sentence.",
+                includes: ["First item in the download", "Second item"],
+                format: "ZIP with PDF and Word files",
+                delivery: "Instant download",
+              }}
+            />
+          </Spec>
+          <Spec title="Entry offer" note="<AuditOffer /> · services and pricing">
+            <AuditOffer />
           </Spec>
         </div>
       </Section>
