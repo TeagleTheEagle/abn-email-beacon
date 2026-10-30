@@ -205,3 +205,15 @@ Built as real files in `products/` (git-ignored; on Ben's machine only) and crea
 - [x] Free previews pre-built for the three strongest prospects so the first message carries a link: `/preview/frank-and-michael`, `/preview/lil-lane-eatery`, `/preview/birdwood-cafe`. Content in `src/content/previews.ts`, page in `src/components/ClientPreview.tsx`; noindex, no nav or footer, not in the sitemap. Photos are placeholders until the client supplies theirs
 - [ ] Ben to send the messages (email, DM or walk-in; Google lists phones, not emails) and name whoever says yes; Claude builds that preview next
 - [ ] When a preview is approved: swap in the client's photos, confirm services, prices and hours, connect their domain and launch
+
+## Video Ad Pack service (30 Oct 2026)
+
+Prompted by Wholesale Ted's Claude Code video: the highest-margin option for this studio is short vertical ads sold to the same local clients, not print-on-demand.
+
+- [x] "Video Ad Pack" added to the fixed-scope add-ons (From A$299; A$599 real-motion clips; A$899 five ads with a presenter). Shows on Services and Pricing and in the MCP `list_services` tool
+- [x] Pipeline built outside this repo at `C:\Users\jonny\ad-pack-pipeline\` (SKILL.md, `scripts/assemble.py`, brief template). Higgsfield makes the stills and, when credits allow, Seedance 2.5 clips; ffmpeg assembles 1080×1920 ads with hook captions
+- [x] Demo pack for the Tradie Website Starter Kit: three ads in `ad-pack-pipeline/clients/teague-demo/output/` (stills only; the Higgsfield balance was 1.58 credits and a Seedance clip is 35)
+- [x] Pitch drafts in `outreach/video-ad-pack-pitch-2026-10-30.md` (untracked, like the rest of `outreach/`): past clients, lapsed enquiries, cold Lower North Shore, plus a day-4 follow-up
+- [ ] Ben: top up Higgsfield (≈120 credits covers one Video-tier pack) before selling the A$599 and A$899 tiers
+- [ ] Ben: watch the three demo ads and say if the hooks or the caption style should change; then send the pitch with one demo attached
+- [ ] Put the demo ads on the Services page beside the add-on once Ben approves them (needs a small video component; mute, loop, poster frame)
