@@ -1,9 +1,10 @@
-import { ArrowRight, Clock, Instagram, MapPin, Phone, Star } from "lucide-react";
+import { ArrowRight, Check, Clock, Instagram, Mail, MapPin, Phone, Star } from "lucide-react";
 import type { ClientPreview as Preview } from "@/content/previews";
 import { site } from "@/content/site";
 
 // A client's free preview: a full, light-themed website for their business, framed by a thin
-// Teague Industries band at the top. Nothing here submits anywhere; the phone and map links are real.
+// Teague Industries band at the top. Nothing here submits anywhere; the phone, email and map links
+// are real.
 export function ClientPreview({ preview }: { preview: Preview }) {
   const tel = `tel:${preview.phone.replace(/[^\d+]/g, "")}`;
   const mapsSearch = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
@@ -13,7 +14,32 @@ export function ClientPreview({ preview }: { preview: Preview }) {
     `${preview.name}, ${preview.address}`,
   )}&output=embed`;
   const menuId = "cs-items";
-  const primaryHref = preview.kind === "barber" ? tel : `#${menuId}`;
+  const featureId = "cs-feature";
+  const isCafe = preview.kind === "cafe";
+  const primaryHref = isCafe ? `#${menuId}` : tel;
+  const mailto = (subject?: string) =>
+    preview.email
+      ? `mailto:${preview.email}${subject ? `?subject=${encodeURIComponent(subject)}` : ""}`
+      : undefined;
+  const feature = preview.feature;
+  const featureHref = (feature && mailto(feature.emailSubject)) ?? tel;
+  const cta =
+    preview.cta ??
+    {
+      barber: {
+        title: "Need a cut this week?",
+        body: "Walk in, or call ahead and we'll have a chair ready.",
+      },
+      cafe: {
+        title: `See you at ${preview.brand}.`,
+        body: "Come in for breakfast or lunch, or call ahead for a bigger table.",
+      },
+      studio: {
+        title: "Ready when you are.",
+        body: "Call or email to book an appointment.",
+      },
+    }[preview.kind];
+  const ctaEmail = preview.kind === "studio" ? mailto(`Enquiry for ${preview.brand}`) : undefined;
 
   return (
     <div className="client-preview">
@@ -32,7 +58,8 @@ export function ClientPreview({ preview }: { preview: Preview }) {
             {preview.brand}
           </a>
           <nav className="cs-nav" aria-label={`${preview.brand} sections`}>
-            <a href={`#${menuId}`}>{preview.kind === "barber" ? "Services" : "Menu"}</a>
+            <a href={`#${menuId}`}>{isCafe ? "Menu" : "Services"}</a>
+            {feature && <a href={`#${featureId}`}>{feature.navLabel}</a>}
             <a href="#cs-about">About</a>
             <a href="#cs-hours">Hours</a>
             <a href="#cs-find">Find us</a>
@@ -75,7 +102,8 @@ export function ClientPreview({ preview }: { preview: Preview }) {
             <p className="cs-rating">
               <Star size={16} aria-hidden="true" fill="currentColor" />
               <span>
-                {preview.rating.stars} stars from {preview.rating.count} Google reviews
+                {preview.rating.stars} stars from {preview.rating.count.toLocaleString("en-AU")}{" "}
+                Google reviews
               </span>
             </p>
           </div>
@@ -96,6 +124,33 @@ export function ClientPreview({ preview }: { preview: Preview }) {
             ))}
           </ul>
         </section>
+
+        {feature && (
+          <section id={featureId} className="cs-section cs-feature">
+            <div className="cs-feature-card">
+              <div>
+                <p className="cs-eyebrow">{feature.eyebrow}</p>
+                <h2>{feature.title}</h2>
+                <p className="cs-feature-body">{feature.body}</p>
+                <a href={featureHref} className="cs-button">
+                  {preview.email ? (
+                    <Mail size={18} aria-hidden="true" />
+                  ) : (
+                    <Phone size={18} aria-hidden="true" />
+                  )}{" "}
+                  {feature.action}
+                </a>
+              </div>
+              <ul className="cs-feature-points">
+                {feature.points.map((point) => (
+                  <li key={point}>
+                    <Check size={18} aria-hidden="true" /> {point}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )}
 
         <section id="cs-about" className="cs-section cs-about">
           <div className="cs-about-grid">
@@ -136,6 +191,13 @@ export function ClientPreview({ preview }: { preview: Preview }) {
                 <Phone size={16} aria-hidden="true" /> {preview.phone}
               </a>
             </p>
+            {preview.email && (
+              <p>
+                <a href={`mailto:${preview.email}`} className="cs-link cs-link-wrap">
+                  <Mail size={16} aria-hidden="true" /> {preview.email}
+                </a>
+              </p>
+            )}
             {preview.instagram && (
               <p>
                 <a href={preview.instagram} className="cs-link" target="_blank" rel="noreferrer">
@@ -164,26 +226,26 @@ export function ClientPreview({ preview }: { preview: Preview }) {
         </section>
 
         <section className="cs-section cs-cta">
-          <h2>
-            {preview.kind === "barber" ? "Need a cut this week?" : `See you at ${preview.brand}.`}
-          </h2>
-          <p>
-            {preview.kind === "barber"
-              ? "Walk in, or call ahead and we'll have a chair ready."
-              : "Come in for breakfast or lunch, or call ahead for a bigger table."}
-          </p>
+          <h2>{cta.title}</h2>
+          <p>{cta.body}</p>
           <div className="cs-actions">
             <a href={tel} className="cs-button">
               <Phone size={18} aria-hidden="true" /> Call {preview.phone}
             </a>
-            <a
-              href={mapsSearch}
-              className="cs-button cs-button-ghost"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <MapPin size={18} aria-hidden="true" /> Directions
-            </a>
+            {ctaEmail ? (
+              <a href={ctaEmail} className="cs-button cs-button-ghost">
+                <Mail size={18} aria-hidden="true" /> Email us
+              </a>
+            ) : (
+              <a
+                href={mapsSearch}
+                className="cs-button cs-button-ghost"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <MapPin size={18} aria-hidden="true" /> Directions
+              </a>
+            )}
           </div>
         </section>
 

@@ -209,6 +209,10 @@ Built as real files in `products/` (git-ignored; on Ben's machine only) and crea
 - [x] Previews for Sharps Barber Shop (`/preview/sharps-barber-shop`) and Cafe 107 (`/preview/cafe-107`) built from their Google listings (31 Oct 2026), so all five Crows Nest and Lane Cove messages now carry a draft link; their spec ads re-cut to show the previews and the outreach messages updated to link them
 - [x] Spec ads for the first five (Frank and Michael, Sharps, Lil Lane, Birdwood, Cafe 107): a 10-second vertical clip each, naming the business, showing its preview (or the matching demo site) and the free-preview offer. Files and a how-to-send note are on Ben's Desktop in "Spec ads – outreach – 2026-10-30"; source in `ad-pack-pipeline/clients/spec-outreach/` (30 Oct 2026)
 - [ ] When a preview is approved: swap in the client's photos, confirm services, prices and hours, connect their domain and launch
+- [x] Round 2 prospect list (5 Nov 2026): about 1,500 Google listings checked across North Sydney, Cammeray, St Leonards, Artarmon, Willoughby, Chatswood, Naremburn, Kirribilli, Northbridge and Greenwich. Result: 16 businesses with a verified public email (a ready-to-send email each), 37 to call (with a script) and 6 to drop in on. Seven used to have a website that has since expired, which is the strongest opener. In `outreach/` (untracked), with a CSV call sheet
+- [x] Round 2 previews built for the three strongest email prospects (5 Nov 2026): `/preview/chimichuri`, `/preview/blue-36-cafe` (with a catering section) and `/preview/nadis-bridal` (with an appointments section). The preview template gained a "studio" type for appointment-based businesses, the business's own email, an optional feature block and two themes (navy café, bridal). Their emails in the round 2 file now link to them
+- [ ] Ben to send the round 2 emails and work through the call list; name whoever says yes and Claude builds their preview
+- [ ] Tradies (plumbers, electricians, painters and so on) still to search: Google blocked further searches partway through on 5 Nov
 
 ## Video Ad Pack service (30 Oct 2026)
 

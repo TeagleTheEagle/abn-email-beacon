@@ -885,6 +885,28 @@
   --cs-header-fg: #faf6ef;
   --cs-overlay: linear-gradient(90deg, rgba(40, 25, 15, 0.84), rgba(40, 25, 15, 0.14));
 }
+.cs-theme-cafe-blue {
+  --cs-bg: #f5f8fb;
+  --cs-fg: #14213a;
+  --cs-muted: #56627a;
+  --cs-accent: #1f4e8c;
+  --cs-border: #dbe3ee;
+  --cs-surface: #ffffff;
+  --cs-header-bg: #14213a;
+  --cs-header-fg: #f5f8fb;
+  --cs-overlay: linear-gradient(90deg, rgba(10, 20, 40, 0.84), rgba(10, 20, 40, 0.14));
+}
+.cs-theme-bridal {
+  --cs-bg: #fbf7f5;
+  --cs-fg: #2a1f24;
+  --cs-muted: #6f6066;
+  --cs-accent: #7a3b55;
+  --cs-border: #eadfe0;
+  --cs-surface: #ffffff;
+  --cs-header-bg: #fbf7f5;
+  --cs-header-fg: #2a1f24;
+  --cs-overlay: linear-gradient(90deg, rgba(42, 22, 32, 0.82), rgba(42, 22, 32, 0.12));
+}
 .client-site h1,
 .client-site h2,
 .client-site h3 {
@@ -894,6 +916,9 @@
   line-height: 1.15;
   text-transform: none;
   color: inherit;
+}
+.client-site [id] {
+  scroll-margin-top: 80px;
 }
 .cs-header {
   position: sticky;
@@ -1126,6 +1151,47 @@
   gap: 8px;
   color: var(--cs-accent);
 }
+.cs-link-wrap {
+  overflow-wrap: anywhere;
+}
+.cs-feature-card {
+  display: grid;
+  gap: 28px;
+  padding: 32px 24px;
+  border: 1px solid var(--cs-border);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--cs-accent) 7%, var(--cs-surface));
+}
+.cs-feature-card .cs-eyebrow {
+  color: var(--cs-accent);
+}
+.cs-feature-card h2 {
+  margin-top: 8px;
+}
+.cs-feature-body {
+  max-width: 560px;
+  margin: 12px 0 24px;
+  color: var(--cs-muted);
+  font-size: 17px;
+}
+.cs-feature-points {
+  display: grid;
+  gap: 12px;
+  align-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cs-feature-points li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+.cs-feature-points svg {
+  flex: none;
+  color: var(--cs-accent);
+}
 .cs-map iframe {
   display: block;
   width: 100%;
@@ -1171,6 +1237,11 @@
   .cs-about-grid {
     grid-template-columns: 1fr 2fr;
     gap: 48px;
+  }
+  .cs-feature-card {
+    grid-template-columns: 3fr 2fr;
+    gap: 40px;
+    padding: 40px;
   }
 }
 @media (min-width: 900px) {

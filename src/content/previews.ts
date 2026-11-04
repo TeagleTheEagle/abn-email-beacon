@@ -10,6 +10,18 @@ import salonSmall from "@/assets/demo-salon-640.webp";
 
 export type PreviewHours = { days: string; hours: string };
 export type PreviewItem = { name: string; detail: string };
+/** An optional highlighted block after the menu or services, e.g. catering or how appointments work. */
+export type PreviewFeature = {
+  navLabel: string;
+  eyebrow: string;
+  title: string;
+  body: string;
+  points: string[];
+  /** Button label. The button emails the business if it has an email, otherwise it calls. */
+  action: string;
+  /** Subject line for the email button. */
+  emailSubject: string;
+};
 
 export type ClientPreview = {
   slug: string;
@@ -17,12 +29,18 @@ export type ClientPreview = {
   brand: string;
   /** Full trading name as it appears on Google. */
   name: string;
-  kind: "barber" | "cafe";
-  theme: "barber" | "cafe-fresh" | "cafe-cosy";
+  /** cafe: menu-led, main button jumps to the menu. barber and studio: services-led, main button calls. */
+  kind: "barber" | "cafe" | "studio";
+  theme: "barber" | "cafe-fresh" | "cafe-cosy" | "cafe-blue" | "bridal";
   suburb: string;
   address: string;
   phone: string;
+  /** Only an address the business itself publishes (Facebook, booking page). */
+  email?: string;
   instagram?: string;
+  feature?: PreviewFeature;
+  /** Overrides the closing call-to-action, which otherwise depends on `kind`. */
+  cta?: { title: string; body: string };
   eyebrow: string;
   title: string;
   body: string;
@@ -234,6 +252,175 @@ export const previews: Record<string, ClientPreview> = {
     image: cafe,
     imageSmall: cafeSmall,
     imageAlt: "Placeholder photo of a café counter and coffee",
+  },
+  // Round 2 (5 Nov 2026): built from the Google listing, reviews and the business's own Facebook
+  // and Instagram pages.
+  chimichuri: {
+    slug: "chimichuri",
+    brand: "Chimichuri",
+    name: "Chimichuri",
+    kind: "cafe",
+    theme: "cafe-fresh",
+    suburb: "Chatswood",
+    address: "1/6 Help St, Chatswood NSW 2067",
+    phone: "0424 568 223",
+    email: "chimicafe@gmail.com",
+    eyebrow: "Chatswood · Help Street · Open seven days",
+    title: "Contemporary brunch in the heart of Chatswood.",
+    body: "Creative fusion dishes, generous plates and Zest specialty coffee, seven days a week on Help Street.",
+    primaryAction: "See the menu",
+    itemsTitle: "Signature dishes",
+    itemsIntro: "The plates and drinks our regulars rave about.",
+    items: [
+      {
+        name: "Tom Yum Seafood Linguine",
+        detail: "Creamy, tangy tom yum sauce, loaded with prawns and squid.",
+      },
+      {
+        name: "Scallop & Sunshine",
+        detail: "Seared scallops on fluffy scrambled eggs. Our signature.",
+      },
+      {
+        name: "Sunrise Platter",
+        detail: "Scrambled eggs, halloumi, bacon and smashed avocado. Made for sharing.",
+      },
+      { name: "Truffle fries", detail: "The upgrade regulars always recommend." },
+      { name: "Strawberry Matcha", detail: "Smooth, and not too sweet." },
+      {
+        name: "Raspberry Green Dream",
+        detail: "Topped with raspberry sorbet. Properly refreshing.",
+      },
+    ],
+    aboutTitle: "A boutique café with a big following",
+    about: [
+      "Chimichuri is a boutique café on Help Street in the heart of Chatswood, serving contemporary brunch with plenty of fusion flair. Thai-style tom yum linguine sits happily next to the classics, the presentation is always spot on, and the Zest specialty coffee gets as much praise as the food.",
+      "With more than 1,000 Google reviews, it is one of the most-reviewed cafés in Chatswood, and 5,200 people follow along on Facebook. Regulars mention the generous portions, the friendly service and the drinks menu almost as often as the food.",
+    ],
+    rating: { stars: "4.3", count: 1003 },
+    hours: [
+      { days: "Monday to Friday", hours: "7 am – 2:30 pm" },
+      { days: "Saturday and Sunday", hours: "8 am – 2:30 pm" },
+    ],
+    hoursNote: "No bookings on weekends: just walk in.",
+    image: cafe,
+    imageSmall: cafeSmall,
+    imageAlt: "Placeholder photo of a café counter and coffee",
+  },
+  "blue-36-cafe": {
+    slug: "blue-36-cafe",
+    brand: "Blue 36",
+    name: "Blue 36 Cafe",
+    kind: "cafe",
+    theme: "cafe-blue",
+    suburb: "North Sydney",
+    address: "Shop P02/36 Blue St, North Sydney NSW 2060",
+    phone: "(02) 9221 2427",
+    email: "blue36cafe@gmail.com",
+    instagram: "https://www.instagram.com/blue36cafe_northsydney/",
+    eyebrow: "North Sydney · Opposite the station · From 6 am",
+    title: "Your morning coffee, your midday table.",
+    body: "Coffee, brunch and lunch right opposite North Sydney station. Freshly renovated, with a new menu and a drinks list to match.",
+    primaryAction: "See the menu",
+    itemsTitle: "From the new menu",
+    itemsIntro: "A few of the favourites since we reopened.",
+    items: [
+      { name: "Morning Steak", detail: "Cooked medium, with braised kale. A new favourite." },
+      { name: "Chilli Korean Chicken Burger", detail: "The lunchtime one people keep ordering." },
+      { name: "Chicken Risotto", detail: "Creamy and comforting, for the midday table." },
+      { name: "Collagen Smoothie", detail: "Fresh, light and very refreshing." },
+      { name: "Iced Mango Matcha", detail: "One of the new drinks on the menu." },
+      { name: "Coffee from 6 am", detail: "For the first train and the early meeting." },
+    ],
+    feature: {
+      navLabel: "Catering",
+      eyebrow: "Catering",
+      title: "Catering for offices, schools and events",
+      body: "From working breakfasts to school functions, we cater across North Sydney. Tell us the date, the numbers and what you have in mind, and we'll come back with a menu and a price.",
+      points: [
+        "Breakfast and lunch platters",
+        "Office meetings and school events",
+        "Right by North Sydney station",
+      ],
+      action: "Ask about catering",
+      emailSubject: "Catering enquiry",
+    },
+    aboutTitle: "Bright, busy and right by the station",
+    about: [
+      "Blue 36 sits on Blue Street, right opposite North Sydney station, serving coffee, beer, food and wine to commuters, office workers and locals. After a months-long renovation it has reopened brighter and cosier, with a new menu and a long list of drinks.",
+      "With 530 Google reviews and a 4.7-star rating, the things people mention most are the fresh, tasty food, the fast and friendly service and the fair prices. Great for breakfast, brunch, lunch or just a quick coffee.",
+    ],
+    rating: { stars: "4.7", count: 530 },
+    hours: [
+      { days: "Monday and Friday", hours: "6 am – 3 pm" },
+      { days: "Tuesday to Thursday", hours: "6 am – 3:30 pm" },
+      { days: "Saturday", hours: "7 am – 2 pm" },
+      { days: "Sunday", hours: "Closed" },
+    ],
+    image: cafe,
+    imageSmall: cafeSmall,
+    imageAlt: "Placeholder photo of a café counter and coffee",
+  },
+  "nadis-bridal": {
+    slug: "nadis-bridal",
+    brand: "Nadi's Bridal",
+    name: "Nadi's Bridal & Alteration Studio",
+    kind: "studio",
+    theme: "bridal",
+    suburb: "Crows Nest",
+    address: "Shop 3/210 Pacific Hwy, Crows Nest NSW 2065",
+    phone: "(02) 8018 8399",
+    email: "nadi_bridalandalterations@outlook.com",
+    instagram: "https://www.instagram.com/nadi_bridalandalteration/",
+    eyebrow: "Crows Nest · Bridal alterations and custom design",
+    title: "Your dress, fitted perfectly for the day.",
+    body: "Expert bridal alterations and custom designs on the Pacific Highway, with the care and attention to detail every bride deserves. By appointment only.",
+    primaryAction: "Call to book a fitting",
+    itemsTitle: "What we do",
+    itemsIntro: "From your wedding gown to everyday alterations.",
+    items: [
+      {
+        name: "Wedding dress alterations",
+        detail:
+          "Hems, bustles, taking in and reshaping, so your gown fits like it was made for you.",
+      },
+      { name: "Custom designs", detail: "A gown or outfit designed and made for you." },
+      {
+        name: "Bridal party and formal wear",
+        detail: "Alterations for the rest of the wedding party and for formal occasions.",
+      },
+      {
+        name: "Everyday alterations",
+        detail: "Hems, taking in and repairs for the clothes you wear every day.",
+      },
+    ],
+    feature: {
+      navLabel: "Appointments",
+      eyebrow: "By appointment",
+      title: "How fittings work",
+      body: "Fittings are by appointment, so you have Nadi's full attention. Call or email to book your first fitting, and we'll plan the rest around your wedding date.",
+      points: ["By appointment only", "Monday to Saturday", "Pacific Highway, Crows Nest"],
+      action: "Email to book a fitting",
+      emailSubject: "Fitting enquiry",
+    },
+    cta: {
+      title: "Planning your big day?",
+      body: "Get in touch early and we'll plan your fittings around your wedding date.",
+    },
+    aboutTitle: "Meet Nadi",
+    about: [
+      "Nadi runs a bridal and alteration studio on the Pacific Highway in Crows Nest, specialising in wedding dress alterations and custom designs. Brides come to her on the recommendation of friends and locals, and stay for the care she puts into every fitting.",
+      "With 220 Google reviews and a 4.8-star rating, the things brides mention most are her attention to detail, clear communication, fair pricing and a friendly, stress-free experience from the first fitting to the big day.",
+    ],
+    rating: { stars: "4.8", count: 220 },
+    hours: [
+      { days: "Monday to Friday", hours: "8 am – 4 pm" },
+      { days: "Saturday", hours: "8 am – 3 pm" },
+      { days: "Sunday", hours: "Closed" },
+    ],
+    hoursNote: "By appointment only. Please call or email before you come in.",
+    image: salon,
+    imageSmall: salonSmall,
+    imageAlt: "Placeholder photo of a light, pink-toned studio interior",
   },
 };
 
