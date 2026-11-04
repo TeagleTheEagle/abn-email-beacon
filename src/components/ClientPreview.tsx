@@ -103,7 +103,7 @@ export function ClientPreview({ preview }: { preview: Preview }) {
               <Star size={16} aria-hidden="true" fill="currentColor" />
               <span>
                 {preview.rating.stars} stars from {preview.rating.count.toLocaleString("en-AU")}{" "}
-                Google reviews
+                {preview.rating.source ?? "Google"} reviews
               </span>
             </p>
           </div>
@@ -171,14 +171,16 @@ export function ClientPreview({ preview }: { preview: Preview }) {
             <h2>
               <Clock size={20} aria-hidden="true" /> Opening hours
             </h2>
-            <dl className="cs-hours">
-              {preview.hours.map((row) => (
-                <div key={row.days}>
-                  <dt>{row.days}</dt>
-                  <dd>{row.hours}</dd>
-                </div>
-              ))}
-            </dl>
+            {preview.hours.length > 0 && (
+              <dl className="cs-hours">
+                {preview.hours.map((row) => (
+                  <div key={row.days}>
+                    <dt>{row.days}</dt>
+                    <dd>{row.hours}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
             {preview.hoursNote && <p className="cs-muted">{preview.hoursNote}</p>}
           </div>
           <div id="cs-find" className="cs-card">
