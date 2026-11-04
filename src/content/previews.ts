@@ -422,6 +422,51 @@ export const previews: Record<string, ClientPreview> = {
     imageSmall: salonSmall,
     imageAlt: "Placeholder photo of a light, pink-toned studio interior",
   },
+  // US round 1 (5 Nov 2026): built ahead of a reply for the strongest US prospect, whose old
+  // woodlawncoffee.com address no longer resolves. US spelling. Hours come from an older listing
+  // and are flagged for the owner to confirm.
+  "woodlawn-coffee": {
+    slug: "woodlawn-coffee",
+    brand: "Woodlawn Coffee & Pastry",
+    name: "Woodlawn Coffee & Pastry",
+    kind: "cafe",
+    theme: "cafe-cosy",
+    suburb: "Woodlawn",
+    address: "808 NE Dekum St, Portland, OR 97211",
+    phone: "(503) 954-2412",
+    eyebrow: "Portland · Woodlawn · NE Dekum Street",
+    title: "Scratch-made pastry and good coffee on Dekum.",
+    body: "Pound cake, scones and biscuits baked from scratch, a short breakfast menu and espresso, in the heart of Woodlawn.",
+    primaryAction: "See the menu",
+    itemsTitle: "What people come for",
+    itemsIntro: "The things regulars and reviewers mention most.",
+    items: [
+      { name: "Pound cake", detail: "Made from scratch. The one most people come in for." },
+      { name: "Scones", detail: "Baked fresh, and gone by the afternoon." },
+      {
+        name: "Biscuit and sausage gravy",
+        detail: "Homemade biscuits, the breakfast plate people end up ordering instead.",
+      },
+      { name: "Quiche", detail: "A slice with your coffee, or breakfast to go." },
+      { name: "Lemon-curd tarts and muffins", detail: "From the pastry case, baked in house." },
+      { name: "Espresso drinks", detail: "Lattes, cappuccinos and drip, made properly." },
+    ],
+    aboutTitle: "Woodlawn's neighborhood bakery café",
+    about: [
+      "Woodlawn Coffee & Pastry sits on NE Dekum Street in Portland's Woodlawn neighborhood, baking pound cake, scones, tarts and biscuits from scratch every morning. Willamette Week has written it up more than once, and the biscuit and sausage gravy has a following of its own.",
+      "With 546 Google reviews and a 4.5-star rating, it is one of the best-loved cafés in North Portland. People mention the baking, the friendly counter and the easy, neighborly feel of the room.",
+    ],
+    rating: { stars: "4.5", count: 546 },
+    hours: [
+      { days: "Monday to Friday", hours: "6:30 am – 4 pm" },
+      { days: "Saturday and Sunday", hours: "7:30 am – 4 pm" },
+    ],
+    hoursNote:
+      "Hours are from an older listing. Brandon, tell us your current hours and we'll update them.",
+    image: cafe,
+    imageSmall: cafeSmall,
+    imageAlt: "Placeholder photo of a café counter and coffee",
+  },
 };
 
 export const previewSlugs = Object.keys(previews);
