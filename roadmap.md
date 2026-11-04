@@ -213,6 +213,12 @@ Built as real files in `products/` (git-ignored; on Ben's machine only) and crea
 - [x] Round 2 previews built for the three strongest email prospects (5 Nov 2026): `/preview/chimichuri`, `/preview/blue-36-cafe` (with a catering section) and `/preview/nadis-bridal` (with an appointments section). The preview template gained a "studio" type for appointment-based businesses, the business's own email, an optional feature block and two themes (navy café, bridal). Their emails in the round 2 file now link to them
 - [ ] Ben to send the round 2 emails and work through the call list; name whoever says yes and Claude builds their preview
 - [ ] Tradies (plumbers, electricians, painters and so on) still to search: Google blocked further searches partway through on 5 Nov
+- [x] Round 2 emails sent (5 Nov 2026): 14 from benteaguey6@gmail.com, three with preview links. Barberiko and Freya skipped (already pitched 15 Oct). Follow up 12 Nov
+- [x] First US prospect list (5 Nov 2026): about 2,600 Google listings across San Diego, Phoenix and Portland metros. 10 to email (plus one Video Ad Pack lead), 43 to call, 10 with dead websites. In `outreach/usa-email-and-call-list-2026-11-05.md` with a CSV call sheet. The 10 emails were sent the same day from benteaguey6@gmail.com at US$350, with Ben's US mailing address (Morristown, NJ) in the sign-off for CAN-SPAM. One bounced (The White Spa). Follow up 12 Nov
+- [x] AI outbound caller built in ElevenLabs (5 Nov 2026, agent `agent_1701m6knt21we76tzx8eyh4ek0n6`): discloses it's an AI, pitches the free preview at US$350, collects an email, honours "do not call". Call list with per-business lines in `outreach/usa-ai-caller-list-2026-11-05.csv`; Ben's steps in `outreach/usa-ai-caller-setup-2026-11-05.md`
+- [x] AI caller tested with six simulated calls (email given, robot question, refusal, hard questions and callback): all passed. End-call and voicemail detection were missing and are now on
+- [x] Preview built ahead of a reply for the strongest US prospect (5 Nov 2026): `/preview/woodlawn-coffee` (Woodlawn Coffee & Pastry, Portland, dead woodlawncoffee.com). Hours flagged for the owner to confirm. Stella Style (San Diego) skipped for now: listings give two different addresses and another studio has already built her a demo site
+- [ ] Ben: buy a Twilio US number, import it into ElevenLabs, run line-type lookups (AI may only call landlines under US law), test-call his own phone, then batch-call the landlines
 
 ## Video Ad Pack service (30 Oct 2026)
 
