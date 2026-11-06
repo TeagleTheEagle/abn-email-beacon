@@ -499,8 +499,8 @@ export function PlumbingTradesDemo({ design }: DemoProps) {
           >
             Get a price
           </button>
-          <nav aria-label="Site sections" className="w-full overflow-x-auto @3xl:w-auto">
-            <ul className="flex gap-1">
+          <nav aria-label="Site sections" className="w-full @3xl:w-auto">
+            <ul className="flex flex-wrap gap-1">
               {nav.map((item) => (
                 <li key={item.label}>
                   <button

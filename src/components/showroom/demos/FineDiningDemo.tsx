@@ -364,7 +364,7 @@ export function FineDiningDemo({ design }: DemoProps) {
           aria-label="Demo site sections, compact"
           className="border-t border-[#3a2a2c] @3xl:hidden"
         >
-          <ul className="flex justify-between gap-1 overflow-x-auto px-3 py-1.5">
+          <ul className="flex flex-wrap justify-center gap-x-2 gap-y-1 px-3 py-1.5">
             {nav.map((item) => (
               <li key={item.label}>
                 <button

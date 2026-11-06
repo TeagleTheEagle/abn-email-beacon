@@ -759,7 +759,7 @@ export function BoutiqueEcommerceDemo({ design }: DemoProps) {
             aria-label="Demo site sections, compact"
             className="border-t border-[#d8d0c4] @3xl:hidden"
           >
-            <ul className="flex justify-center gap-2 px-3 py-1.5">
+            <ul className="flex flex-wrap justify-center gap-2 px-3 py-1.5">
               {nav.map((item) => (
                 <li key={item.label}>
                   <button

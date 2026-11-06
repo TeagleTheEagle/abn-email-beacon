@@ -494,7 +494,7 @@ export function FitnessStudioDemo({ design }: DemoProps) {
           aria-label="Demo site sections, compact"
           className="border-t border-[#2a2a2a] @3xl:hidden"
         >
-          <ul className="flex gap-1 overflow-x-auto px-3 py-1.5">
+          <ul className="flex flex-wrap gap-1 px-3 py-1.5">
             {nav.map((item) => (
               <li key={item.label}>
                 <button

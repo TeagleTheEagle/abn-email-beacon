@@ -539,7 +539,7 @@ export function BeautySpaDemo({ design }: DemoProps) {
           aria-label="Demo site sections, compact"
           className="border-t border-[#eadbd5] @3xl:hidden"
         >
-          <ul className="flex justify-between gap-1 overflow-x-auto px-3 py-1.5">
+          <ul className="flex flex-wrap justify-between gap-1 px-3 py-1.5">
             {nav.map((item) => (
               <li key={item.label}>
                 <button

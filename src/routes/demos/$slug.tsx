@@ -49,7 +49,7 @@ const viewports = [
 type Viewport = (typeof viewports)[number]["id"];
 
 const toolButton =
-  "inline-flex shrink-0 items-center gap-1.5 rounded-md border border-border px-3 py-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary";
+  "shrink-0 items-center gap-1.5 rounded-md border border-border px-3 py-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary";
 
 function DemoViewer() {
   const { slug } = Route.useParams();
@@ -122,7 +122,7 @@ function DemoViewer() {
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" /> All Designs
           </Link>
-          <label className="min-w-0 flex-1 sm:max-w-xs">
+          <label className="min-w-[11rem] flex-1 sm:max-w-xs">
             <span className="sr-only">Switch design</span>
             <select
               value={slug}
@@ -166,12 +166,16 @@ function DemoViewer() {
             type="button"
             aria-pressed={compare}
             onClick={() => setCompare((c) => !c)}
-            className={`${toolButton} ${compare ? "!border-primary !bg-primary/15 !text-foreground" : ""}`}
+            className={`inline-flex ${toolButton} ${compare ? "!border-primary !bg-primary/15 !text-foreground" : ""}`}
           >
             <Columns2 className="h-4 w-4" aria-hidden="true" />
             Compare
           </button>
-          <button type="button" onClick={() => void share()} className={toolButton}>
+          <button
+            type="button"
+            onClick={() => void share()}
+            className={`inline-flex ${toolButton}`}
+          >
             <Share2 className="h-4 w-4" aria-hidden="true" />
             Share
           </button>
@@ -259,7 +263,11 @@ function DemoViewer() {
             >
               Request a Build Like This
             </Link>
-            <button type="button" onClick={() => void exitFull()} className={toolButton}>
+            <button
+              type="button"
+              onClick={() => void exitFull()}
+              className={`inline-flex ${toolButton}`}
+            >
               <Minimize2 className="h-4 w-4" aria-hidden="true" /> Exit full screen
             </button>
           </div>
