@@ -26,6 +26,7 @@ export const nav = [
   { to: "/", label: "Home" },
   { to: "/services", label: "Services" },
   { to: "/work", label: "Work" },
+  { to: "/demos", label: "Website Designs" },
   { to: "/pricing", label: "Pricing" },
   { to: "/templates", label: "Templates" },
   { to: "/shop", label: "Shop" },

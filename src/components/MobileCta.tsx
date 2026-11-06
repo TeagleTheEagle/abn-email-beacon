@@ -19,6 +19,7 @@ export function MobileCta() {
     pathname === "/contact" ||
     pathname === "/book" ||
     pathname.startsWith("/demo/") ||
+    pathname.startsWith("/demos") ||
     pathname.startsWith("/preview/") ||
     pathname === "/design-system"
   )

@@ -10,6 +10,7 @@ import { Field } from "@/components/FormField";
 import { BookCallLink } from "@/components/BookCallLink";
 import { supabase } from "@/integrations/supabase/client";
 import { site } from "@/content/site";
+import { getShowroomDesign, isShowroomSlug, type ShowroomSlug } from "@/content/showroom";
 import { seo } from "@/lib/seo";
 import { newLeadId, notifyLead } from "@/lib/leads";
 import { track } from "@/lib/analytics";
@@ -21,6 +22,12 @@ export const Route = createFileRoute("/contact")({
       "Get a Free Preview",
       "Tell us about your business and we'll build a free preview of your new website or store — no obligation.",
     ),
+  // "Request a Build Like This" in the showroom links here with ?design=<slug>; unknown values are
+  // dropped rather than rejected so a stale link still opens the form.
+  validateSearch: (search: Record<string, unknown>): { design?: ShowroomSlug } => {
+    const design = search["design"];
+    return typeof design === "string" && isShowroomSlug(design) ? { design } : {};
+  },
   component: Contact,
 });
 
@@ -55,11 +62,14 @@ const schema = z.object({
       (v) => !v || normaliseWebsite(v) !== null,
       "Please enter your website address, e.g. mysite.com.au",
     ),
-  message: z.string().trim().max(2000).optional(),
+  message: z.string().trim().max(1900, "Please keep the message under 1,900 characters").optional(),
 });
 type FormValues = z.infer<typeof schema>;
 
 function Contact() {
+  const { design: designSlug } = Route.useSearch();
+  const design = designSlug ? getShowroomDesign(designSlug) : undefined;
+  const designLine = design ? `Showroom design: ${design.title} (design ${design.id})` : undefined;
   const [done, setDone] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const {
@@ -68,7 +78,11 @@ function Contact() {
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { needs: [] },
+    defaultValues: {
+      needs:
+        design?.category === "ecommerce" ? ["Website", "Online store"] : design ? ["Website"] : [],
+      message: design ? `I'd like a website like the ${design.title} demo.` : "",
+    },
   });
 
   const trapRef = useRef<HTMLInputElement>(null);
@@ -88,14 +102,17 @@ function Contact() {
       business_type: v.business_type || null,
       needs: v.needs ?? [],
       current_website: normaliseWebsite(v.current_website),
-      message: v.message || null,
+      // The design line is always recorded, even if the visitor edits the message.
+      message: designLine
+        ? `${v.message ? `${v.message}\n\n` : ""}${designLine}`
+        : v.message || null,
     });
     if (error) {
       setErr("Sorry, something went wrong. Please try again or email us directly.");
       return;
     }
     setDone(true);
-    track("generate_lead", { form: "contact" });
+    track("generate_lead", design ? { form: "contact", design: design.slug } : { form: "contact" });
     void notifyLead(supabase, id);
   };
 

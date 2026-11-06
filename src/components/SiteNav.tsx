@@ -44,7 +44,9 @@ export function SiteNav() {
         </Link>
         <ul className="hidden min-w-0 items-center gap-5 lg:flex">
           {nav
-            .filter((n) => ["/services", "/work", "/pricing", "/shop", "/about"].includes(n.to))
+            .filter((n) =>
+              ["/services", "/work", "/demos", "/pricing", "/shop", "/about"].includes(n.to),
+            )
             .map((n) => (
               <li key={n.to}>
                 <Link

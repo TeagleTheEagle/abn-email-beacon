@@ -24,6 +24,8 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WorkRouteImport } from './routes/work'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as DemoKindRouteImport } from './routes/demo.$kind'
+import { Route as DemosIndexRouteImport } from './routes/demos/index'
+import { Route as DemosSlugRouteImport } from './routes/demos/$slug'
 import { Route as PreviewSlugRouteImport } from './routes/preview.$slug'
 import { Route as ProductHandleRouteImport } from './routes/product.$handle'
 
@@ -103,6 +105,16 @@ const DemoKindRoute = DemoKindRouteImport.update({
   path: '/demo/$kind',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DemosIndexRoute = DemosIndexRouteImport.update({
+  id: '/demos/',
+  path: '/demos/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemosSlugRoute = DemosSlugRouteImport.update({
+  id: '/demos/$slug',
+  path: '/demos/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PreviewSlugRoute = PreviewSlugRouteImport.update({
   id: '/preview/$slug',
   path: '/preview/$slug',
@@ -130,8 +142,10 @@ export interface FileRoutesByFullPath {
   '/work': typeof WorkRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/demo/$kind': typeof DemoKindRoute
+  '/demos/$slug': typeof DemosSlugRoute
   '/preview/$slug': typeof PreviewSlugRoute
   '/product/$handle': typeof ProductHandleRoute
+  '/demos/': typeof DemosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -149,8 +163,10 @@ export interface FileRoutesByTo {
   '/work': typeof WorkRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/demo/$kind': typeof DemoKindRoute
+  '/demos/$slug': typeof DemosSlugRoute
   '/preview/$slug': typeof PreviewSlugRoute
   '/product/$handle': typeof ProductHandleRoute
+  '/demos': typeof DemosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -169,8 +185,10 @@ export interface FileRoutesById {
   '/work': typeof WorkRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/demo/$kind': typeof DemoKindRoute
+  '/demos/$slug': typeof DemosSlugRoute
   '/preview/$slug': typeof PreviewSlugRoute
   '/product/$handle': typeof ProductHandleRoute
+  '/demos/': typeof DemosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -190,8 +208,10 @@ export interface FileRouteTypes {
     | '/work'
     | '/.well-known/oauth-protected-resource'
     | '/demo/$kind'
+    | '/demos/$slug'
     | '/preview/$slug'
     | '/product/$handle'
+    | '/demos/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -209,8 +229,10 @@ export interface FileRouteTypes {
     | '/work'
     | '/.well-known/oauth-protected-resource'
     | '/demo/$kind'
+    | '/demos/$slug'
     | '/preview/$slug'
     | '/product/$handle'
+    | '/demos'
   id:
     | '__root__'
     | '/'
@@ -228,8 +250,10 @@ export interface FileRouteTypes {
     | '/work'
     | '/.well-known/oauth-protected-resource'
     | '/demo/$kind'
+    | '/demos/$slug'
     | '/preview/$slug'
     | '/product/$handle'
+    | '/demos/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -248,8 +272,10 @@ export interface RootRouteChildren {
   WorkRoute: typeof WorkRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   DemoKindRoute: typeof DemoKindRoute
+  DemosSlugRoute: typeof DemosSlugRoute
   PreviewSlugRoute: typeof PreviewSlugRoute
   ProductHandleRoute: typeof ProductHandleRoute
+  DemosIndexRoute: typeof DemosIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -359,6 +385,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoKindRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/demos/': {
+      id: '/demos/'
+      path: '/demos'
+      fullPath: '/demos/'
+      preLoaderRoute: typeof DemosIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demos/$slug': {
+      id: '/demos/$slug'
+      path: '/demos/$slug'
+      fullPath: '/demos/$slug'
+      preLoaderRoute: typeof DemosSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/preview/$slug': {
       id: '/preview/$slug'
       path: '/preview/$slug'
@@ -393,8 +433,10 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   DemoKindRoute: DemoKindRoute,
+  DemosSlugRoute: DemosSlugRoute,
   PreviewSlugRoute: PreviewSlugRoute,
   ProductHandleRoute: ProductHandleRoute,
+  DemosIndexRoute: DemosIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

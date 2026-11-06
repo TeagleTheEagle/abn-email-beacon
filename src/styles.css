@@ -121,11 +121,21 @@
   }
   /* Links inside running text are underlined so they don't rely on colour alone (demos style their own).
      Covers the footer too, and any link using the inline-link colour wherever it sits. */
-  :where(main, footer) :is(p, li, td):not(.demo-site *) a:not([class*="btn"]),
+  :where(main, footer) :is(p, li, td):not(.demo-site *, .showroom-demo *) a:not([class*="btn"]),
   :where(main, footer) a[class~="text-primary-soft"]:not([class*="btn"]) {
     text-decoration: underline;
     text-decoration-color: color-mix(in oklab, currentColor 55%, transparent);
     text-underline-offset: 3px;
+  }
+  /* Showroom demos (src/components/showroom/demos) bring their own type through these variables.
+     This outranks the heading rule above; utility classes on an element still win. */
+  .showroom-demo {
+    font-family: var(--demo-font-body);
+    line-height: 1.6;
+  }
+  .showroom-demo :is(h1, h2, h3, h4) {
+    font-family: var(--demo-font-heading);
+    letter-spacing: normal;
   }
 }
 
