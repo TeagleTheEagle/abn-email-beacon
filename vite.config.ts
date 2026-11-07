@@ -11,9 +11,15 @@ import { loadEnv } from "vite";
 // Lovable's dev-only asset proxy (serves `/__l5e/assets-v1/*` uploads, e.g. the founder photo on
 // /about, on localhost) reads LOVABLE_PREVIEW_HOST from process.env, but Vite only exposes VITE_*
 // values from .env, so lift it ourselves. Lovable's own sandbox already sets it, hence `??=`.
-process.env["LOVABLE_PREVIEW_HOST"] ??= loadEnv("development", process.cwd(), "LOVABLE_")[
-  "LOVABLE_PREVIEW_HOST"
-];
+delete process.env["GEMINI_API_KEY"];
+delete process.env["GOOGLE_API_KEY"];
+const rawEnv = loadEnv("development", process.cwd(), "");
+process.env["LOVABLE_PREVIEW_HOST"] ??= rawEnv["LOVABLE_PREVIEW_HOST"];
+if (rawEnv["GEMINI_API_KEY"]) {
+  process.env["GEMINI_API_KEY"] = rawEnv["GEMINI_API_KEY"];
+} else if (rawEnv["GOOGLE_API_KEY"]) {
+  process.env["GOOGLE_API_KEY"] = rawEnv["GOOGLE_API_KEY"];
+}
 
 export default defineConfig({
   tanstackStart: {

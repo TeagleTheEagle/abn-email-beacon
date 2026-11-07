@@ -303,12 +303,18 @@ export function JarvisAssistant() {
     };
 
     const reply = generateJarvisReply(text, cartCount, checkoutUrl);
+    const jarvisMsgId = `j-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
     const jarvisMsg: JarvisMessage = {
-      id: `j-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      id: jarvisMsgId,
       sender: "jarvis",
       text: reply.text,
       actions: reply.actions,
     };
+
+    const historySnapshot = messages.slice(-8).map((m) => ({
+      sender: m.sender,
+      text: m.text,
+    }));
 
     setMessages((prev) => [...prev, userMsg, jarvisMsg]);
     setInput("");
@@ -317,6 +323,45 @@ export function JarvisAssistant() {
       setLeadNeeds(reply.openLeadForm.needs ?? ["Website"]);
       setLeadNote(reply.openLeadForm.note ?? text);
       setLeadFormOpen(true);
+    }
+
+    // Call the server-side Gemini + Public APIs endpoint (/api/jarvis) so JARVIS can answer any question
+    if (typeof window !== "undefined" && typeof window.fetch === "function") {
+      void window
+        .fetch("/api/jarvis", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: text,
+            history: historySnapshot,
+            cartCount,
+            checkoutUrl,
+          }),
+        })
+        .then(async (res) => {
+          if (!res.ok) return;
+          const data = (await res.json()) as {
+            text?: string;
+            actions?: JarvisAction[];
+          };
+          if (data.text) {
+            const nextText = data.text;
+            setMessages((prev) =>
+              prev.map((m) =>
+                m.id === jarvisMsgId
+                  ? {
+                      ...m,
+                      text: nextText,
+                      ...(data.actions ? { actions: data.actions } : {}),
+                    }
+                  : m,
+              ),
+            );
+          }
+        })
+        .catch(() => {
+          // Offline or unit-test environment: keep the instant local response.
+        });
     }
   };
 

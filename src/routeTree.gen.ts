@@ -23,6 +23,7 @@ import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WorkRouteImport } from './routes/work'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as ApiJarvisRouteImport } from './routes/api.jarvis'
 import { Route as DemoKindRouteImport } from './routes/demo.$kind'
 import { Route as DemosIndexRouteImport } from './routes/demos/index'
 import { Route as DemosSlugRouteImport } from './routes/demos/$slug'
@@ -100,6 +101,11 @@ const Char91DotwellKnownChar93OauthProtectedResourceRoute =
     path: '/.well-known/oauth-protected-resource',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiJarvisRoute = ApiJarvisRouteImport.update({
+  id: '/api/jarvis',
+  path: '/api/jarvis',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DemoKindRoute = DemoKindRouteImport.update({
   id: '/demo/$kind',
   path: '/demo/$kind',
@@ -141,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/work': typeof WorkRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/api/jarvis': typeof ApiJarvisRoute
   '/demo/$kind': typeof DemoKindRoute
   '/demos/$slug': typeof DemosSlugRoute
   '/preview/$slug': typeof PreviewSlugRoute
@@ -162,6 +169,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/work': typeof WorkRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/api/jarvis': typeof ApiJarvisRoute
   '/demo/$kind': typeof DemoKindRoute
   '/demos/$slug': typeof DemosSlugRoute
   '/preview/$slug': typeof PreviewSlugRoute
@@ -184,6 +192,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/work': typeof WorkRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/api/jarvis': typeof ApiJarvisRoute
   '/demo/$kind': typeof DemoKindRoute
   '/demos/$slug': typeof DemosSlugRoute
   '/preview/$slug': typeof PreviewSlugRoute
@@ -207,6 +216,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/work'
     | '/.well-known/oauth-protected-resource'
+    | '/api/jarvis'
     | '/demo/$kind'
     | '/demos/$slug'
     | '/preview/$slug'
@@ -228,6 +238,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/work'
     | '/.well-known/oauth-protected-resource'
+    | '/api/jarvis'
     | '/demo/$kind'
     | '/demos/$slug'
     | '/preview/$slug'
@@ -249,6 +260,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/work'
     | '/.well-known/oauth-protected-resource'
+    | '/api/jarvis'
     | '/demo/$kind'
     | '/demos/$slug'
     | '/preview/$slug'
@@ -271,6 +283,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   WorkRoute: typeof WorkRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  ApiJarvisRoute: typeof ApiJarvisRoute
   DemoKindRoute: typeof DemoKindRoute
   DemosSlugRoute: typeof DemosSlugRoute
   PreviewSlugRoute: typeof PreviewSlugRoute
@@ -378,6 +391,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/jarvis': {
+      id: '/api/jarvis'
+      path: '/api/jarvis'
+      fullPath: '/api/jarvis'
+      preLoaderRoute: typeof ApiJarvisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/demo/$kind': {
       id: '/demo/$kind'
       path: '/demo/$kind'
@@ -432,6 +452,7 @@ const rootRouteChildren: RootRouteChildren = {
   WorkRoute: WorkRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  ApiJarvisRoute: ApiJarvisRoute,
   DemoKindRoute: DemoKindRoute,
   DemosSlugRoute: DemosSlugRoute,
   PreviewSlugRoute: PreviewSlugRoute,
