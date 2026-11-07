@@ -1,6 +1,11 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { JarvisAssistant, generateJarvisReply } from "./JarvisAssistant";
+import {
+  JarvisAssistant,
+  extractBusinessName,
+  generateJarvisReply,
+  getPagePrompts,
+} from "./JarvisAssistant";
 
 const { insert, navigate } = vi.hoisted(() => ({
   insert: vi.fn().mockResolvedValue({ error: null }),
@@ -34,6 +39,30 @@ describe("JarvisAssistant", () => {
     expect(reply.text).toContain("A$500");
     expect(reply.text).toContain("From A$1,200");
     expect(reply.text).toContain("From A$2,000");
+  });
+
+  it("tailors greeting and quick prompts to the pricing page", () => {
+    const page = getPagePrompts("/pricing");
+    expect(page.greeting).toContain("free working preview");
+    expect(page.prompts.some((p) => p.label === "What’s in a Care Plan?")).toBe(true);
+  });
+
+  it("tailors greeting to a specific showroom demo page", () => {
+    const page = getPagePrompts("/demos/barbershop");
+    expect(page.greeting).toContain("Barbershop");
+    expect(page.prompts.some((p) => p.label === "Brand this demo for me")).toBe(true);
+  });
+
+  it("falls back to default prompts on the home page", () => {
+    const page = getPagePrompts("/");
+    expect(page.prompts.some((p) => p.label === "Free preview")).toBe(true);
+    expect(page.prompts.some((p) => p.label === "Book a 15-min call")).toBe(true);
+  });
+
+  it("extracts a business name from chat text for form auto-fill", () => {
+    expect(extractBusinessName("I run Apex Electrical in Mosman")).toBe("Apex Electrical");
+    expect(extractBusinessName("my cafe is called The Daily Grind")).toBe("The Daily Grind");
+    expect(extractBusinessName("How much does a website cost?")).toBeNull();
   });
 
   it("opens the chat panel and submits an inline free-preview request to Supabase", async () => {

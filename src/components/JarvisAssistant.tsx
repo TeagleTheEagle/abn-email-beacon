@@ -37,6 +37,114 @@ const QUICK_PROMPTS = [
   { label: "Book a 15-min call", prompt: "I'd like to book a 15-minute call with Ben" },
 ] as const;
 
+export interface PagePrompts {
+  greeting: string;
+  prompts: Array<{ label: string; prompt: string }>;
+}
+
+const DEFAULT_PAGE_PROMPTS: PagePrompts = {
+  greeting: `Good day, I’m JARVIS — at your service for Teague Industries. Ask me about our ${websitePrice} websites, ${storeBasePrice}+ online stores, or 12 industry designs — or request your free website preview right here.`,
+  prompts: [...QUICK_PROMPTS],
+};
+
+/** Page-aware greeting + quick prompt chips so JARVIS matches what the visitor is looking at. */
+export function getPagePrompts(pathname: string): PagePrompts {
+  if (pathname.startsWith("/pricing")) {
+    return {
+      greeting: `Looking at pricing? Every build starts with a free working preview before you pay a cent — websites are ${websitePrice} one-off and stores are ${storePrice.toLowerCase()}. Ask me to break down exactly what’s included.`,
+      prompts: [
+        { label: "Website vs Store?", prompt: "Should I get a website or an online store?" },
+        { label: "What’s in a Care Plan?", prompt: "What does a Care Plan cover?" },
+        { label: "Free preview", prompt: "How do I get a free website preview?" },
+        { label: "Book a 15-min call", prompt: "I'd like to book a 15-minute call with Ben" },
+      ],
+    };
+  }
+  if (pathname.startsWith("/demos/")) {
+    const slug = pathname.slice("/demos/".length).split("/")[0] ?? "";
+    const design = showroomDesigns.find((d) => d.slug === slug);
+    if (design) {
+      return {
+        greeting: `Like the "${design.title}" concept? I can have Ben build a free preview of this exact style branded for your business — no upfront cost. Just tell me your business name.`,
+        prompts: [
+          { label: "Brand this demo for me", prompt: `I'd like a free preview like the ${design.title} demo` },
+          { label: "What’s included?", prompt: `What's included in the ${design.title} design?` },
+          { label: "See all 12 designs", prompt: "Show me website designs for my industry" },
+          { label: "Pricing", prompt: "How much does a website cost?" },
+        ],
+      };
+    }
+  }
+  if (pathname === "/demos" || pathname.startsWith("/work")) {
+    return {
+      greeting: `Browsing the designs? Tell me your industry — barbershop, café, tradie, salon, fitness and more — and I’ll point you to the closest concept and start your free preview.`,
+      prompts: [
+        { label: "Match my industry", prompt: "Show me website designs for my industry" },
+        { label: "Free preview", prompt: "How do I get a free website preview?" },
+        { label: "Pricing", prompt: "How much does a website cost?" },
+        { label: "Book a 15-min call", prompt: "I'd like to book a 15-minute call with Ben" },
+      ],
+    };
+  }
+  if (pathname.startsWith("/shop") || pathname.startsWith("/product") || pathname.startsWith("/templates")) {
+    return {
+      greeting: `Looking at the shop? I can explain what’s inside any template or kit, how instant download works, or get Ben to set it all up for you.`,
+      prompts: [
+        { label: "What’s in the downloads?", prompt: "What's included in the templates and kits?" },
+        { label: "Can Ben set it up for me?", prompt: "Can Ben set up a template for my business?" },
+        { label: "Custom website instead", prompt: "How much does a custom website cost?" },
+        { label: "Free preview", prompt: "How do I get a free website preview?" },
+      ],
+    };
+  }
+  if (pathname.startsWith("/services")) {
+    return {
+      greeting: `Comparing services? Websites are ${websitePrice} one-off, stores are ${storePrice.toLowerCase()}, and every option starts with a free preview. Tell me what your business needs and I’ll recommend the right fit.`,
+      prompts: [
+        { label: "Recommend a service", prompt: "Which service is right for my business?" },
+        { label: "Add-ons & audits", prompt: "What add-ons do you offer?" },
+        { label: "Free preview", prompt: "How do I get a free website preview?" },
+        { label: "Book a 15-min call", prompt: "I'd like to book a 15-minute call with Ben" },
+      ],
+    };
+  }
+  if (pathname.startsWith("/about")) {
+    return {
+      greeting: `You’re dealing directly with Ben — the founder — from first message to launch. No account managers, no jargon. Ask me anything, or start your free preview.`,
+      prompts: [
+        { label: "Free preview", prompt: "How do I get a free website preview?" },
+        { label: "How it works", prompt: "How does the free preview process work?" },
+        { label: "Pricing", prompt: "How much does a website cost?" },
+        { label: "Book a 15-min call", prompt: "I'd like to book a 15-minute call with Ben" },
+      ],
+    };
+  }
+  if (pathname.startsWith("/contact") || pathname.startsWith("/book")) {
+    return {
+      greeting: `Skip the form if you like — tell me your business name and email right here and I’ll log your free preview request for Ben instantly.`,
+      prompts: [
+        { label: "Start free preview here", prompt: "How do I get a free website preview?" },
+        { label: "Pricing first", prompt: "How much does a website or online store cost?" },
+        { label: "See designs", prompt: "Show me website designs for my industry" },
+      ],
+    };
+  }
+  return DEFAULT_PAGE_PROMPTS;
+}
+
+/** Pulls a business name out of chat text ("I run Apex Electrical", "my cafe is called…") to pre-fill the lead form. */
+export function extractBusinessName(text: string): string | null {
+  const match = text.match(
+    /(?:my (?:business|company|shop|store|salon|caf[eé]|studio|clinic|firm|brand)(?:'s name)? is(?: called| named)?|i (?:run|own|manage|have)|we (?:run|own|are)|(?:it'?s|called|named))\s+([A-Za-z0-9][A-Za-z0-9&'’.\-]*(?:\s+[A-Za-z0-9&'’.\-]+){0,3})/i,
+  );
+  const raw = match?.[1];
+  if (!raw) return null;
+  const trimmed = raw.replace(/[.,!?;:]+$/, "").trim();
+  const cut = trimmed.split(/\s+(?:and|in|based|located|near|that|which|we|i)\b/i)[0] ?? trimmed;
+  const name = cut.trim();
+  return name.length >= 2 ? name : null;
+}
+
 const INDUSTRY_KEYWORDS: Array<{ pattern: RegExp; slug: ShowroomSlug }> = [
   { pattern: /barber|haircut|fade|shave/i, slug: "barbershop" },
   { pattern: /salon|spa|beauty|facial|nail|massage/i, slug: "beauty-salon" },
@@ -250,11 +358,11 @@ export function JarvisAssistant() {
 
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<JarvisMessage[]>([
+  const [messages, setMessages] = useState<JarvisMessage[]>(() => [
     {
       id: "welcome",
       sender: "jarvis",
-      text: `Good day, I’m JARVIS — at your service for Teague Industries. Ask me about our ${websitePrice} websites, ${storeBasePrice}+ online stores, or 12 industry designs — or request your free website preview right here.`,
+      text: getPagePrompts(pathname).greeting,
       actions: [
         { label: "Request Free Preview Here", openLeadForm: { needs: ["Website"] } },
         { label: "12 Website Designs", to: "/demos" },
@@ -262,6 +370,7 @@ export function JarvisAssistant() {
       ],
     },
   ]);
+  const pagePrompts = getPagePrompts(pathname);
 
   // Inline Free-Preview Lead Capture state inside JARVIS
   const [leadFormOpen, setLeadFormOpen] = useState(false);
@@ -318,6 +427,13 @@ export function JarvisAssistant() {
 
     setMessages((prev) => [...prev, userMsg, jarvisMsg]);
     setInput("");
+
+    // Smart auto-fill: pick the business name out of the conversation so the
+    // visitor doesn't have to retype it in the lead form.
+    const detectedName = extractBusinessName(text);
+    if (detectedName && !leadSent) {
+      setBusinessName((current) => current || detectedName);
+    }
 
     if (reply.openLeadForm && !leadSent) {
       setLeadNeeds(reply.openLeadForm.needs ?? ["Website"]);
@@ -674,7 +790,7 @@ export function JarvisAssistant() {
           {/* Quick Action Chips */}
           <div className="border-t border-border bg-[#0e1626]/70 px-3 py-2">
             <div className="flex flex-wrap gap-1.5">
-              {QUICK_PROMPTS.map((chip) => (
+              {pagePrompts.prompts.map((chip) => (
                 <button
                   key={chip.label}
                   type="button"
