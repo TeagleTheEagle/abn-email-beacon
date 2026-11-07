@@ -65,6 +65,23 @@ describe("JarvisAssistant", () => {
     expect(extractBusinessName("How much does a website cost?")).toBeNull();
   });
 
+  it("attaches a rich demo card with palette, price and features to industry matches", () => {
+    const reply = generateJarvisReply("Do you have a barbershop website demo?");
+    expect(reply.card?.kind).toBe("demo");
+    expect(reply.card?.title).toBe("Luxury Barbershop");
+    expect(reply.card?.price).toContain("A$500");
+    expect(reply.card?.features.length).toBe(3);
+    expect(reply.card?.palette?.accent).toBeTruthy();
+    expect(reply.card?.to).toBe("/demos/barbershop");
+  });
+
+  it("attaches a service card to pricing replies", () => {
+    const reply = generateJarvisReply("How much does a website cost?");
+    expect(reply.card?.kind).toBe("service");
+    expect(reply.card?.title).toBe("Website Build");
+    expect(reply.card?.price).toContain("A$500");
+  });
+
   it("opens the chat panel and submits an inline free-preview request to Supabase", async () => {
     render(<JarvisAssistant />);
     fireEvent.click(screen.getByRole("button", { name: "Ask JARVIS AI Assistant" }));

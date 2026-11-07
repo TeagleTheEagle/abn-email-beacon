@@ -19,11 +19,23 @@ export interface JarvisAction {
   };
 }
 
+export interface JarvisCard {
+  kind: "demo" | "service";
+  title: string;
+  subtitle: string;
+  price: string;
+  features: string[];
+  palette?: { background: string; surface: string; text: string; accent: string };
+  to?: string;
+  openLeadForm?: { needs?: string[]; note?: string };
+}
+
 export interface JarvisMessage {
   id: string;
   sender: "jarvis" | "user";
   text: string;
   actions?: JarvisAction[];
+  card?: JarvisCard;
 }
 
 const websitePrice = services.find((s) => s.id === "website-build")?.price ?? "A$500";
@@ -164,7 +176,12 @@ export function generateJarvisReply(
   input: string,
   cartCount = 0,
   checkoutUrl: string | null = null,
-): { text: string; actions: JarvisAction[]; openLeadForm?: { needs?: string[]; note?: string } } {
+): {
+  text: string;
+  actions: JarvisAction[];
+  openLeadForm?: { needs?: string[]; note?: string };
+  card?: JarvisCard;
+} {
   const trimmed = input.trim();
   const lower = trimmed.toLowerCase();
 
@@ -175,6 +192,19 @@ export function generateJarvisReply(
       if (design) {
         return {
           text: `For ${design.industry.toLowerCase()}, take a look at our "${design.title}" showroom concept (${design.businessName}). It includes ${design.includedFeatures.join(", ")}, plus an interactive ${design.interactiveWidget.toLowerCase()}. Every website build is ${websitePrice} one-off with a free preview first.`,
+          card: {
+            kind: "demo",
+            title: design.title,
+            subtitle: design.businessName,
+            price: `${websitePrice} one-off`,
+            features: [...design.includedFeatures.slice(0, 3)],
+            palette: { ...design.palette },
+            to: `/demos/${design.slug}`,
+            openLeadForm: {
+              needs: design.category === "ecommerce" ? ["Website", "Online store"] : ["Website"],
+              note: `Interested in a build like the ${design.title} demo.`,
+            },
+          },
           actions: [
             { label: `Open ${design.title} Demo`, to: `/demos/${design.slug}` },
             {
@@ -281,8 +311,22 @@ export function generateJarvisReply(
     const coreList = services
       .map((s) => `• ${s.title}: ${s.price}${s.priceNote ? ` (${s.priceNote})` : ""} — ${s.short}`)
       .join("\n");
+    const websiteService = services.find((s) => s.id === "website-build");
     return {
       text: `Here is our transparent pricing — every build starts with a free working preview before you pay a cent:\n${coreList}`,
+      ...(websiteService
+        ? {
+            card: {
+              kind: "service" as const,
+              title: websiteService.title,
+              subtitle: websiteService.short,
+              price: `${websiteService.price}${websiteService.priceNote ? ` ${websiteService.priceNote}` : ""}`,
+              features: websiteService.included.slice(0, 3),
+              to: "/services",
+              openLeadForm: { needs: ["Website"], note: "Requested free preview from JARVIS pricing card" },
+            },
+          }
+        : {}),
       actions: [
         {
           label: "Start Free Preview in Chat",
@@ -418,6 +462,7 @@ export function JarvisAssistant() {
       sender: "jarvis",
       text: reply.text,
       actions: reply.actions,
+      ...(reply.card ? { card: reply.card } : {}),
     };
 
     const historySnapshot = messages.slice(-8).map((m) => ({
@@ -699,6 +744,80 @@ export function JarvisAssistant() {
                 >
                   {m.text}
                 </div>
+                {m.card && (
+                  <div className="mt-2 w-[92%] overflow-hidden rounded-lg border border-primary/40 bg-[#0e1626] shadow-[0_0_20px_rgba(84,217,255,0.12)]">
+                    {/* Mini browser mockup painted from the design's own palette */}
+                    {m.card.palette && (
+                      <div
+                        aria-hidden="true"
+                        className="border-b border-border px-3 pb-3 pt-2"
+                        style={{ background: m.card.palette.background }}
+                      >
+                        <div className="mb-2 flex gap-1">
+                          <span className="h-1.5 w-1.5 rounded-full" style={{ background: m.card.palette.accent }} />
+                          <span className="h-1.5 w-1.5 rounded-full" style={{ background: m.card.palette.surface }} />
+                          <span className="h-1.5 w-1.5 rounded-full" style={{ background: m.card.palette.surface }} />
+                        </div>
+                        <div className="space-y-1.5">
+                          <div className="h-2.5 w-2/3 rounded-sm" style={{ background: m.card.palette.accent }} />
+                          <div className="h-1.5 w-full rounded-sm" style={{ background: m.card.palette.surface }} />
+                          <div className="h-1.5 w-4/5 rounded-sm" style={{ background: m.card.palette.surface }} />
+                          <div className="flex gap-1.5 pt-0.5">
+                            <div className="h-3 w-10 rounded-sm" style={{ background: m.card.palette.accent }} />
+                            <div className="h-3 w-10 rounded-sm border" style={{ borderColor: m.card.palette.accent }} />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <div className="p-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <p className="text-xs font-semibold text-foreground">{m.card.title}</p>
+                          <p className="text-[11px] text-muted-foreground">{m.card.subtitle}</p>
+                        </div>
+                        <span className="shrink-0 rounded-sm border border-primary/40 bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary">
+                          {m.card.price}
+                        </span>
+                      </div>
+                      <ul className="mt-2 space-y-1">
+                        {m.card.features.map((f) => (
+                          <li key={f} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                            <CheckCircle2 className="h-3 w-3 shrink-0 text-primary" aria-hidden="true" />
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="mt-2.5 flex flex-wrap gap-1.5">
+                        {m.card.to && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const card = m.card;
+                              if (card?.to) handleActionClick({ label: `Open ${card.title}`, to: card.to });
+                            }}
+                            className="inline-flex items-center gap-1 rounded-sm bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground transition hover:brightness-110"
+                          >
+                            {m.card.kind === "demo" ? "Launch Live Demo" : "View Service"}
+                            <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                          </button>
+                        )}
+                        {m.card.openLeadForm && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const card = m.card;
+                              if (card?.openLeadForm)
+                                handleActionClick({ label: "Get Free Preview", openLeadForm: card.openLeadForm });
+                            }}
+                            className="inline-flex items-center gap-1 rounded-sm border border-primary/40 bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary-soft transition hover:border-primary hover:bg-primary hover:text-primary-foreground"
+                          >
+                            Get Free Preview
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
                 {m.actions && m.actions.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     {m.actions.map((act) => (
