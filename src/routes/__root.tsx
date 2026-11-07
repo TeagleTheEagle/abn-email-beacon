@@ -16,6 +16,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { MobileCta } from "@/components/MobileCta";
+import { JarvisAssistant } from "@/components/JarvisAssistant";
 import { Toaster } from "@/components/ui/sonner";
 import { useCartSync } from "@/hooks/useCartSync";
 import { analyticsScripts, trackPageView } from "@/lib/analytics";
@@ -162,6 +163,7 @@ function RootComponent() {
       </main>
       {!bare && <SiteFooter />}
       {!bare && <MobileCta />}
+      {!bare && <JarvisAssistant />}
       <Toaster position="top-center" />
     </QueryClientProvider>
   );
