@@ -1,14 +1,6 @@
 import { defineTool, ToolError } from "@lovable.dev/mcp-js";
-import { storefrontApiRequest, STOREFRONT_QUERY, formatPrice } from "@/lib/shopify";
-
-const SITE = "https://www.teagueindustries.com.au";
-
-type Node = {
-  title: string;
-  handle: string;
-  description: string;
-  priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
-};
+import { SITE_URL } from "@/lib/seo";
+import { fetchProducts, formatPrice } from "@/lib/shopify";
 
 export default defineTool({
   name: "list_products",
@@ -17,16 +9,15 @@ export default defineTool({
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: true },
   handler: async () => {
-    const data = await storefrontApiRequest(STOREFRONT_QUERY, { first: 50 });
-    if (!data) throw new ToolError("The shop is unavailable right now.");
-    const edges = (data?.data?.products?.edges ?? []) as { node: Node }[];
+    const edges = await fetchProducts();
+    if (!edges) throw new ToolError("The shop is unavailable right now.");
     const rows = edges.map(({ node }) => ({
       title: node.title,
       price: formatPrice(
         node.priceRange.minVariantPrice.amount,
         node.priceRange.minVariantPrice.currencyCode,
       ),
-      url: `${SITE}/product/${node.handle}`,
+      url: `${SITE_URL}/product/${node.handle}`,
       description: node.description,
     }));
     return {

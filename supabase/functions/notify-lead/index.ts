@@ -5,7 +5,7 @@
 // Secrets (Lovable Cloud → Secrets):
 //   RESEND_API_KEY   required — from resend.com
 //   LEAD_NOTIFY_TO   optional — where owner alerts go (default: the site email)
-//   LEAD_FROM        optional — a verified sender like "Teague Industries <hello@teagueindustries.com.au>".
+//   LEAD_FROM        optional — a verified sender like "Teague Industries <benteaguey6@gmail.com>".
 //                    Until a domain is verified in Resend, alerts go out from onboarding@resend.dev
 //                    (which can only reach the Resend account's own email) and no auto-reply is sent.
 import { createClient } from "npm:@supabase/supabase-js@2";

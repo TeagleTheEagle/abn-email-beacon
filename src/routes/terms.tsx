@@ -28,7 +28,8 @@ function Terms() {
         <section>
           <h2>Free previews</h2>
           <p className="mt-3">
-            Previews are free with no obligation. If you don't go ahead, you owe nothing.
+            Every build starts with a free preview first, with no obligation — you pay only if you
+            go ahead. If you don't go ahead, you owe nothing.
           </p>
         </section>
         <section>
@@ -48,8 +49,8 @@ function Terms() {
           </p>
         </section>
         <section>
-          <h2>You own your content</h2>
-          <p className="mt-3">Your content, domain and accounts belong to you.</p>
+          <h2>You own your finished site</h2>
+          <p className="mt-3">Your finished website, content, domain and accounts belong to you.</p>
         </section>
         <section>
           <h2>Services refunds</h2>
@@ -79,7 +80,14 @@ function Terms() {
         </section>
         <section>
           <h2>Who we are</h2>
-          <p className="mt-3">These terms are provided by Teague Industries, ABN {site.abn}.</p>
+          <p className="mt-3">
+            These terms are provided by {site.name}, founded by {site.founder} · ABN {site.abn} ·{" "}
+            <a className="text-primary-soft" href={`mailto:${site.email}`}>
+              {site.email}
+            </a>
+            . Service area: Sydney's Lower North Shore ({site.suburbs.join(", ")}) plus anywhere in
+            Australia online.
+          </p>
         </section>
       </article>
     </>

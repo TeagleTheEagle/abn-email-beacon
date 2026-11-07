@@ -47,19 +47,52 @@ export interface ProductDetails {
   licence?: string;
 }
 
+// Normalise store copy so visitor-facing product descriptions and metafields
+// use "online store" rather than leaking platform names or non-www canonical URLs.
+export function normaliseStoreCopy(text: string): string {
+  return text
+    .replace(/\bShopify store\b/gi, "online store")
+    .replace(/\ba Shopify account\b/gi, "an online store account")
+    .replace(/\bA Shopify account\b/g, "An online store account")
+    .replace(/(?<![.\w])teagueindustries\.com\.au/g, "www.teagueindustries.com.au");
+}
+
+function normaliseNode<T extends ShopifyProduct["node"] & { descriptionHtml?: string }>(
+  node: T,
+): T {
+  return {
+    ...node,
+    description: normaliseStoreCopy(node.description),
+    ...(node.descriptionHtml !== undefined
+      ? { descriptionHtml: normaliseStoreCopy(node.descriptionHtml) }
+      : {}),
+    ...(node.details
+      ? {
+          details: node.details.map((f) =>
+            f && f.value ? { ...f, value: normaliseStoreCopy(f.value) } : f,
+          ),
+        }
+      : {}),
+  };
+}
+
 export function productDetails(node: Pick<ShopifyProduct["node"], "details">): ProductDetails {
   const out: ProductDetails = { includes: [] };
   for (const field of node.details ?? []) {
     if (!field?.value) continue;
+    const val = normaliseStoreCopy(field.value);
     if (field.key === "includes") {
       try {
-        const list: unknown = JSON.parse(field.value);
-        if (Array.isArray(list)) out.includes = list.filter((v) => typeof v === "string");
+        const list: unknown = JSON.parse(val);
+        if (Array.isArray(list))
+          out.includes = list
+            .filter((v): v is string => typeof v === "string")
+            .map(normaliseStoreCopy);
       } catch {
         // A malformed list just isn't shown.
       }
     } else if (DETAIL_KEYS.includes(field.key)) {
-      out[field.key as Exclude<keyof ProductDetails, "includes">] = field.value;
+      out[field.key as Exclude<keyof ProductDetails, "includes">] = val;
     }
   }
   return out;
@@ -190,7 +223,8 @@ export function fetchProducts(query?: string): Promise<ShopifyProduct[]> {
         first: 50,
         query: query ?? null,
       });
-      return (data?.data?.products?.edges ?? []) as ShopifyProduct[];
+      const edges = (data?.data?.products?.edges ?? []) as ShopifyProduct[];
+      return edges.map((edge) => ({ ...edge, node: normaliseNode(edge.node) }));
     },
     (products) => products.length > 0,
   );
@@ -204,8 +238,9 @@ export function fetchProduct(
     PRODUCT_CACHE_MS,
     async () => {
       const data = await storefrontApiRequest(PRODUCT_BY_HANDLE_QUERY, { handle });
-      return (data?.data?.product ?? null) as
+      const raw = (data?.data?.product ?? null) as
         (ShopifyProduct["node"] & { descriptionHtml?: string }) | null;
+      return raw ? normaliseNode(raw) : null;
     },
     (product) => product !== null,
   );

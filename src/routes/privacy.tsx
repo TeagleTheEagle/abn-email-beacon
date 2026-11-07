@@ -50,11 +50,11 @@ function Privacy() {
         <section>
           <h2>Shop purchases</h2>
           <p className="mt-3">
-            Purchases in our shop are processed by our store provider, Shopify. At checkout, the
-            provider collects your name, email, billing details and payment information to complete
-            the order. We never see or store your full card details. The provider handles this data
-            under its own privacy policy, available at checkout, and we can see your order details
-            to provide your download and support.
+            Purchases in our shop are processed by our e-commerce checkout provider. At checkout,
+            the provider collects your name, email, billing details and payment information to
+            complete the order. We never see or store your full card details. The provider handles
+            this data under its own privacy policy, available at checkout, and we can see your order
+            details to provide your download and support.
           </p>
         </section>
         <section>
@@ -84,9 +84,9 @@ function Privacy() {
             sets first-party cookies (named _ga and _ga_*) that last up to two years, to tell
             returning visitors from new ones. Our hosting's analytics also uses a first-party cookie
             called session-id to group page visits into browsing sessions; it expires after 30
-            minutes and is refreshed when analytics events are sent. Shopify's checkout uses its own
-            cookies to process orders securely. You can clear cookies and site data in your browser
-            settings at any time; your cart will be emptied if you do.
+            minutes and is refreshed when analytics events are sent. Our secure checkout uses its
+            own cookies to process orders securely. You can clear cookies and site data in your
+            browser settings at any time; your cart will be emptied if you do.
           </p>
         </section>
         <section>
@@ -109,10 +109,11 @@ function Privacy() {
         <section>
           <h2>Who we are</h2>
           <p className="mt-3">
-            Teague Industries · ABN {site.abn} ·{" "}
+            {site.name} · Founded by {site.founder} · ABN {site.abn} ·{" "}
             <a className="text-primary-soft" href={`mailto:${site.email}`}>
               {site.email}
-            </a>
+            </a>{" "}
+            · Sydney's Lower North Shore ({site.suburbs.join(", ")}) and Australia-wide online.
           </p>
         </section>
       </article>

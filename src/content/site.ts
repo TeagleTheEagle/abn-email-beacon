@@ -1,11 +1,20 @@
+import { services } from "@/content/services";
+
+const websitePrice = services.find((s) => s.id === "website-build")?.price ?? "A$500";
+const storePrice = services.find((s) => s.id === "shopify-store")?.price ?? "From A$1,200";
+const smartStorePrice = services.find((s) => s.id === "smart-store")?.price ?? "From A$2,000";
+const carePlanService = services.find((s) => s.id === "care-plan");
+const carePlanPrice = `${carePlanService?.price ?? "A$49"}${carePlanService?.priceNote ?? "/month"}`;
+
 export const site = {
   name: "Teague Industries",
+  founder: "Ben Teague",
   tagline: "FAST, HONEST WEBSITES AND STORES FOR AUSTRALIAN BUSINESSES",
   est: "EST. 2026",
-  email: "benteague@teagueindustries.com.au",
+  email: "benteaguey6@gmail.com",
   abn: "64 813 107 974",
   storeUrl: "/shop",
-  storeLabel: "teagueindustries.com.au",
+  storeLabel: "www.teagueindustries.com.au",
   // Paste a Calendly / Cal.com / Google appointment page here and every "Book a call" button opens
   // it. While it's empty they go to the call-request form at /book.
   bookingUrl: "",
@@ -65,7 +74,7 @@ export const steps = [
 export const faqs = [
   {
     q: "How much does a website cost?",
-    a: "Our standard website build is A$500. Stores start from A$1,200, Smart Store setups from A$2,000, and Care Plans from A$49/month.",
+    a: `Our standard website build is ${websitePrice}. Stores start ${storePrice.toLowerCase()}, Smart Store setups ${smartStorePrice.toLowerCase()}, and Care Plans from ${carePlanPrice}.`,
   },
   {
     q: "Do I have to pay before I see anything?",
@@ -75,7 +84,10 @@ export const faqs = [
     q: "How long does it take?",
     a: "A standard website usually takes about 1 week (5–7 business days).",
   },
-  { q: "Who owns the website?", a: "You do: your content, your domain, your accounts." },
+  {
+    q: "Who owns the website?",
+    a: "You do: your finished site, your content, your domain, your accounts.",
+  },
   {
     q: "Do I own my domain name?",
     a: "Yes. Your domain is registered in your name, and you keep it even if you stop working with us.",
@@ -102,10 +114,14 @@ export const faqs = [
   },
   {
     q: "When do I pay?",
-    a: "After you approve the preview and before launch. Store builds are quoted with the preview. Care Plans are billed monthly from launch, and you can stop any time by email.",
+    a: "After you approve the preview and before launch. Store builds are quoted with the preview, and written quotes are valid for 30 days. Care Plans are billed monthly from launch, and you can stop any time by email.",
   },
   {
     q: "What are the ongoing costs?",
     a: "Your domain renews yearly in your name, usually A$15–30 a year for a .com.au. Hosting, SSL and backups are included in a Care Plan; without one, we set hosting up in your name and you pay the host directly, confirmed with your quote. Online stores also pay the store platform's monthly plan to the provider.",
+  },
+  {
+    q: "What is the refund policy on digital templates?",
+    a: "Digital templates and guides are instant digital downloads — there are no change-of-mind refunds once downloaded. Faulty or not-as-described files are replaced or refunded in full within 30 days. Your rights under the Australian Consumer Law are unaffected.",
   },
 ];

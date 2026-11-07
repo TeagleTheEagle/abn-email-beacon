@@ -2,10 +2,14 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   JarvisAssistant,
+  buildPersonalisedDemoUrl,
   extractBusinessName,
+  extractDemoPersonalisation,
+  extractSuburb,
   generateJarvisReply,
   getPagePrompts,
 } from "./JarvisAssistant";
+import { DemoSite } from "./DemoSite";
 
 const { insert, navigate } = vi.hoisted(() => ({
   insert: vi.fn().mockResolvedValue({ error: null }),
@@ -62,7 +66,64 @@ describe("JarvisAssistant", () => {
   it("extracts a business name from chat text for form auto-fill", () => {
     expect(extractBusinessName("I run Apex Electrical in Mosman")).toBe("Apex Electrical");
     expect(extractBusinessName("my cafe is called The Daily Grind")).toBe("The Daily Grind");
+    expect(extractBusinessName("Apex Electrical, Mosman")).toBe("Apex Electrical");
+    expect(extractBusinessName("The Daily Grind Cafe")).toBe("The Daily Grind Cafe");
     expect(extractBusinessName("How much does a website cost?")).toBeNull();
+  });
+
+  it("extracts business name, suburb and demo slug for the Instant Demo Personaliser", () => {
+    const bondi = extractDemoPersonalisation("I run Bondi Barber in Bondi");
+    expect(bondi).toEqual({
+      businessName: "Bondi Barber",
+      suburb: "Bondi",
+      demoSlug: "barbershop",
+      url: "/demo/barbershop?biz=Bondi+Barber&loc=Bondi",
+    });
+
+    const mosman = extractDemoPersonalisation("Apex Electrical, Mosman");
+    expect(mosman).toEqual({
+      businessName: "Apex Electrical",
+      suburb: "Mosman",
+      demoSlug: "tradie",
+      url: "/demo/tradie?biz=Apex+Electrical&loc=Mosman",
+    });
+  });
+
+  it("generates a Personalised Demo Card with query params and Launch/Official Preview actions", () => {
+    const reply = generateJarvisReply("I run Bondi Barber in Bondi");
+    expect(reply.text).toContain(
+      "I've configured a live preview specifically for Bondi Barber in Bondi.",
+    );
+    expect(reply.card?.title).toBe("Bondi Barber — Interactive Demo");
+    expect(reply.card?.subtitle).toBe("Customised for Bondi · Live interactive prototype");
+    expect(reply.card?.to).toBe("/demo/barbershop?biz=Bondi+Barber&loc=Bondi");
+    expect(reply.card?.ctaLabel).toBe("Launch Bondi Barber Preview");
+    expect(reply.card?.secondaryCtaLabel).toBe("Request Official Free Preview");
+    expect(reply.actions.some((a) => a.label === "Launch Bondi Barber Preview")).toBe(true);
+    expect(reply.actions.some((a) => a.label === "Request Official Free Preview")).toBe(true);
+  });
+
+  it("falls back cleanly when no suburb is provided in a personalised demo request", () => {
+    expect(extractSuburb("The Daily Grind Cafe")).toBeNull();
+    expect(buildPersonalisedDemoUrl("cafe", "The Daily Grind Cafe", null)).toBe(
+      "/demo/cafe?biz=The+Daily+Grind+Cafe",
+    );
+
+    const reply = generateJarvisReply("The Daily Grind Cafe");
+    expect(reply.text).toContain(
+      "I've configured a live preview specifically for The Daily Grind Cafe.",
+    );
+    expect(reply.card?.title).toBe("The Daily Grind Cafe — Interactive Demo");
+    expect(reply.card?.subtitle).toBe("Customised for Australia · Live interactive prototype");
+    expect(reply.card?.to).toBe("/demo/cafe?biz=The+Daily+Grind+Cafe");
+  });
+
+  it("dynamically overwrites DemoSite hero headline and brand name when biz and loc are provided", () => {
+    render(<DemoSite kind="barbershop" businessName="Bondi Barber" location="Bondi" />);
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Bondi Barber — Bondi" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Barbershop · Bondi")).toBeInTheDocument();
   });
 
   it("attaches a rich demo card with palette, price and features to industry matches", () => {

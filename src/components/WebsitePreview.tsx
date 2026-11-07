@@ -7,6 +7,7 @@ import { demoKinds, demos, type DemoKind } from "@/content/demos";
 
 const labels: Record<DemoKind, string> = {
   cafe: "Café",
+  barbershop: "Barber",
   tradie: "Trades",
   salon: "Salon",
   retail: "Retail",

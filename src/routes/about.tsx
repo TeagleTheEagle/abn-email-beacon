@@ -1,9 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { services } from "@/content/services";
 import { site } from "@/content/site";
 import { PageHeader, Reveal } from "@/components/Reveal";
 import { BookCallLink } from "@/components/BookCallLink";
 import { seo } from "@/lib/seo";
 import founderAsset from "@/assets/founder.webp.asset.json";
+
+const websitePrice = services.find((s) => s.id === "website-build")?.price ?? "A$500";
 
 export const Route = createFileRoute("/about")({
   head: () =>
@@ -18,7 +21,7 @@ export const Route = createFileRoute("/about")({
 // Four facts with numbers instead of generic values. Keep in step with services.ts and the FAQs.
 const facts = [
   {
-    n: "A$500",
+    n: websitePrice,
     t: "Fixed-price website",
     d: "One-off. Nothing to pay until you approve the preview.",
   },

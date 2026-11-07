@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/accordion";
 import { projects } from "@/content/projects";
 import { demos, demoKinds } from "@/content/demos";
+import { services } from "@/content/services";
 import { site } from "@/content/site";
 import { seo } from "@/lib/seo";
 
@@ -152,7 +153,7 @@ function DesignSystem() {
       <PageHeader
         label="Internal reference"
         title="Design system"
-        sub="The real tokens, type and components behind teagueindustries.com.au. Unlisted and not indexed."
+        sub="The real tokens, type and components behind www.teagueindustries.com.au. Unlisted and not indexed."
       />
 
       <nav aria-label="Sections" className="mx-auto flex max-w-6xl flex-wrap gap-2 px-6">
@@ -514,7 +515,7 @@ function DesignSystem() {
           <Spec title="Pricing tier" note="pricing.tsx">
             <div className="glass flex h-full flex-col p-6">
               <p className="font-display text-[10px] tracking-[0.25em]">Website Build</p>
-              <p className="mt-4 text-3xl text-chrome">A$500</p>
+              <p className="mt-4 text-3xl text-chrome">{services[0]?.price ?? "A$500"}</p>
               <p className="text-xs text-muted-foreground">one-off · Free preview first.</p>
               <ul className="mt-5 flex-1 space-y-2 text-sm text-muted-foreground">
                 <li>✓ Up to 5 pages</li>
@@ -525,7 +526,7 @@ function DesignSystem() {
           </Spec>
         </div>
         <div className="mt-6 grid gap-6 md:grid-cols-[1fr_2fr]">
-          <Spec title="Product spec sheet" note="<ProductSpecs /> · Shopify details.* fields">
+          <Spec title="Product spec sheet" note="<ProductSpecs /> · Store details.* fields">
             <ProductSpecs
               details={{
                 audience: "Who the product is for, in one sentence.",
@@ -589,6 +590,17 @@ function DesignSystem() {
               <li>
                 <strong className="text-foreground">&lt;Reveal&gt;</strong> fades in sections as
                 they scroll into view; content already on screen is never hidden.
+              </li>
+              <li>
+                <strong className="text-foreground">&lt;JarvisAssistant&gt;</strong> floats at
+                bottom-right on public routes (hidden on bare preview routes), offering instant
+                answers from <code>services.ts</code>, <code>site.ts</code> and{" "}
+                <code>showroom.ts</code>, plus inline free-preview lead capture.
+              </li>
+              <li>
+                <strong className="text-foreground">&lt;DemoPreview&gt;</strong> &amp;{" "}
+                <strong className="text-foreground">&lt;ShowroomComparison&gt;</strong> render
+                scaled live industry demos and side-by-side comparisons on <code>/demos</code>.
               </li>
               <li>All motion is disabled for visitors who prefer reduced motion.</li>
             </ul>

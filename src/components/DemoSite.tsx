@@ -9,12 +9,29 @@ export function DemoSite({
   kind,
   compact = false,
   priority = false,
+  businessName,
+  location,
 }: {
   kind: DemoKind;
   compact?: boolean;
   priority?: boolean;
+  businessName?: string;
+  location?: string;
 }) {
   const demo = demos[kind];
+  const searchParams =
+    typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+  const customBiz = businessName?.trim() || searchParams?.get("biz")?.trim() || "";
+  const customLoc = location?.trim() || searchParams?.get("loc")?.trim() || "";
+  const activeName = customBiz || demo.name;
+  const activeEyebrow = customLoc ? `${demo.category} · ${customLoc}` : demo.eyebrow;
+  const activeTitle = customBiz
+    ? customLoc
+      ? `${customBiz} — ${customLoc}`
+      : `${customBiz} · ${demo.title}`
+    : demo.title;
+  const isBookingKind = kind === "tradie" || kind === "salon" || kind === "barbershop";
+  const isAppointmentKind = kind === "salon" || kind === "barbershop";
   const [filter, setFilter] = useState("All");
   const [booking, setBooking] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
@@ -38,7 +55,7 @@ export function DemoSite({
     bookingRef.current.querySelector("input")?.focus({ preventScroll: true });
   }, [booking]);
   const openAction = () => {
-    if (kind === "tradie" || kind === "salon") setBooking(true);
+    if (isBookingKind) setBooking(true);
     else
       document
         .getElementById(`demo-items-${kind}-${compact ? "compact" : "full"}`)
@@ -52,7 +69,7 @@ export function DemoSite({
   return (
     <div className={`demo-site demo-${kind} ${compact ? "demo-compact" : ""}`}>
       <div className="demo-navigation">
-        <span className="demo-brand">{demo.name}</span>
+        <span className="demo-brand">{activeName}</span>
         <span className="demo-nav-links">
           {kind === "retail" ? "Collection" : kind === "cafe" ? "Menu & kitchen" : "Our services"}
         </span>
@@ -62,7 +79,7 @@ export function DemoSite({
           </span>
         ) : (
           <Button size="sm" className="demo-button" onClick={openAction}>
-            {kind === "salon" ? "Book now" : kind === "tradie" ? "Get in touch" : "Our menu"}{" "}
+            {isAppointmentKind ? "Book now" : kind === "tradie" ? "Get in touch" : "Our menu"}{" "}
             <ArrowRight />
           </Button>
         )}
@@ -72,7 +89,7 @@ export function DemoSite({
           src={demo.image}
           srcSet={`${demo.imageSmall} 640w, ${demo.image} 1024w`}
           sizes={compact ? "(max-width: 767px) 92vw, 640px" : "(max-width: 1199px) 92vw, 1100px"}
-          alt={`${demo.category} concept imagery for ${demo.name}`}
+          alt={`${demo.category} concept imagery for ${activeName}`}
           width={1024}
           height={640}
           loading={priority ? "eager" : "lazy"}
@@ -81,8 +98,8 @@ export function DemoSite({
         />
         <div className="demo-cover-shade" />
         <div className="demo-cover-copy">
-          <p className="demo-eyebrow">{demo.eyebrow}</p>
-          <h2>{demo.title}</h2>
+          <p className="demo-eyebrow">{activeEyebrow}</p>
+          <h2>{activeTitle}</h2>
           <p>{demo.body}</p>
           <Button className="demo-button" onClick={openAction}>
             {demo.action} <ArrowRight />
@@ -160,7 +177,7 @@ export function DemoSite({
             Demo bag · {count} {count === 1 ? "item" : "items"} · A${total} — no payment taken
           </p>
         )}
-        {(kind === "tradie" || kind === "salon") && booking && (
+        {isBookingKind && booking && (
           <form
             ref={bookingRef}
             className="demo-booking"
@@ -180,15 +197,15 @@ export function DemoSite({
                   <input required autoComplete="name" placeholder="Alex" />
                 </label>
                 <label>
-                  {kind === "salon" ? "Preferred date" : "Job details"}
+                  {isAppointmentKind ? "Preferred date" : "Job details"}
                   <input
                     required
-                    type={kind === "salon" ? "date" : "text"}
-                    placeholder={kind === "salon" ? "Pick a date" : "What needs attention?"}
+                    type={isAppointmentKind ? "date" : "text"}
+                    placeholder={isAppointmentKind ? "Pick a date" : "What needs attention?"}
                   />
                 </label>
                 <Button className="demo-button" type="submit">
-                  {kind === "salon" ? "Preview booking" : "Preview request"} <ArrowRight />
+                  {isAppointmentKind ? "Preview booking" : "Preview request"} <ArrowRight />
                 </Button>
               </>
             )}
@@ -197,7 +214,7 @@ export function DemoSite({
       </section>
       {!compact && (
         <footer className="demo-footer">
-          <strong>{demo.name}</strong>
+          <strong>{activeName}</strong>
           <span>Fictional business · Demonstration only · Images and prices are illustrative</span>
         </footer>
       )}

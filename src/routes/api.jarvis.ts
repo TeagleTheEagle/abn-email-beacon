@@ -57,9 +57,12 @@ async function fetchSydneyWeather(): Promise<string | null> {
 // 2. Frankfurter Currency API (No key required): Live AUD exchange rates
 async function fetchAudRates(): Promise<string | null> {
   try {
-    const res = await fetch("https://api.frankfurter.dev/v1/latest?base=AUD&symbols=USD,NZD,GBP,EUR", {
-      signal: AbortSignal.timeout(2500),
-    });
+    const res = await fetch(
+      "https://api.frankfurter.dev/v1/latest?base=AUD&symbols=USD,NZD,GBP,EUR",
+      {
+        signal: AbortSignal.timeout(2500),
+      },
+    );
     if (!res.ok) return null;
     const data = (await res.json()) as { rates?: Record<string, number> };
     if (!data.rates) return null;
@@ -141,9 +144,7 @@ function buildSystemInstruction(liveContext: string[]): string {
     )
     .join("\n");
 
-  const addOnsSummary = addOns
-    .map((a) => `- ${a.title} (${a.price}): ${a.summary}`)
-    .join("\n");
+  const addOnsSummary = addOns.map((a) => `- ${a.title} (${a.price}): ${a.summary}`).join("\n");
 
   const demosSummary = showroomDesigns
     .map((d) => `- ${d.title} (/demos/${d.slug}): ${d.industry} — ${d.interactiveWidget}`)
@@ -221,7 +222,8 @@ export const Route = createFileRoute("/api/jarvis")({
           return Response.json({ error: "Invalid JSON body" }, { status: 400 });
         }
 
-        const rawMessage = typeof body.message === "string" ? body.message.trim().slice(0, 800) : "";
+        const rawMessage =
+          typeof body.message === "string" ? body.message.trim().slice(0, 800) : "";
         if (!rawMessage) {
           return Response.json({ error: "Message is required" }, { status: 400 });
         }

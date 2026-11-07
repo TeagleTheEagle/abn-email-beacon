@@ -26,6 +26,22 @@ export const demos = {
       { name: "Breakfast bowl", detail: "Kitchen", price: 22 },
     ],
   },
+  barbershop: {
+    name: "Gilded Blade Barbershop",
+    category: "Barbershop",
+    eyebrow: "Classic craft. Sharp finishes.",
+    title: "Traditional barbering, tailored to you.",
+    body: "Precision cuts, skin fades and hot-towel shaves in a relaxed local studio.",
+    image: salon,
+    imageSmall: salonSmall,
+    action: "Book a chair",
+    itemsTitle: "Cuts, fades and shaves.",
+    items: [
+      { name: "Signature cut & finish", detail: "Consultation, wash & style.", price: 55 },
+      { name: "Skin fade & beard sculpt", detail: "Zero fade with hot-towel finish.", price: 80 },
+      { name: "Traditional hot-towel shave", detail: "Straight-razor shave & balm.", price: 50 },
+    ],
+  },
   tradie: {
     name: "Northside Electrical",
     category: "Trades",
@@ -78,6 +94,7 @@ export const demos = {
 
 export type DemoKind = keyof typeof demos;
 export const demoKinds: DemoKind[] = ["cafe", "tradie", "salon", "retail"];
+export const allDemoKinds: DemoKind[] = ["cafe", "barbershop", "tradie", "salon", "retail"];
 export function isDemoKind(value: string): value is DemoKind {
-  return demoKinds.some((kind) => kind === value);
+  return allDemoKinds.some((kind) => kind === value);
 }

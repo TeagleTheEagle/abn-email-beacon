@@ -252,7 +252,7 @@ function DesignCard({
           <span className="rounded-full border border-border px-2.5 py-0.5 text-[11px] text-silver">
             {categoryLabel(d.category)}
           </span>
-          <span className="text-[11px] text-muted-foreground">Design {d.id}</span>
+          <span className="text-[11px] text-muted-foreground">Design {d.id} (Demo)</span>
         </div>
         <h3 className="mt-3 text-lg text-foreground">{d.title}</h3>
         <p className="mt-1 text-sm text-muted-foreground">{d.tagline}</p>

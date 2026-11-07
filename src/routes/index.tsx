@@ -43,13 +43,17 @@ import templatesStore from "@/assets/work-templates.jpg";
 
 // The product given the oversized showcase. Falls back to whatever Shopify lists first.
 const FEATURED_HANDLE = "48-hour-website-speed-conversion-audit";
+const websitePrice = services.find((s) => s.id === "website-build")?.price ?? "A$500";
+const storeBasePrice = (
+  services.find((s) => s.id === "shopify-store")?.price ?? "From A$1,200"
+).replace(/^From\s+/i, "");
 
 export const Route = createFileRoute("/")({
   head: () => {
     const base = seo(
       "/",
       "Websites and Stores for All Australian Businesses",
-      "Websites from A$500, online stores and smart tools for businesses of every size on Sydney's Lower North Shore and across Australia. Free preview first.",
+      `Websites from ${websitePrice}, online stores and smart tools for businesses of every size on Sydney's Lower North Shore and across Australia. Free preview first.`,
     );
     return {
       ...base,
@@ -59,18 +63,18 @@ export const Route = createFileRoute("/")({
           children: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "ProfessionalService",
-            name: "Teague Industries",
+            name: site.name,
             url: SITE_URL,
             image: OG_IMAGE,
             email: site.email,
             taxID: site.abn,
-            founder: { "@type": "Person", name: "Ben Teague" },
+            founder: { "@type": "Person", name: site.founder },
             address: { "@type": "PostalAddress", addressRegion: "NSW", addressCountry: "AU" },
             areaServed: [
               ...site.suburbs.map((s) => ({ "@type": "Place", name: `${s}, NSW` })),
               { "@type": "Country", name: "Australia" },
             ],
-            priceRange: "A$500+",
+            priceRange: `${websitePrice}+`,
           }),
         },
         {
@@ -135,9 +139,9 @@ function Home() {
               <span className="text-primary-soft">Built for your next chapter.</span>
             </h1>
             <p className="mt-6 max-w-lg text-lg text-muted-foreground">
-              Custom websites from <strong className="text-accent-tech">A$500</strong> and online
-              stores from <strong className="text-accent-tech">A$1,200</strong> for Australian
-              businesses of every size — with a free preview before you pay.
+              Custom websites from <strong className="text-accent-tech">{websitePrice}</strong> and
+              online stores from <strong className="text-accent-tech">{storeBasePrice}</strong> for
+              Australian businesses of every size — with a free preview before you pay.
             </p>
             <div className="mt-7 max-w-md">
               <QuickLeadForm />

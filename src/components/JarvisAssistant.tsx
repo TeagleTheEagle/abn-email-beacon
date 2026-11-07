@@ -6,6 +6,7 @@ import { newLeadId, notifyLead } from "@/lib/leads";
 import { track } from "@/lib/analytics";
 import { faqs, site, steps } from "@/content/site";
 import { addOns, carePlans, services } from "@/content/services";
+import { demos, type DemoKind } from "@/content/demos";
 import { showroomDesigns, type ShowroomSlug } from "@/content/showroom";
 import { useCartStore } from "@/stores/cartStore";
 
@@ -27,6 +28,8 @@ export interface JarvisCard {
   features: string[];
   palette?: { background: string; surface: string; text: string; accent: string };
   to?: string;
+  ctaLabel?: string;
+  secondaryCtaLabel?: string;
   openLeadForm?: { needs?: string[]; note?: string };
 }
 
@@ -79,7 +82,10 @@ export function getPagePrompts(pathname: string): PagePrompts {
       return {
         greeting: `Like the "${design.title}" concept? I can have Ben build a free preview of this exact style branded for your business — no upfront cost. Just tell me your business name.`,
         prompts: [
-          { label: "Brand this demo for me", prompt: `I'd like a free preview like the ${design.title} demo` },
+          {
+            label: "Brand this demo for me",
+            prompt: `I'd like a free preview like the ${design.title} demo`,
+          },
           { label: "What’s included?", prompt: `What's included in the ${design.title} design?` },
           { label: "See all 12 designs", prompt: "Show me website designs for my industry" },
           { label: "Pricing", prompt: "How much does a website cost?" },
@@ -98,12 +104,19 @@ export function getPagePrompts(pathname: string): PagePrompts {
       ],
     };
   }
-  if (pathname.startsWith("/shop") || pathname.startsWith("/product") || pathname.startsWith("/templates")) {
+  if (
+    pathname.startsWith("/shop") ||
+    pathname.startsWith("/product") ||
+    pathname.startsWith("/templates")
+  ) {
     return {
       greeting: `Looking at the shop? I can explain what’s inside any template or kit, how instant download works, or get Ben to set it all up for you.`,
       prompts: [
         { label: "What’s in the downloads?", prompt: "What's included in the templates and kits?" },
-        { label: "Can Ben set it up for me?", prompt: "Can Ben set up a template for my business?" },
+        {
+          label: "Can Ben set it up for me?",
+          prompt: "Can Ben set up a template for my business?",
+        },
         { label: "Custom website instead", prompt: "How much does a custom website cost?" },
         { label: "Free preview", prompt: "How do I get a free website preview?" },
       ],
@@ -144,17 +157,155 @@ export function getPagePrompts(pathname: string): PagePrompts {
   return DEFAULT_PAGE_PROMPTS;
 }
 
-/** Pulls a business name out of chat text ("I run Apex Electrical", "my cafe is called…") to pre-fill the lead form. */
-export function extractBusinessName(text: string): string | null {
-  const match = text.match(
-    /(?:my (?:business|company|shop|store|salon|caf[eé]|studio|clinic|firm|brand)(?:'s name)? is(?: called| named)?|i (?:run|own|manage|have)|we (?:run|own|are)|(?:it'?s|called|named))\s+([A-Za-z0-9][A-Za-z0-9&'’.\-]*(?:\s+[A-Za-z0-9&'’.\-]+){0,3})/i,
+const DEMO_KIND_KEYWORDS: Array<{ pattern: RegExp; kind: DemoKind; showroomSlug: ShowroomSlug }> = [
+  {
+    pattern: /barber|barbershop|haircut|fade|shave/i,
+    kind: "barbershop",
+    showroomSlug: "barbershop",
+  },
+  {
+    pattern: /caf[eé]|coffee|bakery|brunch|espresso|roaster|bistro|restaurant|dining|hospitality/i,
+    kind: "cafe",
+    showroomSlug: "cafe",
+  },
+  {
+    pattern:
+      /plumb|tradie|electric|sparky|builder|drain|gas|roof|hvac|carpenter|handyman|landscap|garden|lawn|clean|detail|auto|mechanic/i,
+    kind: "tradie",
+    showroomSlug: "plumbing-trades",
+  },
+  {
+    pattern:
+      /salon|spa|beauty|facial|nail|massage|stylist|lash|brow|pilates|yoga|fitness|gym|pet|groom/i,
+    kind: "salon",
+    showroomSlug: "beauty-salon",
+  },
+  {
+    pattern:
+      /boutique|fashion|clothing|apparel|retail|ecommerce|e-commerce|goods|jeweller|florist/i,
+    kind: "retail",
+    showroomSlug: "boutique-ecommerce",
+  },
+];
+
+const QUESTION_OR_COMMAND_STARTERS =
+  /^(?:what|how|when|where|why|who|which|do|does|did|can|could|should|would|will|is|are|show|tell|give|book|open|see|view|browse|compare|calculate|request|enquire|need|want|looking|interested|i['’]?d|hi|hello|hey|yes|no|thanks|please|help|price|pricing|cost)\b/i;
+
+const SUBURB_STOP_WORDS =
+  /^(?:chat|the|my|our|your|a|an|this|that|store|shop|cart|advance|detail|touch|mind|business|general|australia|online)$/i;
+
+export function matchDemoKind(text: string): DemoKind | null {
+  for (const entry of DEMO_KIND_KEYWORDS) {
+    if (entry.pattern.test(text)) {
+      return entry.kind;
+    }
+  }
+  return null;
+}
+
+/** Pulls a suburb or location out of chat text ("I run Bondi Barber in Bondi", "Apex Electrical, Mosman"). */
+export function extractSuburb(text: string): string | null {
+  const cleaned = text.trim().replace(/[.!?]+$/, "");
+
+  const commaMatch = cleaned.match(/,\s*([A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+){0,2})\s*$/);
+  if (commaMatch?.[1] && !SUBURB_STOP_WORDS.test(commaMatch[1].trim())) {
+    return commaMatch[1].trim();
+  }
+
+  const prepMatch = cleaned.match(
+    /\b(?:in|at|near|from|based in|located in)\s+([A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+){0,2})(?=\s*(?:[,;]|$|\band\b|\bwith\b|\bfor\b))/,
   );
-  const raw = match?.[1];
-  if (!raw) return null;
-  const trimmed = raw.replace(/[.,!?;:]+$/, "").trim();
-  const cut = trimmed.split(/\s+(?:and|in|based|located|near|that|which|we|i)\b/i)[0] ?? trimmed;
-  const name = cut.trim();
-  return name.length >= 2 ? name : null;
+  if (prepMatch?.[1] && !SUBURB_STOP_WORDS.test(prepMatch[1].trim())) {
+    return prepMatch[1].trim();
+  }
+
+  return null;
+}
+
+/** Pulls a business name out of chat text ("I run Apex Electrical", "Apex Electrical, Mosman", "The Daily Grind Cafe") to pre-fill the lead form and personalise demos. */
+export function extractBusinessName(text: string): string | null {
+  const cleaned = text.trim();
+  if (!cleaned || cleaned.includes("?")) return null;
+
+  // 1. Explicit introduction ("I run Bondi Barber in Bondi", "my cafe is called The Daily Grind")
+  const explicitMatch = cleaned.match(
+    /(?:my (?:business|company|shop|store|salon|barbershop|barber|caf[eé]|bakery|studio|clinic|firm|brand|trade)(?:'s name)? is(?: called| named)?|i (?:run|own|manage|have|started)|we (?:run|own|manage|are)|(?:it'?s|called|named))\s+([A-Za-z0-9][A-Za-z0-9&'’.-]*(?:\s+[A-Za-z0-9&'’.-]+){0,4})/i,
+  );
+  if (explicitMatch?.[1]) {
+    const trimmed = explicitMatch[1].replace(/[.,!?;:]+$/, "").trim();
+    const cut =
+      trimmed.split(/\s+(?:and|in|at|from|based|located|near|that|which|we|i)\b|,/i)[0] ?? trimmed;
+    const name = cut.trim();
+    return name.length >= 2 ? name : null;
+  }
+
+  if (QUESTION_OR_COMMAND_STARTERS.test(cleaned)) {
+    return null;
+  }
+
+  // 2. "Business Name, Suburb" pattern ("Apex Electrical, Mosman")
+  const commaMatch = cleaned.match(
+    /^([A-Z][A-Za-z0-9&'’.-]*(?:\s+[A-Za-z0-9&'’.-]+){0,4})\s*,\s*([A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+){0,2})[.!]*$/,
+  );
+  if (commaMatch?.[1]) {
+    const name = commaMatch[1].trim();
+    return name.length >= 2 ? name : null;
+  }
+
+  // 3. "Business Name in Suburb" pattern ("Bondi Barber in Bondi")
+  const inSuburbMatch = cleaned.match(
+    /^([A-Z][A-Za-z0-9&'’.-]*(?:\s+[A-Za-z0-9&'’.-]+){0,4})\s+(?:in|at|near|based in|located in)\s+([A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+){0,2})[.!]*$/,
+  );
+  if (inSuburbMatch?.[1]) {
+    const name = inSuburbMatch[1].trim();
+    return name.length >= 2 ? name : null;
+  }
+
+  // 4. Standalone Business Name containing an industry keyword ("The Daily Grind Cafe")
+  const standaloneMatch = cleaned.match(
+    /^([A-Z][A-Za-z0-9&'’.-]*(?:\s+[A-Za-z0-9&'’.-]+){1,4})[.!]*$/,
+  );
+  if (standaloneMatch?.[1] && matchDemoKind(standaloneMatch[1]) !== null) {
+    const name = standaloneMatch[1].trim();
+    return name.length >= 2 ? name : null;
+  }
+
+  return null;
+}
+
+export function buildPersonalisedDemoUrl(
+  demoSlug: DemoKind,
+  businessName: string,
+  suburb?: string | null,
+): string {
+  const params = new URLSearchParams();
+  params.set("biz", businessName.trim());
+  if (suburb && suburb.trim()) {
+    params.set("loc", suburb.trim());
+  }
+  return `/demo/${demoSlug}?${params.toString()}`;
+}
+
+export interface DemoPersonalisation {
+  businessName: string;
+  suburb: string | null;
+  demoSlug: DemoKind;
+  url: string;
+}
+
+export function extractDemoPersonalisation(text: string): DemoPersonalisation | null {
+  const businessName = extractBusinessName(text);
+  if (!businessName) return null;
+  const demoSlug = matchDemoKind(text) ?? matchDemoKind(businessName);
+  if (!demoSlug) return null;
+  const suburb = extractSuburb(text);
+  const url = buildPersonalisedDemoUrl(demoSlug, businessName, suburb);
+  return {
+    businessName,
+    suburb,
+    demoSlug,
+    url,
+  };
 }
 
 const INDUSTRY_KEYWORDS: Array<{ pattern: RegExp; slug: ShowroomSlug }> = [
@@ -168,8 +319,14 @@ const INDUSTRY_KEYWORDS: Array<{ pattern: RegExp; slug: ShowroomSlug }> = [
   { pattern: /gym|fitness|trainer|workout|pilates|yoga/i, slug: "fitness-studio" },
   { pattern: /restaurant|dining|bistro|wine|hospitality/i, slug: "fine-dining" },
   { pattern: /clean|cleaner|end of lease|housekeeping|maid/i, slug: "cleaning-services" },
-  { pattern: /boutique|fashion|clothing|apparel|retail|ecommerce|e-commerce/i, slug: "boutique-ecommerce" },
-  { pattern: /consult|advisory|corporate|accountant|law|legal|finance|agency/i, slug: "consulting" },
+  {
+    pattern: /boutique|fashion|clothing|apparel|retail|ecommerce|e-commerce/i,
+    slug: "boutique-ecommerce",
+  },
+  {
+    pattern: /consult|advisory|corporate|accountant|law|legal|finance|agency/i,
+    slug: "consulting",
+  },
 ];
 
 export function generateJarvisReply(
@@ -184,6 +341,47 @@ export function generateJarvisReply(
 } {
   const trimmed = input.trim();
   const lower = trimmed.toLowerCase();
+
+  // 0. Instant Demo Personaliser ("Show, Don't Sell") when business name + industry are provided
+  const personalised = extractDemoPersonalisation(trimmed);
+  if (personalised) {
+    const { businessName, suburb, demoSlug, url } = personalised;
+    const matchedEntry = DEMO_KIND_KEYWORDS.find((k) => k.kind === demoSlug);
+    const matchedShowroom = matchedEntry
+      ? showroomDesigns.find((d) => d.slug === matchedEntry.showroomSlug)
+      : undefined;
+    const demoInfo = demos[demoSlug];
+    const suburbPhrase = suburb ? ` in ${suburb}` : "";
+    const subtitleLoc = suburb ?? "Australia";
+    const leadPayload = {
+      needs: demoSlug === "retail" ? ["Website", "Online store"] : ["Website"],
+      note: suburb
+        ? `Personalised ${demoSlug} preview for ${businessName} in ${suburb}.`
+        : `Personalised ${demoSlug} preview for ${businessName}.`,
+    };
+    return {
+      text: `I've configured a live preview specifically for ${businessName}${suburbPhrase}. Launch your interactive ${demoInfo.category.toLowerCase()} prototype below, or request an official free preview built by Ben.`,
+      card: {
+        kind: "demo",
+        title: `${businessName} — Interactive Demo`,
+        subtitle: `Customised for ${subtitleLoc} · Live interactive prototype`,
+        price: `${websitePrice} one-off`,
+        features: matchedShowroom
+          ? [...matchedShowroom.includedFeatures.slice(0, 3)]
+          : demoInfo.items.slice(0, 3).map((item) => item.name),
+        ...(matchedShowroom ? { palette: { ...matchedShowroom.palette } } : {}),
+        to: url,
+        ctaLabel: `Launch ${businessName} Preview`,
+        secondaryCtaLabel: "Request Official Free Preview",
+        openLeadForm: leadPayload,
+      },
+      actions: [
+        { label: `Launch ${businessName} Preview`, to: url },
+        { label: "Request Official Free Preview", openLeadForm: leadPayload },
+        { label: "All 12 Website Designs", to: "/demos" },
+      ],
+    };
+  }
 
   // 1. Direct industry / showroom demo match
   for (const item of INDUSTRY_KEYWORDS) {
@@ -222,7 +420,10 @@ export function generateJarvisReply(
   }
 
   // 2. Cart / Shop / Templates queries
-  if (/cart|bag|checkout|basket|order|template|shop|product|buy/i.test(lower) && !/online store cost|store setup/i.test(lower)) {
+  if (
+    /cart|bag|checkout|basket|order|template|shop|product|buy/i.test(lower) &&
+    !/online store cost|store setup/i.test(lower)
+  ) {
     const cartNote =
       cartCount > 0
         ? `You currently have ${cartCount} item${cartCount === 1 ? "" : "s"} in your cart.`
@@ -241,7 +442,9 @@ export function generateJarvisReply(
   }
 
   // 3. Booking a call
-  if (/book a call|call|phone|talk|speak|chat with ben|15-min|15 min|appointment|meeting/i.test(lower)) {
+  if (
+    /book a call|call|phone|talk|speak|chat with ben|15-min|15 min|appointment|meeting/i.test(lower)
+  ) {
     const actions: JarvisAction[] = [{ label: "Book a 15-minute call", to: "/book" }];
     if (site.bookingUrl) {
       actions.unshift({ label: "Choose a calendar time", externalHref: site.bookingUrl });
@@ -257,7 +460,11 @@ export function generateJarvisReply(
   }
 
   // 4. Add-ons (Audit, SEO, Booking setup, Business email, Missed-call text-back, Video ads)
-  if (/audit|sprint|business email|booking system|follow-up|missed-call|missed call|google business|review|video ad|add-on|addon/i.test(lower)) {
+  if (
+    /audit|sprint|business email|booking system|follow-up|missed-call|missed call|google business|review|video ad|add-on|addon/i.test(
+      lower,
+    )
+  ) {
     const matchedAddOn = addOns.find(
       (a) =>
         lower.includes(a.id.replace("-", " ")) ||
@@ -273,7 +480,10 @@ export function generateJarvisReply(
         actions: [
           {
             label: `Enquire about ${matchedAddOn.title}`,
-            openLeadForm: { needs: [matchedAddOn.title], note: `Enquiry for ${matchedAddOn.title} (${matchedAddOn.price})` },
+            openLeadForm: {
+              needs: [matchedAddOn.title],
+              note: `Enquiry for ${matchedAddOn.title} (${matchedAddOn.price})`,
+            },
           },
           { label: "View all Services & Add-ons", to: "/services" },
         ],
@@ -300,14 +510,19 @@ export function generateJarvisReply(
         { label: "Compare Care Plans", to: "/pricing" },
         {
           label: "Request a Free Preview",
-          openLeadForm: { needs: ["Website", "Care Plan"], note: "Interested in Website + Care Plan" },
+          openLeadForm: {
+            needs: ["Website", "Care Plan"],
+            note: "Interested in Website + Care Plan",
+          },
         },
       ],
     };
   }
 
   // 6. Pricing / Packages / Cost / Estimate
-  if (/price|pricing|cost|how much|package|estimate|quote|store|smart store|\$500|500/i.test(lower)) {
+  if (
+    /price|pricing|cost|how much|package|estimate|quote|store|smart store|\$500|500/i.test(lower)
+  ) {
     const coreList = services
       .map((s) => `• ${s.title}: ${s.price}${s.priceNote ? ` (${s.priceNote})` : ""} — ${s.short}`)
       .join("\n");
@@ -323,14 +538,20 @@ export function generateJarvisReply(
               price: `${websiteService.price}${websiteService.priceNote ? ` ${websiteService.priceNote}` : ""}`,
               features: websiteService.included.slice(0, 3),
               to: "/services",
-              openLeadForm: { needs: ["Website"], note: "Requested free preview from JARVIS pricing card" },
+              openLeadForm: {
+                needs: ["Website"],
+                note: "Requested free preview from JARVIS pricing card",
+              },
             },
           }
         : {}),
       actions: [
         {
           label: "Start Free Preview in Chat",
-          openLeadForm: { needs: ["Website"], note: "Requested free preview from JARVIS pricing summary" },
+          openLeadForm: {
+            needs: ["Website"],
+            note: "Requested free preview from JARVIS pricing summary",
+          },
         },
         { label: "Open Estimate Calculator", to: "/pricing" },
         { label: "View Services", to: "/services" },
@@ -351,7 +572,11 @@ export function generateJarvisReply(
   }
 
   // 8. Free preview / How it works / Turnaround / Revisions
-  if (/preview|how do i|how does it work|step|process|turnaround|how long|revision|start|get started/i.test(lower)) {
+  if (
+    /preview|how do i|how does it work|step|process|turnaround|how long|revision|start|get started/i.test(
+      lower,
+    )
+  ) {
     const stepsLine = steps.map((s) => `${s.n}. ${s.title} (${s.when})`).join(" → ");
     return {
       text: `Getting started is completely risk-free: ${stepsLine}. There is zero upfront cost or obligation — you only pay ${websitePrice} for a standard website (or ${storePrice.toLowerCase()} for an online store) if you approve the preview. Two rounds of revisions are included (further work is quoted first), written quotes are valid for 30 days, and you own the finished site.`,
@@ -754,17 +979,41 @@ export function JarvisAssistant() {
                         style={{ background: m.card.palette.background }}
                       >
                         <div className="mb-2 flex gap-1">
-                          <span className="h-1.5 w-1.5 rounded-full" style={{ background: m.card.palette.accent }} />
-                          <span className="h-1.5 w-1.5 rounded-full" style={{ background: m.card.palette.surface }} />
-                          <span className="h-1.5 w-1.5 rounded-full" style={{ background: m.card.palette.surface }} />
+                          <span
+                            className="h-1.5 w-1.5 rounded-full"
+                            style={{ background: m.card.palette.accent }}
+                          />
+                          <span
+                            className="h-1.5 w-1.5 rounded-full"
+                            style={{ background: m.card.palette.surface }}
+                          />
+                          <span
+                            className="h-1.5 w-1.5 rounded-full"
+                            style={{ background: m.card.palette.surface }}
+                          />
                         </div>
                         <div className="space-y-1.5">
-                          <div className="h-2.5 w-2/3 rounded-sm" style={{ background: m.card.palette.accent }} />
-                          <div className="h-1.5 w-full rounded-sm" style={{ background: m.card.palette.surface }} />
-                          <div className="h-1.5 w-4/5 rounded-sm" style={{ background: m.card.palette.surface }} />
+                          <div
+                            className="h-2.5 w-2/3 rounded-sm"
+                            style={{ background: m.card.palette.accent }}
+                          />
+                          <div
+                            className="h-1.5 w-full rounded-sm"
+                            style={{ background: m.card.palette.surface }}
+                          />
+                          <div
+                            className="h-1.5 w-4/5 rounded-sm"
+                            style={{ background: m.card.palette.surface }}
+                          />
                           <div className="flex gap-1.5 pt-0.5">
-                            <div className="h-3 w-10 rounded-sm" style={{ background: m.card.palette.accent }} />
-                            <div className="h-3 w-10 rounded-sm border" style={{ borderColor: m.card.palette.accent }} />
+                            <div
+                              className="h-3 w-10 rounded-sm"
+                              style={{ background: m.card.palette.accent }}
+                            />
+                            <div
+                              className="h-3 w-10 rounded-sm border"
+                              style={{ borderColor: m.card.palette.accent }}
+                            />
                           </div>
                         </div>
                       </div>
@@ -781,8 +1030,14 @@ export function JarvisAssistant() {
                       </div>
                       <ul className="mt-2 space-y-1">
                         {m.card.features.map((f) => (
-                          <li key={f} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                            <CheckCircle2 className="h-3 w-3 shrink-0 text-primary" aria-hidden="true" />
+                          <li
+                            key={f}
+                            className="flex items-center gap-1.5 text-[11px] text-muted-foreground"
+                          >
+                            <CheckCircle2
+                              className="h-3 w-3 shrink-0 text-primary"
+                              aria-hidden="true"
+                            />
                             {f}
                           </li>
                         ))}
@@ -793,11 +1048,17 @@ export function JarvisAssistant() {
                             type="button"
                             onClick={() => {
                               const card = m.card;
-                              if (card?.to) handleActionClick({ label: `Open ${card.title}`, to: card.to });
+                              if (card?.to) {
+                                handleActionClick({
+                                  label: card.ctaLabel ?? `Open ${card.title}`,
+                                  to: card.to,
+                                });
+                              }
                             }}
                             className="inline-flex items-center gap-1 rounded-sm bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground transition hover:brightness-110"
                           >
-                            {m.card.kind === "demo" ? "Launch Live Demo" : "View Service"}
+                            {m.card.ctaLabel ??
+                              (m.card.kind === "demo" ? "Launch Live Demo" : "View Service")}
                             <ArrowRight className="h-3 w-3" aria-hidden="true" />
                           </button>
                         )}
@@ -806,12 +1067,16 @@ export function JarvisAssistant() {
                             type="button"
                             onClick={() => {
                               const card = m.card;
-                              if (card?.openLeadForm)
-                                handleActionClick({ label: "Get Free Preview", openLeadForm: card.openLeadForm });
+                              if (card?.openLeadForm) {
+                                handleActionClick({
+                                  label: card.secondaryCtaLabel ?? "Get Free Preview",
+                                  openLeadForm: card.openLeadForm,
+                                });
+                              }
                             }}
                             className="inline-flex items-center gap-1 rounded-sm border border-primary/40 bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary-soft transition hover:border-primary hover:bg-primary hover:text-primary-foreground"
                           >
-                            Get Free Preview
+                            {m.card.secondaryCtaLabel ?? "Get Free Preview"}
                           </button>
                         )}
                       </div>

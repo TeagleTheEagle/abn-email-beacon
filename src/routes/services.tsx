@@ -7,6 +7,7 @@ import { AddOns } from "@/components/AddOns";
 import { AuditOffer } from "@/components/AuditOffer";
 import { demos } from "@/content/demos";
 import { services } from "@/content/services";
+import { site } from "@/content/site";
 import { seo } from "@/lib/seo";
 import { EstimateCalculator } from "@/components/EstimateCalculator";
 import templatesStore from "@/assets/work-templates.jpg";
@@ -109,6 +110,22 @@ function Services() {
       </Reveal>
       <Reveal className="mx-auto mt-20 max-w-5xl px-6">
         <AddOns />
+      </Reveal>
+      <Reveal className="mx-auto mt-14 max-w-3xl space-y-3 px-6 text-center text-sm text-muted-foreground">
+        <p>
+          Every build starts with a free preview first — pay only if you go ahead. Two rounds of
+          revisions are included (further work is quoted first), written quotes are valid for 30
+          days, and you own the finished site, domain and accounts.
+        </p>
+        <p>
+          Digital templates in our shop are instant digital downloads: no change-of-mind refunds
+          once downloaded, with faulty or not-as-described files replaced or refunded within 30 days
+          (Australian Consumer Law rights unaffected).
+        </p>
+        <p>
+          Service area: Sydney's Lower North Shore ({site.suburbs.join(", ")}) plus anywhere in
+          Australia online.
+        </p>
       </Reveal>
     </>
   );

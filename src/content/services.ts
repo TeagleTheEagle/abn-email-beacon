@@ -242,7 +242,7 @@ export const addOns: AddOn[] = [
       "Three short vertical ads of your product or service, ready to post on Instagram, TikTok and Facebook.",
     included: [
       "Three 10–15 second ads, 1080×1920, with your offer and link on screen",
-      "AI-generated scenes of your product in use, built from one photo or your website",
+      "Custom product-in-use scenes built from one photo or your website",
       "Delivered within three business days; music and captions on request",
     ],
     note: "A$599 adds real-motion video scenes; A$899 is five ads with a presenter.",

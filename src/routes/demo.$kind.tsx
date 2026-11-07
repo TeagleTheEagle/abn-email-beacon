@@ -5,7 +5,22 @@ import { DemoSite } from "@/components/DemoSite";
 import { Button } from "@/components/ui/button";
 import { seo } from "@/lib/seo";
 
+type DemoSearch = {
+  biz?: string;
+  loc?: string;
+};
+
 export const Route = createFileRoute("/demo/$kind")({
+  validateSearch: (search: Record<string, unknown>): DemoSearch => {
+    const biz =
+      typeof search["biz"] === "string" && search["biz"].trim() ? search["biz"].trim() : undefined;
+    const loc =
+      typeof search["loc"] === "string" && search["loc"].trim() ? search["loc"].trim() : undefined;
+    return {
+      ...(biz ? { biz } : {}),
+      ...(loc ? { loc } : {}),
+    };
+  },
   beforeLoad: ({ params }) => {
     if (!isDemoKind(params.kind)) throw notFound();
   },
@@ -20,7 +35,9 @@ export const Route = createFileRoute("/demo/$kind")({
 
 function DemoPage() {
   const { kind } = Route.useParams();
+  const { biz, loc } = Route.useSearch();
   if (!isDemoKind(kind)) return null;
+  const displayName = biz || demos[kind].name;
   return (
     <div className="px-4 pb-12 pt-24 sm:px-6 sm:pt-28">
       <div className="mx-auto max-w-6xl">
@@ -32,10 +49,10 @@ function DemoPage() {
               </Link>
             </Button>
             <h1 className="mt-2 text-base font-semibold text-foreground">
-              {demos[kind].name}: {demos[kind].category.toLowerCase()} website demo
+              {displayName}: {demos[kind].category.toLowerCase()} website demo
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Interactive concept · Not a client project
+              {loc ? `Customised for ${loc} · ` : ""}Interactive concept · Not a client project
             </p>
           </div>
           <Button asChild>
@@ -44,7 +61,11 @@ function DemoPage() {
             </Link>
           </Button>
         </div>
-        <DemoSite kind={kind} />
+        <DemoSite
+          kind={kind}
+          {...(biz ? { businessName: biz } : {})}
+          {...(loc ? { location: loc } : {})}
+        />
       </div>
     </div>
   );

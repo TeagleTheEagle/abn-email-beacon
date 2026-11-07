@@ -14,22 +14,24 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { services } from "@/content/services";
-import { faqs } from "@/content/site";
+import { faqs, site } from "@/content/site";
 import { seo } from "@/lib/seo";
+
+const websitePrice = services.find((s) => s.id === "website-build")?.price ?? "A$500";
 
 export const Route = createFileRoute("/pricing")({
   head: () =>
     seo(
       "/pricing",
       "Pricing",
-      "Website builds from A$500 with a free preview first. Store, smart store and care plan quotes to suit your business.",
+      `Website builds from ${websitePrice} with a free preview first. Store, smart store and care plan quotes to suit your business.`,
     ),
   component: Pricing,
 });
 
-// The money questions from the shared FAQ list, so this page answers them without a second copy.
+// The money and policy questions from the shared FAQ list, so this page answers them without a second copy.
 const pricingFaqs = faqs.filter((f) =>
-  /cost|pay|platform|owns|changes|own my domain|preview include/i.test(f.q),
+  /cost|pay|platform|owns|changes|own my domain|preview include|refund|based/i.test(f.q),
 );
 
 // The three builds get the big cards; the Care Plans have their own comparison below.
@@ -92,7 +94,7 @@ function Pricing() {
       <Reveal className="mx-auto mt-16 max-w-5xl px-6">
         <div className="grid gap-6 lg:grid-cols-[1fr_1.4fr]">
           <div className="glass corner-marks p-8">
-            <p className="label">Why A$500?</p>
+            <p className="label">Why {websitePrice}?</p>
             <h2 className="mt-4 text-2xl">Because you see it before you pay for it.</h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               There is no office, no account manager and no sales pitch. You brief me in two
@@ -102,11 +104,11 @@ function Pricing() {
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               Nothing is due until you approve the preview. Stores and Smart Stores start from the
               prices shown because every catalogue is different; you get a fixed quote with the
-              preview.
+              preview, valid for 30 days.
             </p>
           </div>
           <div>
-            <p className="label">Money questions</p>
+            <p className="label">Money &amp; policy questions</p>
             <Accordion type="single" collapsible className="mt-2">
               {pricingFaqs.map((faq, i) => (
                 <AccordionItem key={faq.q} value={`p${i}`}>
@@ -121,7 +123,16 @@ function Pricing() {
         </div>
       </Reveal>
       <Reveal className="mx-auto mt-14 max-w-2xl space-y-3 px-6 text-center text-sm text-muted-foreground">
-        <p>Prices in AUD. Teague Industries is not registered for GST, so no GST is charged.</p>
+        <p>
+          Prices in AUD. Teague Industries is not registered for GST, so no GST is charged. Every
+          build includes a free preview first (pay only if you go ahead), two rounds of revisions
+          (further work quoted first), 30-day quote validity, and full ownership of your finished
+          site.
+        </p>
+        <p>
+          Service area: Sydney's Lower North Shore ({site.suburbs.join(", ")}) plus anywhere in
+          Australia online.
+        </p>
         <p>
           Not sure what you need?{" "}
           <Link to="/contact" className="text-primary-soft hover:underline">
