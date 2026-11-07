@@ -92,10 +92,11 @@ export function QuickLeadForm() {
         ref={trapRef}
         type="text"
         name="company_website"
+        aria-label="Company website (do not fill in)"
         tabIndex={-1}
         autoComplete="off"
         aria-hidden="true"
-        className="absolute -left-[9999px] h-0 w-0 opacity-0"
+        className="pointer-events-none absolute -left-[9999px] h-0 w-0 opacity-0"
       />
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <label className="min-w-0">
@@ -123,7 +124,7 @@ export function QuickLeadForm() {
         </Button>
       </div>
       {(errors.business_name || errors.email || err) && (
-        <p className="mt-2 px-1 text-xs text-destructive">
+        <p role="alert" className="mt-2 px-1 text-xs text-destructive">
           {errors.business_name?.message || errors.email?.message || err}
         </p>
       )}

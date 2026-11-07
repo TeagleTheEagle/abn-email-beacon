@@ -14,7 +14,8 @@ import { loadEnv } from "vite";
 delete process.env["GEMINI_API_KEY"];
 delete process.env["GOOGLE_API_KEY"];
 const rawEnv = loadEnv("development", process.cwd(), "");
-process.env["LOVABLE_PREVIEW_HOST"] ??= rawEnv["LOVABLE_PREVIEW_HOST"];
+process.env["LOVABLE_PREVIEW_HOST"] ??=
+  rawEnv["LOVABLE_PREVIEW_HOST"] || "www.teagueindustries.com.au";
 if (rawEnv["GEMINI_API_KEY"]) {
   process.env["GEMINI_API_KEY"] = rawEnv["GEMINI_API_KEY"];
 } else if (rawEnv["GOOGLE_API_KEY"]) {

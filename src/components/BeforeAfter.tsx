@@ -20,7 +20,7 @@ export function BeforeAfter() {
             <span className="text-[10px] underline">Home | Menu | About | Contact</span>
           </div>
           <div className="grid grid-cols-[1fr_1.2fr] gap-3 p-4">
-            <div className="h-28 bg-[#d9d9d9] text-center text-[10px] leading-[7rem] text-[#777]">
+            <div className="h-28 bg-[#d9d9d9] text-center text-[10px] leading-[7rem] text-[#525252]">
               [ shopfront.jpg ]
             </div>
             <div className="text-[12px] leading-5">
@@ -29,12 +29,12 @@ export function BeforeAfter() {
                 We are a cafe. We serve coffee and food. Open most days. Please see our menu{" "}
                 <span className="text-[#1a0dab] underline">here (PDF, 14 MB)</span>.
               </p>
-              <p className="mt-2 text-[11px] text-[#777]">
+              <p className="mt-2 text-[11px] text-[#595959]">
                 Opening hours: call us. Phone: see Facebook.
               </p>
             </div>
           </div>
-          <div className="mx-4 border-t border-[#ddd] pt-2 text-[10px] text-[#888]">
+          <div className="mx-4 border-t border-[#ddd] pt-2 text-[10px] text-[#595959]">
             Last updated 2017 · Site built with free website builder
           </div>
         </div>

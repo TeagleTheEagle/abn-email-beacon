@@ -9,6 +9,13 @@ import { showroomDemos } from "./demos";
 const STAGE_W = 1280;
 const STAGE_H = 720;
 
+// Ensure the badge text in the dark #0b0f17 browser bar always meets 4.5:1 AA contrast,
+// even when the showroom design itself is light-themed with a darker accent colour.
+const DARK_BAR_ACCENT_OVERRIDES: Record<string, string> = {
+  "#0a6ebd": "#4da3eb",
+  "#8a6d4b": "#b89b78",
+};
+
 export function DemoPreview({ design }: { design: ShowroomDesign }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const [near, setNear] = useState(false);
@@ -58,7 +65,10 @@ export function DemoPreview({ design }: { design: ShowroomDesign }) {
         <span className="mx-auto w-full max-w-[65%] truncate rounded bg-white/5 px-2 py-0.5 text-center text-[10px] text-muted-foreground">
           {demoDomain(design)}
         </span>
-        <span className="label shrink-0 !text-[9px]" style={{ color: accent }}>
+        <span
+          className="label shrink-0 !text-[9px]"
+          style={{ color: DARK_BAR_ACCENT_OVERRIDES[accent.toLowerCase()] ?? accent }}
+        >
           {design.id}
         </span>
       </div>

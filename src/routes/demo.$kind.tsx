@@ -24,12 +24,13 @@ export const Route = createFileRoute("/demo/$kind")({
   beforeLoad: ({ params }) => {
     if (!isDemoKind(params.kind)) throw notFound();
   },
-  head: ({ params }) =>
-    seo(
-      `/demo/${params.kind}`,
-      `${isDemoKind(params.kind) ? demos[params.kind].name : "Website"} — Interactive Demo`,
-      "Explore an interactive Teague Industries website concept. Fictional business, illustrative imagery and no real bookings or payments.",
-    ),
+  head: ({ params }) => {
+    const d = isDemoKind(params.kind) ? demos[params.kind] : null;
+    const description = d
+      ? `Interactive ${d.category.toLowerCase()} website demo for ${d.name} — ${d.body} An illustrative concept by Teague Industries.`
+      : "Explore an interactive Teague Industries website concept. Fictional business, illustrative imagery and no real bookings or payments.";
+    return seo(`/demo/${params.kind}`, `${d ? d.name : "Website"} — Interactive Demo`, description);
+  },
   component: DemoPage,
 });
 

@@ -145,7 +145,7 @@ describe("JarvisAssistant", () => {
 
   it("opens the chat panel and submits an inline free-preview request to Supabase", async () => {
     render(<JarvisAssistant />);
-    fireEvent.click(screen.getByRole("button", { name: "Ask JARVIS AI Assistant" }));
+    fireEvent.click(screen.getByRole("button", { name: /JARVIS AI\s+Ask or get a free preview/i }));
     expect(screen.getByRole("region", { name: "JARVIS AI Website Assistant" })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Request Free Preview Here/i }));

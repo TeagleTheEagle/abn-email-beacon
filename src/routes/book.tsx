@@ -114,10 +114,11 @@ function Book() {
                   ref={trapRef}
                   type="text"
                   name="company_website"
+                  aria-label="Company website (do not fill in)"
                   tabIndex={-1}
                   autoComplete="off"
                   aria-hidden="true"
-                  className="absolute -left-[9999px] h-0 w-0 opacity-0"
+                  className="pointer-events-none absolute -left-[9999px] h-0 w-0 opacity-0"
                 />
                 <Field label="Name *" error={errors.name?.message}>
                   <input className="field" autoComplete="name" {...register("name")} />

@@ -125,10 +125,11 @@ export function DemoEnquiryModal({
               ref={trapRef}
               type="text"
               name="company_website"
+              aria-label="Company website (do not fill in)"
               tabIndex={-1}
               autoComplete="off"
               aria-hidden="true"
-              className="absolute -left-[9999px] h-0 w-0 opacity-0"
+              className="pointer-events-none absolute -left-[9999px] h-0 w-0 opacity-0"
             />
             {designs.length > 0 && (
               <p className="rounded-md border border-border bg-background/40 px-3 py-2 text-xs text-muted-foreground">

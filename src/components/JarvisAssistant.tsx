@@ -836,7 +836,6 @@ export function JarvisAssistant() {
         }}
         aria-expanded={open}
         aria-controls="jarvis-command-panel"
-        aria-label="Ask JARVIS AI Assistant"
         className="group flex items-center gap-3 rounded-full border border-primary/50 bg-[#070c17]/95 px-4 py-2.5 text-left text-foreground shadow-[0_0_28px_rgba(84,217,255,0.32)] backdrop-blur-xl transition duration-200 hover:border-primary hover:shadow-[0_0_36px_rgba(84,217,255,0.5)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
         <span className="relative grid h-9 w-9 shrink-0 place-items-center">

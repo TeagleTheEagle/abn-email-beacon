@@ -32,12 +32,7 @@ export function ProductCard({
 
   return (
     <div className="glass glass-hover group flex h-full flex-col overflow-hidden">
-      <Link
-        to="/product/$handle"
-        params={{ handle: node.handle }}
-        className="block"
-        aria-label={`View ${node.title}`}
-      >
+      <Link to="/product/$handle" params={{ handle: node.handle }} className="block">
         <div className="relative aspect-square overflow-hidden bg-surface-2">
           {image ? (
             <img

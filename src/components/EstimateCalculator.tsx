@@ -297,10 +297,11 @@ export function EstimateCalculator({ guided = false }: { guided?: boolean }) {
                 ref={trapRef}
                 type="text"
                 name="company_website"
+                aria-label="Company website (do not fill in)"
                 tabIndex={-1}
                 autoComplete="off"
                 aria-hidden="true"
-                className="absolute -left-[9999px] h-0 w-0 opacity-0"
+                className="pointer-events-none absolute -left-[9999px] h-0 w-0 opacity-0"
               />
               <label className="block">
                 <span className="sr-only">Business name</span>

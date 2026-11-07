@@ -311,7 +311,7 @@ const areaName = (id: AreaId) => practiceAreas.find((a) => a.id === id)?.name ??
 function Meridian({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 400 400" aria-hidden="true" className={className}>
-      <g fill="none" stroke="#5b8def" strokeWidth="1">
+      <g fill="none" stroke="#689af5" strokeWidth="1">
         <circle cx="200" cy="200" r="170" strokeOpacity="0.5" />
         <circle cx="200" cy="200" r="120" strokeOpacity="0.35" />
         <circle cx="200" cy="200" r="70" strokeOpacity="0.5" />
@@ -320,7 +320,7 @@ function Meridian({ className }: { className?: string }) {
         <path d="M30 200 H370 M200 30 V370" strokeOpacity="0.4" />
         <path d="M80 80 L320 320" strokeOpacity="0.15" strokeDasharray="4 6" />
       </g>
-      <circle cx="200" cy="200" r="6" fill="#5b8def" />
+      <circle cx="200" cy="200" r="6" fill="#689af5" />
       <circle cx="290" cy="112" r="4" fill="#e2e8f0" />
       <circle cx="120" cy="290" r="4" fill="#e2e8f0" />
       <path d="M200 200 L290 112" stroke="#e2e8f0" strokeOpacity="0.6" strokeWidth="1.5" />
@@ -645,7 +645,7 @@ export function ConsultingDemo({ design }: DemoProps) {
     ringLight,
   );
   const lightBtn = cn(
-    "inline-flex items-center justify-center gap-2 rounded-md bg-[#5b8def] px-5 py-3 text-sm font-semibold text-[#0f2a4a] hover:bg-[#7ba2f2] motion-safe:transition-colors",
+    "inline-flex items-center justify-center gap-2 rounded-md bg-[#689af5] px-5 py-3 text-sm font-semibold text-[#0f2a4a] hover:bg-[#7ba2f2] motion-safe:transition-colors",
     ringDark,
   );
   const outlineBtn = cn(
@@ -698,10 +698,10 @@ export function ConsultingDemo({ design }: DemoProps) {
                 rx="6"
                 ry="14"
                 fill="none"
-                stroke="#5b8def"
+                stroke="#689af5"
                 strokeWidth="1.5"
               />
-              <path d="M2 16 H30" stroke="#5b8def" strokeWidth="1.5" />
+              <path d="M2 16 H30" stroke="#689af5" strokeWidth="1.5" />
             </svg>
             <span className={cn(display, "text-xl text-[#0f2a4a]")}>{design.businessName}</span>
           </p>
@@ -764,7 +764,7 @@ export function ConsultingDemo({ design }: DemoProps) {
         />
         <div className="relative mx-auto grid max-w-6xl items-center gap-8 px-5 py-14 @3xl:grid-cols-[1.3fr_1fr] @3xl:py-24">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#5b8def]">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#689af5]">
               Independent business advisory
             </p>
             <h2
@@ -788,7 +788,7 @@ export function ConsultingDemo({ design }: DemoProps) {
                 type="button"
                 onClick={() => go(casesRef)}
                 className={cn(
-                  "inline-flex items-center justify-center gap-2 rounded-md border border-[#5b8def] px-5 py-3 text-sm font-semibold text-white hover:bg-white/10",
+                  "inline-flex items-center justify-center gap-2 rounded-md border border-[#689af5] px-5 py-3 text-sm font-semibold text-white hover:bg-white/10",
                   ringDark,
                 )}
               >
@@ -803,7 +803,7 @@ export function ConsultingDemo({ design }: DemoProps) {
               ].map(([v, l]) => (
                 <div key={l} className="flex flex-col-reverse">
                   <dt className="mt-1 text-xs uppercase tracking-wider text-[#cbd5e1]">{l}</dt>
-                  <dd className={cn(display, "text-3xl text-[#5b8def] @xl:text-4xl")}>{v}</dd>
+                  <dd className={cn(display, "text-3xl text-[#689af5] @xl:text-4xl")}>{v}</dd>
                 </div>
               ))}
             </dl>
@@ -863,7 +863,7 @@ export function ConsultingDemo({ design }: DemoProps) {
                       ringLight,
                     )}
                   >
-                    <span className="grid size-10 shrink-0 place-items-center rounded-md bg-[#0f2a4a] text-[#5b8def]">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-md bg-[#0f2a4a] text-[#689af5]">
                       <Icon aria-hidden="true" className="size-5" />
                     </span>
                     <span className="min-w-0 flex-1">
@@ -1005,7 +1005,7 @@ export function ConsultingDemo({ design }: DemoProps) {
                       <span
                         className={cn(
                           display,
-                          "block text-lg leading-tight text-[#5b8def] @xl:text-xl",
+                          "block text-lg leading-tight text-[#689af5] @xl:text-xl",
                         )}
                       >
                         {r.value}
@@ -1043,7 +1043,7 @@ export function ConsultingDemo({ design }: DemoProps) {
               <span
                 className={cn(
                   display,
-                  "grid size-10 place-items-center rounded-full bg-[#0f2a4a] text-lg text-[#5b8def]",
+                  "grid size-10 place-items-center rounded-full bg-[#0f2a4a] text-lg text-[#689af5]",
                 )}
                 aria-hidden="true"
               >
@@ -1173,7 +1173,7 @@ export function ConsultingDemo({ design }: DemoProps) {
       >
         <div className="mx-auto grid max-w-6xl gap-8 px-5 py-14 @3xl:py-20 @5xl:grid-cols-[320px_1fr]">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#5b8def]">
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#689af5]">
               Consultation
             </p>
             <h3
@@ -1191,7 +1191,7 @@ export function ConsultingDemo({ design }: DemoProps) {
             </p>
             <ul className="mt-6 space-y-3 text-sm text-[#e2e8f0]">
               <li className="flex items-center gap-3">
-                <Phone aria-hidden="true" className="size-4 shrink-0 text-[#5b8def]" />
+                <Phone aria-hidden="true" className="size-4 shrink-0 text-[#689af5]" />
                 <a
                   href={PHONE_HREF}
                   className={cn("rounded underline underline-offset-4", ringDark)}
@@ -1200,14 +1200,14 @@ export function ConsultingDemo({ design }: DemoProps) {
                 </a>
               </li>
               <li className="flex items-center gap-3">
-                <Mail aria-hidden="true" className="size-4 shrink-0 text-[#5b8def]" /> {EMAIL}
+                <Mail aria-hidden="true" className="size-4 shrink-0 text-[#689af5]" /> {EMAIL}
               </li>
               <li className="flex items-start gap-3">
-                <MapPin aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-[#5b8def]" />{" "}
+                <MapPin aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-[#689af5]" />{" "}
                 {ADDRESS}
               </li>
               <li className="flex items-center gap-3">
-                <Clock aria-hidden="true" className="size-4 shrink-0 text-[#5b8def]" /> Mon to Fri,
+                <Clock aria-hidden="true" className="size-4 shrink-0 text-[#689af5]" /> Mon to Fri,
                 8:30 am to 5:30 pm
               </li>
             </ul>

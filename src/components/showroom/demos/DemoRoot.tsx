@@ -74,7 +74,7 @@ export function DemoDisclaimer({
   className?: string;
 }) {
   return (
-    <p className={cn("px-5 py-4 text-center text-xs opacity-70", className)}>
+    <p className={cn("px-5 py-4 text-center text-xs", className)}>
       Demonstration website by Teague Industries. {design.businessName} is a fictional business, and
       every name, address, price and review on this page is sample content.
     </p>

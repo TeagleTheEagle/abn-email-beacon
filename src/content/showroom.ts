@@ -242,8 +242,8 @@ export const showroomDesigns = [
     sections: ["Hero", "Practice areas", "Case studies", "Approach", "Team", "Consultation"],
     includedFeatures: ["Practice areas", "Case study cards", "Team profiles", "Insights"],
     interactiveWidget: "Consultation request flow",
-    accentColor: "#5b8def",
-    palette: { background: "#f4f6f9", surface: "#0f2a4a", text: "#1e293b", accent: "#5b8def" },
+    accentColor: "#689af5",
+    palette: { background: "#f4f6f9", surface: "#0f2a4a", text: "#1e293b", accent: "#689af5" },
   },
 ] as const satisfies readonly ShowroomDesign[];
 
