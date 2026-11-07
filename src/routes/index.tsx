@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import {
   MapPin,
   BadgeCheck,
@@ -8,6 +8,8 @@ import {
   Clock,
   UserRound,
   ShieldCheck,
+  Smartphone,
+  MousePointer,
 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import {
@@ -26,7 +28,7 @@ import { faqs, site } from "@/content/site";
 import { ProjectJourney } from "@/components/ProjectJourney";
 import { services } from "@/content/services";
 import { projects } from "@/content/projects";
-import { demos } from "@/content/demos";
+import { demos, demoKinds } from "@/content/demos";
 import { seo, SITE_URL, OG_IMAGE } from "@/lib/seo";
 import { QuickLeadForm } from "@/components/QuickLeadForm";
 import { BeforeAfter } from "@/components/BeforeAfter";
@@ -40,6 +42,8 @@ import {
   type ShopifyProduct,
 } from "@/lib/shopify";
 import templatesStore from "@/assets/work-templates.jpg";
+import { PreviewConfigurator } from "@/components/PreviewConfigurator";
+import { MobileStickyActions } from "@/components/MobileStickyActions";
 
 // The product given the oversized showcase. Falls back to whatever Shopify lists first.
 const FEATURED_HANDLE = "48-hour-website-speed-conversion-audit";
@@ -445,6 +449,8 @@ function Home() {
         </div>
       </Section>
       <CtaBand />
+      <PreviewConfigurator />
+      <MobileStickyActions />
     </>
   );
 }

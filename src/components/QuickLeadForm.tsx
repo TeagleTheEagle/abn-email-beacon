@@ -16,7 +16,15 @@ const schema = z.object({
 });
 type V = z.infer<typeof schema>;
 
-async function sendQuickLead(raw: unknown) {
+interface QuickLeadFormProps {
+  onSuccess?: () => void;
+  submitText?: string;
+  successText?: string;
+  message?: string;
+  initialBusinessName?: string;
+}
+
+async function sendQuickLead(raw: unknown, message: string) {
   const v = schema.parse(raw);
   const id = newLeadId();
   const { error } = await supabase.from("leads").insert({
@@ -25,21 +33,31 @@ async function sendQuickLead(raw: unknown) {
     business_name: v.business_name,
     email: v.email,
     needs: [],
-    message: "Quick free-preview request from the home page",
+    message,
   });
   if (error) throw new Error("Sorry, something went wrong. Please try again.");
   track("generate_lead", { form: "quick_preview" });
   void notifyLead(supabase, id);
 }
 
-export function QuickLeadForm() {
+export function QuickLeadForm({
+  onSuccess,
+  submitText = "Get a free preview",
+  successText = "Thanks! We'll be in touch about your free preview.",
+  message = "Quick free-preview request from the home page",
+  initialBusinessName,
+}: QuickLeadFormProps) {
   const [done, setDone] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<V>({ resolver: zodResolver(schema) });
+    setValue,
+  } = useForm<V>({
+    resolver: zodResolver(schema),
+    defaultValues: { business_name: initialBusinessName ?? "" },
+  });
 
   const trapRef = useRef<HTMLInputElement>(null);
   const onSubmit = async (v: V) => {
@@ -49,8 +67,9 @@ export function QuickLeadForm() {
     }
     setErr(null);
     try {
-      await sendQuickLead(v);
+      await sendQuickLead(v, message);
       setDone(true);
+      onSuccess?.();
     } catch (e) {
       setErr((e as Error).message);
     }
@@ -71,7 +90,7 @@ export function QuickLeadForm() {
     },
     execute: (args: { business_name: string; email: string }) =>
       runWebMCPTool("request_free_preview", async () => {
-        await sendQuickLead(args);
+        await sendQuickLead(args, message);
         setDone(true);
         return "Free-preview request sent.";
       }),
@@ -80,8 +99,7 @@ export function QuickLeadForm() {
   if (done) {
     return (
       <p className="glass flex items-center justify-center gap-2 px-6 py-4 text-sm text-foreground">
-        <CheckCircle2 className="h-4 w-4 text-primary-soft" /> Thanks! We'll be in touch about your
-        free preview.
+        <CheckCircle2 className="h-4 w-4 text-primary-soft" /> {successText}
       </p>
     );
   }
@@ -120,7 +138,7 @@ export function QuickLeadForm() {
           />
         </label>
         <Button type="submit" disabled={isSubmitting} className="h-12 sm:col-span-2">
-          {isSubmitting ? "Sending…" : "Get a free preview"}
+          {isSubmitting ? "Sending…" : submitText}
         </Button>
       </div>
       {(errors.business_name || errors.email || err) && (

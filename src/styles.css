@@ -781,38 +781,38 @@
 }
 @media (max-width: 767px) {
   .home-hero {
-    padding: 100px 20px 40px;
+    padding: 88px 16px 32px;
   }
   .home-hero-inner {
     grid-template-columns: minmax(0, 1fr);
-    gap: 32px;
+    gap: 24px;
   }
   .hero-heading {
-    font-size: clamp(28px, 8.6vw, 40px);
+    font-size: clamp(26px, 8vw, 36px);
   }
   .preview-viewport {
-    height: 350px;
+    height: 320px;
   }
   .demo-navigation {
-    padding: 16px;
-    gap: 10px;
+    padding: 14px;
+    gap: 8px;
     grid-template-columns: minmax(0, 1fr) auto;
   }
   .demo-nav-links {
     display: none;
   }
   .demo-brand {
-    font-size: 17px;
+    font-size: 15px;
   }
   .demo-cover {
-    min-height: 360px;
-    padding: 28px;
+    min-height: 300px;
+    padding: 24px;
   }
   .demo-cover h2 {
-    font-size: 36px;
+    font-size: 30px;
   }
   .demo-items {
-    padding: 24px;
+    padding: 20px;
   }
   .demo-item-grid,
   .demo-booking {
@@ -820,17 +820,17 @@
   }
   .demo-footer {
     flex-direction: column;
-    padding: 24px;
+    padding: 20px;
   }
   .demo-compact .demo-cover h2 {
-    font-size: 28px;
+    font-size: 24px;
   }
   .demo-compact .demo-brand {
-    font-size: 13px;
+    font-size: 12px;
   }
   .demo-compact .demo-button {
-    font-size: 11px;
-    padding-inline: 10px;
+    font-size: 10px;
+    padding-inline: 8px;
   }
 }
 

@@ -1,6 +1,16 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, CheckCircle2, Send, Sparkles, X } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Send,
+  Sparkles,
+  X,
+  Share2,
+  Copy,
+  Mail,
+  MessageSquare,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { newLeadId, notifyLead } from "@/lib/leads";
 import { track } from "@/lib/analytics";
@@ -9,6 +19,7 @@ import { addOns, carePlans, services } from "@/content/services";
 import { demos, type DemoKind } from "@/content/demos";
 import { showroomDesigns, type ShowroomSlug } from "@/content/showroom";
 import { useCartStore } from "@/stores/cartStore";
+import { toast } from "sonner";
 
 export interface JarvisAction {
   label: string;
@@ -61,6 +72,112 @@ const DEFAULT_PAGE_PROMPTS: PagePrompts = {
   greeting: `Good day, I’m JARVIS — at your service for Teague Industries. Ask me about our ${websitePrice} websites, ${storeBasePrice}+ online stores, or 12 industry designs — or request your free website preview right here.`,
   prompts: [...QUICK_PROMPTS],
 };
+
+/** Section IDs on each page that map to context-aware prompt chips. */
+type SectionPromptMap = Record<string, Record<string, Array<{ label: string; prompt: string }>>>;
+
+const SECTION_PROMPT_MAP: SectionPromptMap = {
+  "/": {
+    hero: [
+      { label: "Free preview", prompt: "How do I get a free website preview?" },
+      { label: "See demos", prompt: "Show me website designs for my industry" },
+    ],
+    services: [
+      { label: "Website vs Store?", prompt: "Should I get a website or an online store?" },
+      { label: "Pricing", prompt: "How much does a website cost?" },
+    ],
+    work: [
+      { label: "Match my industry", prompt: "Show me website designs for my industry" },
+      { label: "Free preview", prompt: "How do I get a free website preview?" },
+    ],
+    process: [
+      { label: "How it works", prompt: "How does the free preview process work?" },
+      { label: "Turnaround", prompt: "How long does a website take?" },
+    ],
+    founder: [
+      { label: "Meet Ben", prompt: "Tell me about Ben Teague" },
+      { label: "Book a call", prompt: "I’d like to book a 15-minute call with Ben" },
+    ],
+  },
+  "/services": {
+    estimate: [
+      { label: "Calculate mine", prompt: "What would a website cost for my business?" },
+      { label: "Website vs Store?", prompt: "Should I get a website or an online store?" },
+    ],
+    "website-build": [
+      { label: "What’s included?", prompt: "What’s included in the website build?" },
+      { label: "Free preview", prompt: "How do I get a free website preview?" },
+    ],
+    "shopify-store": [
+      { label: "Store features", prompt: "What’s included in the Shopify store setup?" },
+      { label: "Smart Store?", prompt: "What is a Smart Store?" },
+    ],
+    "care-plan": [
+      { label: "Compare plans", prompt: "What’s the difference between Care Plans?" },
+      { label: "What’s covered?", prompt: "What does a Care Plan cover?" },
+    ],
+    addons: [
+      { label: "Video ads", prompt: "Tell me about the Video Ad Pack" },
+      { label: "SEO sprint", prompt: "What’s in the SEO Sprint?" },
+    ],
+  },
+  "/pricing": {
+    calculator: [
+      { label: "Calculate mine", prompt: "What would a website cost for my business?" },
+      { label: "Website vs Store?", prompt: "Should I get a website or an online store?" },
+    ],
+    "care-plans": [
+      { label: "Compare plans", prompt: "What’s the difference between Care Plans?" },
+      { label: "What’s covered?", prompt: "What does a Care Plan cover?" },
+    ],
+  },
+  "/demos": {
+    showroom: [
+      { label: "Match my industry", prompt: "Show me website designs for my industry" },
+      { label: "Free preview", prompt: "How do I get a free website preview?" },
+    ],
+    featured: [
+      { label: "Launch demo", prompt: "Launch the demo for me" },
+      { label: "Brand this", prompt: "I’d like a free preview like this demo" },
+    ],
+  },
+};
+
+/** Detects which section is currently most visible in the viewport. */
+function getVisibleSection(pathname: string): string | null {
+  if (typeof window === "undefined" || !document) return null;
+  const map = SECTION_PROMPT_MAP[pathname];
+  if (!map) return null;
+  const sectionIds = Object.keys(map) as Array<keyof typeof map>;
+  let bestSection: string | null = null;
+  let bestRatio = 0;
+  for (const id of sectionIds) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    const rect = el.getBoundingClientRect();
+    const visibleHeight = Math.max(
+      0,
+      Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0),
+    );
+    const ratio = visibleHeight / rect.height;
+    if (ratio > bestRatio) {
+      bestRatio = ratio;
+      bestSection = id;
+    }
+  }
+  return bestRatio > 0.3 ? bestSection : null;
+}
+
+/** Returns context-aware prompt chips based on the currently visible section. */
+export function getSectionAwarePrompts(pathname: string): Array<{ label: string; prompt: string }> {
+  const section = getVisibleSection(pathname);
+  const map = SECTION_PROMPT_MAP[pathname];
+  if (section && map?.[section]) {
+    return map[section];
+  }
+  // Fallback to page-level prompts
+  return getPagePrompts(pathname).prompts;
+}
 
 /** Page-aware greeting + quick prompt chips so JARVIS matches what the visitor is looking at. */
 export function getPagePrompts(pathname: string): PagePrompts {
@@ -640,6 +757,49 @@ export function JarvisAssistant() {
     },
   ]);
   const pagePrompts = getPagePrompts(pathname);
+  const [sectionPrompts, setSectionPrompts] = useState<Array<{ label: string; prompt: string }>>(
+    () => getSectionAwarePrompts(pathname),
+  );
+
+  // Update section-aware prompts on scroll
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const updatePrompts = () => {
+      setSectionPrompts(getSectionAwarePrompts(pathname));
+    };
+    updatePrompts();
+    window.addEventListener("scroll", updatePrompts, { passive: true });
+    return () => window.removeEventListener("scroll", updatePrompts);
+  }, [pathname]);
+
+  // Handle share for personalised demo URLs
+  const handleShareDemo = (url: string, businessName: string) => {
+    const fullUrl = `${window.location.origin}${url}`;
+    const shareText = `Check out my custom website preview for ${businessName} from Teague Industries!`;
+    const mailtoUrl = `mailto:?subject=My custom website preview&body=${encodeURIComponent(`${shareText}\n\n${fullUrl}`)}`;
+    const smsUrl = `sms:?body=${encodeURIComponent(`${shareText}\n\n${fullUrl}`)}`;
+
+    navigator.clipboard.writeText(fullUrl).then(
+      () => {
+        toast.success("Link copied to clipboard!", {
+          description: `Your ${businessName} preview link is ready to share.`,
+          action: {
+            label: "Email",
+            onClick: () => window.open(mailtoUrl, "_blank"),
+          },
+          cancel: {
+            label: "SMS",
+            onClick: () => window.open(smsUrl, "_blank"),
+          },
+        });
+      },
+      () => {
+        toast.error("Couldn't copy link", {
+          description: "Please try copying manually or use the share buttons below.",
+        });
+      },
+    );
+  };
 
   // Inline Free-Preview Lead Capture state inside JARVIS
   const [leadFormOpen, setLeadFormOpen] = useState(false);
@@ -1078,6 +1238,24 @@ export function JarvisAssistant() {
                             {m.card.secondaryCtaLabel ?? "Get Free Preview"}
                           </button>
                         )}
+                        {/* Share button for personalised demo cards */}
+                        {m.card.kind === "demo" && m.card.to?.includes("?biz=") && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const card = m.card;
+                              if (card?.to) {
+                                // Extract business name from title
+                                const bizName = card.title.split(" — ")[0] ?? "your business";
+                                handleShareDemo(card.to, bizName);
+                              }
+                            }}
+                            className="inline-flex items-center gap-1 rounded-sm border border-primary/40 bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary-soft transition hover:border-primary hover:bg-primary hover:text-primary-foreground"
+                          >
+                            <Share2 className="h-3 w-3" aria-hidden="true" />
+                            Share
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -1170,10 +1348,10 @@ export function JarvisAssistant() {
             )}
           </div>
 
-          {/* Quick Action Chips */}
+          {/* Quick Action Chips — section-aware */}
           <div className="border-t border-border bg-[#0e1626]/70 px-3 py-2">
             <div className="flex flex-wrap gap-1.5">
-              {pagePrompts.prompts.map((chip) => (
+              {sectionPrompts.map((chip) => (
                 <button
                   key={chip.label}
                   type="button"

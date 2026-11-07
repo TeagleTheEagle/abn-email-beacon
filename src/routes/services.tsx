@@ -11,6 +11,7 @@ import { site } from "@/content/site";
 import { seo } from "@/lib/seo";
 import { EstimateCalculator } from "@/components/EstimateCalculator";
 import templatesStore from "@/assets/work-templates.jpg";
+import { MobileStickyActions } from "@/components/MobileStickyActions";
 
 export const Route = createFileRoute("/services")({
   head: () =>
@@ -127,6 +128,7 @@ function Services() {
           Australia online.
         </p>
       </Reveal>
+      <MobileStickyActions />
     </>
   );
 }

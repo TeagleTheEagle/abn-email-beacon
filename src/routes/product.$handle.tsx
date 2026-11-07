@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { ArrowLeft, Check, Loader2 } from "lucide-react";
+import { ArrowLeft, Check, Loader2, Shield, Download, Award, RefreshCw } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { ProductSpecs } from "@/components/ProductSpecs";
 import {
@@ -254,6 +254,8 @@ function ProductPage() {
                 "Add to cart"
               )}
             </button>
+            <ConversionBadges />
+            <PeekInsidePreview details={productDetails(product)} />
             <p className="mt-3 text-xs text-muted-foreground">
               {deliveryLabel(product)}. Secure checkout through our store platform.
             </p>
@@ -277,5 +279,65 @@ function ProductPage() {
         </Reveal>
       </div>
     </>
+  );
+}
+
+function ConversionBadges() {
+  return (
+    <div className="mt-4 flex flex-wrap gap-2" role="list" aria-label="Trust badges">
+      <TrustBadge icon={Shield} text="Instant digital download" />
+      <TrustBadge icon={Award} text="Built for Australian businesses" />
+      <TrustBadge icon={RefreshCw} text="Free lifetime file updates" />
+      <TrustBadge icon={Download} text="30-day faulty file replacement" />
+    </div>
+  );
+}
+
+function TrustBadge({ icon: Icon, text }: { icon: React.ElementType; text: string }) {
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-3 py-1.5 text-xs text-muted-foreground"
+      role="listitem"
+    >
+      <Icon className="h-3.5 w-3.5 shrink-0 text-primary-soft" aria-hidden="true" />
+      <span className="font-medium text-foreground">{text}</span>
+    </span>
+  );
+}
+
+function PeekInsidePreview({ details }: { details: ReturnType<typeof productDetails> }) {
+  if (!details.includes?.length && !details.format) return null;
+
+  return (
+    <section className="mt-8 glass glass-hover p-6" aria-labelledby="peek-inside-title">
+      <h3 id="peek-inside-title" className="label mb-4">
+        Peek inside
+      </h3>
+      <div className="grid gap-4 sm:grid-cols-2">
+        {details.format && (
+          <div className="space-y-2">
+            <p className="label !text-[9px]">Format</p>
+            <p className="text-sm text-foreground">{details.format}</p>
+          </div>
+        )}
+        {details.includes?.length && (
+          <div className="space-y-2 sm:col-span-2">
+            <p className="label !text-[9px]">What's inside</p>
+            <ul className="grid gap-2 sm:grid-cols-2">
+              {details.includes.map((item) => (
+                <li key={item} className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Check className="h-3.5 w-3.5 shrink-0 text-accent-tech" aria-hidden="true" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+      <p className="mt-4 text-xs text-muted-foreground">
+        This is a sample preview based on the product's metafields. The full content is delivered
+        instantly after purchase.
+      </p>
+    </section>
   );
 }
