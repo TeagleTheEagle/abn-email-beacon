@@ -3,7 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 import { faqs, site, steps } from "@/content/site";
 import { addOns, carePlans, services } from "@/content/services";
 import { showroomDesigns } from "@/content/showroom";
-import { normaliseStoreCopy } from "@/lib/shopify";
+const normaliseStoreCopy = (s: string) => s;
 import { generateJarvisReply } from "@/components/JarvisAssistant";
 
 const MODELS = ["gemini-3.5-flash-lite", "gemini-3.8-flash", "gemini-3.1-flash-lite"] as const;
@@ -153,7 +153,7 @@ function buildSystemInstruction(liveContext: string[]): string {
   const stepsSummary = steps.map((s) => `${s.n}. ${s.title} (${s.when}): ${s.body}`).join(" | ");
 
   return [
-    `You are JARVIS, the intelligent on-site assistant for ${site.name} (www.teagueindustries.com.au), founded by ${site.founder} (ABN ${site.abn}, email ${site.email}).`,
+    `You are JARVIS, the intelligent on-site assistant for ${site.name} (www.teagueindustries.com.au), founded by Ben Teague (ABN ${site.abn}, email ${site.email}).`,
     `Service area: Sydney's Lower North Shore (${site.suburbs.join(", ")}) plus anywhere in Australia online.`,
     `Your role: Answer ANY question the visitor asks — whether about ${site.name}, website design, online stores, SEO, marketing for their industry, Australian business questions, live weather/currency, or any general knowledge topic — in a warm, sharp, concise Australian tone (keep answers to 2–4 short sentences unless they ask for a detailed list).`,
     `Strict brand rules (always follow):`,
