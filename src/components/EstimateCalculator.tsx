@@ -78,7 +78,7 @@ export function EstimateCalculator({ guided = false }: { guided?: boolean }) {
     }
     setDone(true);
     track("generate_lead", { form: "estimate", value: build.fromAud, currency: "AUD" });
-    void notifyLead(supabase, id);
+    void notifyLead(supabase, id, v.email);
   };
 
   if (!build || !estimate) return null;

@@ -33,7 +33,7 @@ export default defineTool({
       message: `[Sent via AI assistant] ${message ?? ""}`.trim(),
     });
     if (error) throw new ToolError("Couldn't send the enquiry. Please try again.");
-    await notifyLead(client, id);
+    await notifyLead(client, id, email);
     return {
       content: [
         {

@@ -113,7 +113,7 @@ function Contact() {
     }
     setDone(true);
     track("generate_lead", design ? { form: "contact", design: design.slug } : { form: "contact" });
-    void notifyLead(supabase, id);
+    void notifyLead(supabase, id, v.email);
   };
 
   return (

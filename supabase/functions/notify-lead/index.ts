@@ -44,7 +44,9 @@ Deno.serve(async (req) => {
   const apiKey = Deno.env.get("RESEND_API_KEY");
   if (!apiKey) return json({ error: "RESEND_API_KEY is not set" }, 500);
 
-  const { id } = await req.json().catch(() => ({}));
+  const { id, email } = await req.json().catch(() => ({}));
+  if (typeof email !== "string" || email.length < 3 || email.length > 255)
+    return json({ error: "Lead not found" }, 404);
   if (typeof id !== "string" || !/^[0-9a-f-]{36}$/i.test(id))
     return json({ error: "A lead id is required" }, 400);
 
@@ -57,6 +59,7 @@ Deno.serve(async (req) => {
     .from("leads")
     .update({ notified_at: new Date().toISOString() })
     .eq("id", id)
+    .eq("email", email.trim())
     .is("notified_at", null)
     .gte("created_at", new Date(Date.now() - 15 * 60 * 1000).toISOString())
     .select(
@@ -106,7 +109,8 @@ Deno.serve(async (req) => {
 
   // Only send the confirmation from a verified sender; onboarding@resend.dev can't reach customers.
   let confirmed = false;
-  if (Deno.env.get("LEAD_FROM")) {
+  const viaAgent = (lead.message ?? "").startsWith("[Sent via AI assistant]");
+  if (Deno.env.get("LEAD_FROM") && !viaAgent) {
     const first = lead.name.trim().split(/\s+/)[0] || "there";
     await sendEmail(apiKey, {
       from,

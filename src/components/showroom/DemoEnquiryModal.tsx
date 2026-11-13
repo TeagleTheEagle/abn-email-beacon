@@ -92,7 +92,7 @@ export function DemoEnquiryModal({
     }
     setDone(true);
     track("generate_lead", { form: "showroom", designs: designKey });
-    void notifyLead(supabase, id);
+    void notifyLead(supabase, id, v.email);
   };
 
   const single = designs.length === 1 ? designs[0] : undefined;

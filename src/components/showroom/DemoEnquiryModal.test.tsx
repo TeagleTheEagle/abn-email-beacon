@@ -32,7 +32,7 @@ describe("showroom enquiry", () => {
     const row = insert.mock.calls[0]?.[0] as { message: string; needs: string[] };
     expect(row.message).toContain("Showroom design: Luxury Barbershop (design 01)");
     expect(row.needs).toEqual(["Website"]);
-    expect(notifyLead).toHaveBeenCalledWith(expect.anything(), "test-id");
+    expect(notifyLead).toHaveBeenCalledWith(expect.anything(), "test-id", "sam@example.com");
     expect(await screen.findByText("Thanks, we've got it.")).toBeTruthy();
   });
 
