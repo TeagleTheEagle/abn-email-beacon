@@ -634,7 +634,7 @@ function ShopStrip() {
       </p>
       {picks.length > 0 && (
         <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
-          {picks.map((product, i) => (
+          {picks.map((product: ShopifyProduct, i: number) => (
             <Reveal key={product.node.id} delay={i * 0.05} className="h-full">
               <ProductCover product={product} />
             </Reveal>

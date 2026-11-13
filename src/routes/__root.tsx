@@ -20,6 +20,7 @@ import { JarvisAssistant } from "@/components/JarvisAssistant";
 import { Toaster } from "@/components/ui/sonner";
 import { useCartSync } from "@/hooks/useCartSync";
 import { analyticsScripts, trackPageView } from "@/lib/analytics";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 function NotFoundComponent() {
   useEffect(() => {
@@ -151,20 +152,22 @@ function RootComponent() {
   }, [router]);
   return (
     <QueryClientProvider client={queryClient}>
-      <a
-        href="#main"
-        className="sr-only z-[60] rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
-      >
-        Skip to content
-      </a>
-      {!bare && <SiteNav />}
-      <main id="main" tabIndex={-1}>
-        <Outlet />
-      </main>
-      {!bare && <SiteFooter />}
-      {!bare && <MobileCta />}
-      {!bare && <JarvisAssistant />}
-      <Toaster position="top-center" />
+      <AuthProvider>
+        <a
+          href="#main"
+          className="sr-only z-[60] rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+        >
+          Skip to content
+        </a>
+        {!bare && <SiteNav />}
+        <main id="main" tabIndex={-1}>
+          <Outlet />
+        </main>
+        {!bare && <SiteFooter />}
+        {!bare && <MobileCta />}
+        {!bare && <JarvisAssistant />}
+        <Toaster position="top-center" />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

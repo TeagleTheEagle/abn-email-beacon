@@ -11,18 +11,22 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BookRouteImport } from './routes/book'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WorkRouteImport } from './routes/work'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
+import { Route as ApiDeleteAccountRouteImport } from './routes/api.delete-account'
 import { Route as ApiJarvisRouteImport } from './routes/api.jarvis'
 import { Route as DemoKindRouteImport } from './routes/demo.$kind'
 import { Route as DemosIndexRouteImport } from './routes/demos/index'
@@ -38,6 +42,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookRoute = BookRouteImport.update({
@@ -68,6 +77,11 @@ const PricingRoute = PricingRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesRoute = ServicesRouteImport.update({
@@ -101,6 +115,16 @@ const Char91DotwellKnownChar93OauthProtectedResourceRoute =
     path: '/.well-known/oauth-protected-resource',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
+  id: '/_authenticated/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDeleteAccountRoute = ApiDeleteAccountRouteImport.update({
+  id: '/api/delete-account',
+  path: '/api/delete-account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiJarvisRoute = ApiJarvisRouteImport.update({
   id: '/api/jarvis',
   path: '/api/jarvis',
@@ -135,18 +159,22 @@ const ProductHandleRoute = ProductHandleRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
   '/book': typeof BookRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
   '/mcp': typeof McpRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
   '/shop': typeof ShopRoute
   '/templates': typeof TemplatesRoute
   '/terms': typeof TermsRoute
   '/work': typeof WorkRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/account': typeof AuthenticatedAccountRoute
+  '/api/delete-account': typeof ApiDeleteAccountRoute
   '/api/jarvis': typeof ApiJarvisRoute
   '/demo/$kind': typeof DemoKindRoute
   '/demos/$slug': typeof DemosSlugRoute
@@ -157,18 +185,22 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
   '/book': typeof BookRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
   '/mcp': typeof McpRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
   '/shop': typeof ShopRoute
   '/templates': typeof TemplatesRoute
   '/terms': typeof TermsRoute
   '/work': typeof WorkRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/account': typeof AuthenticatedAccountRoute
+  '/api/delete-account': typeof ApiDeleteAccountRoute
   '/api/jarvis': typeof ApiJarvisRoute
   '/demo/$kind': typeof DemoKindRoute
   '/demos/$slug': typeof DemosSlugRoute
@@ -180,18 +212,22 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
   '/book': typeof BookRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
   '/mcp': typeof McpRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
   '/shop': typeof ShopRoute
   '/templates': typeof TemplatesRoute
   '/terms': typeof TermsRoute
   '/work': typeof WorkRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/_authenticated/account': typeof AuthenticatedAccountRoute
+  '/api/delete-account': typeof ApiDeleteAccountRoute
   '/api/jarvis': typeof ApiJarvisRoute
   '/demo/$kind': typeof DemoKindRoute
   '/demos/$slug': typeof DemosSlugRoute
@@ -204,18 +240,22 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/auth'
     | '/book'
     | '/contact'
     | '/design-system'
     | '/mcp'
     | '/pricing'
     | '/privacy'
+    | '/reset-password'
     | '/services'
     | '/shop'
     | '/templates'
     | '/terms'
     | '/work'
     | '/.well-known/oauth-protected-resource'
+    | '/account'
+    | '/api/delete-account'
     | '/api/jarvis'
     | '/demo/$kind'
     | '/demos/$slug'
@@ -226,18 +266,22 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/auth'
     | '/book'
     | '/contact'
     | '/design-system'
     | '/mcp'
     | '/pricing'
     | '/privacy'
+    | '/reset-password'
     | '/services'
     | '/shop'
     | '/templates'
     | '/terms'
     | '/work'
     | '/.well-known/oauth-protected-resource'
+    | '/account'
+    | '/api/delete-account'
     | '/api/jarvis'
     | '/demo/$kind'
     | '/demos/$slug'
@@ -248,18 +292,22 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/auth'
     | '/book'
     | '/contact'
     | '/design-system'
     | '/mcp'
     | '/pricing'
     | '/privacy'
+    | '/reset-password'
     | '/services'
     | '/shop'
     | '/templates'
     | '/terms'
     | '/work'
     | '/.well-known/oauth-protected-resource'
+    | '/_authenticated/account'
+    | '/api/delete-account'
     | '/api/jarvis'
     | '/demo/$kind'
     | '/demos/$slug'
@@ -271,18 +319,22 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AuthRoute: typeof AuthRoute
   BookRoute: typeof BookRoute
   ContactRoute: typeof ContactRoute
   DesignSystemRoute: typeof DesignSystemRoute
   McpRoute: typeof McpRoute
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ServicesRoute: typeof ServicesRoute
   ShopRoute: typeof ShopRoute
   TemplatesRoute: typeof TemplatesRoute
   TermsRoute: typeof TermsRoute
   WorkRoute: typeof WorkRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
+  ApiDeleteAccountRoute: typeof ApiDeleteAccountRoute
   ApiJarvisRoute: typeof ApiJarvisRoute
   DemoKindRoute: typeof DemoKindRoute
   DemosSlugRoute: typeof DemosSlugRoute
@@ -305,6 +357,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/book': {
@@ -349,6 +408,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services': {
       id: '/services'
       path: '/services'
@@ -389,6 +455,20 @@ declare module '@tanstack/react-router' {
       path: '/.well-known/oauth-protected-resource'
       fullPath: '/.well-known/oauth-protected-resource'
       preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/account': {
+      id: '/_authenticated/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AuthenticatedAccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/delete-account': {
+      id: '/api/delete-account'
+      path: '/api/delete-account'
+      fullPath: '/api/delete-account'
+      preLoaderRoute: typeof ApiDeleteAccountRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/jarvis': {
@@ -439,12 +519,14 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AuthRoute: AuthRoute,
   BookRoute: BookRoute,
   ContactRoute: ContactRoute,
   DesignSystemRoute: DesignSystemRoute,
   McpRoute: McpRoute,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   ServicesRoute: ServicesRoute,
   ShopRoute: ShopRoute,
   TemplatesRoute: TemplatesRoute,
@@ -452,6 +534,8 @@ const rootRouteChildren: RootRouteChildren = {
   WorkRoute: WorkRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  AuthenticatedAccountRoute: AuthenticatedAccountRoute,
+  ApiDeleteAccountRoute: ApiDeleteAccountRoute,
   ApiJarvisRoute: ApiJarvisRoute,
   DemoKindRoute: DemoKindRoute,
   DemosSlugRoute: DemosSlugRoute,
