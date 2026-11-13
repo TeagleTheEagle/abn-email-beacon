@@ -37,7 +37,6 @@ export function MobileStickyActions() {
       >
         <div className="mx-auto flex max-w-[480px] items-center justify-between gap-3">
           <Button
-            asChild
             size="lg"
             variant="outline"
             className="h-12 flex-1 min-w-0"
@@ -47,7 +46,6 @@ export function MobileStickyActions() {
             <span className="truncate">Free Preview</span>
           </Button>
           <Button
-            asChild
             size="lg"
             className="h-12 flex-1 min-w-0 btn-primary"
             onClick={() => setJarvisOpen(true)}
@@ -127,7 +125,6 @@ export function MobileStickyActions() {
                 Ask JARVIS about pricing, demos, or request a free preview right here.
               </p>
               <Button
-                asChild
                 className="w-full h-12 btn-primary"
                 onClick={() => {
                   setJarvisOpen(false);
