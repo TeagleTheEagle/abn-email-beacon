@@ -37,7 +37,7 @@ async function sendQuickLead(raw: unknown, message: string) {
   });
   if (error) throw new Error("Sorry, something went wrong. Please try again.");
   track("generate_lead", { form: "quick_preview" });
-  void notifyLead(supabase, id);
+  void notifyLead(supabase, id, v.email);
 }
 
 export function QuickLeadForm({

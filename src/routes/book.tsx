@@ -66,7 +66,7 @@ function Book() {
     }
     setDone(true);
     track("generate_lead", { form: "book_call" });
-    void notifyLead(supabase, id);
+    void notifyLead(supabase, id, v.email);
   };
 
   return (

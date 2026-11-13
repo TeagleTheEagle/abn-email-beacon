@@ -6,9 +6,9 @@ import type { Database } from "@/integrations/supabase/types";
 export const newLeadId = () => crypto.randomUUID();
 
 // Best effort: the enquiry is already saved, so a failed email must never fail the form.
-export async function notifyLead(client: SupabaseClient<Database>, id: string) {
+export async function notifyLead(client: SupabaseClient<Database>, id: string, email: string) {
   try {
-    const { error } = await client.functions.invoke("notify-lead", { body: { id } });
+    const { error } = await client.functions.invoke("notify-lead", { body: { id, email } });
     if (error) console.warn("Lead saved but notification failed:", error.message);
   } catch (e) {
     console.warn("Lead saved but notification failed:", e);

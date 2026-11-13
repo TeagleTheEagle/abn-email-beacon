@@ -962,7 +962,7 @@ export function JarvisAssistant() {
       });
       if (error) throw new Error("Could not send request. Please try again.");
       track("generate_lead", { form: "jarvis_assistant" });
-      void notifyLead(supabase, id);
+      void notifyLead(supabase, id, mail);
       setLeadSent(true);
       setLeadFormOpen(false);
       setMessages((prev) => [
