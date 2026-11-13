@@ -8,6 +8,27 @@
       "when": 1792465396959,
       "tag": "0000_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794539920658,
+      "tag": "0001_profiles_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794539942124,
+      "tag": "0002_profiles_access_and_existing_accounts",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794539994707,
+      "tag": "0003_profiles_remove_anonymous_grants",
+      "breakpoints": true
     }
   ]
 }
