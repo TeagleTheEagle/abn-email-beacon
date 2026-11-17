@@ -14,45 +14,135 @@ export type Database = {
   }
   public: {
     Tables: {
+      api_rate_limits: {
+        Row: {
+          created_at: string
+          hits: number
+          key: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          hits?: number
+          key: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          hits?: number
+          key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
+          assigned_owner_id: string | null
           business_name: string
           business_type: string | null
           created_at: string
           current_website: string | null
+          customer_confirmation_attempt_id: string | null
+          customer_confirmation_attempted_at: string | null
+          customer_confirmation_attempts: number
+          customer_confirmation_error: string | null
+          customer_confirmation_provider_id: string | null
+          customer_confirmation_status: string
           email: string
           id: string
           message: string | null
           name: string
           needs: string[]
+          next_follow_up_at: string | null
+          notes: string | null
           notified_at: string | null
+          owner_notification_attempt_id: string | null
+          owner_notification_attempted_at: string | null
+          owner_notification_attempts: number
+          owner_notification_error: string | null
+          owner_notification_provider_id: string | null
+          owner_notification_status: string
           phone: string | null
+          source: string
+          stage: string
+          updated_at: string
         }
         Insert: {
+          assigned_owner_id?: string | null
           business_name: string
           business_type?: string | null
           created_at?: string
           current_website?: string | null
+          customer_confirmation_attempt_id?: string | null
+          customer_confirmation_attempted_at?: string | null
+          customer_confirmation_attempts?: number
+          customer_confirmation_error?: string | null
+          customer_confirmation_provider_id?: string | null
+          customer_confirmation_status?: string
           email: string
           id?: string
           message?: string | null
           name: string
           needs?: string[]
+          next_follow_up_at?: string | null
+          notes?: string | null
           notified_at?: string | null
+          owner_notification_attempt_id?: string | null
+          owner_notification_attempted_at?: string | null
+          owner_notification_attempts?: number
+          owner_notification_error?: string | null
+          owner_notification_provider_id?: string | null
+          owner_notification_status?: string
           phone?: string | null
+          source?: string
+          stage?: string
+          updated_at?: string
         }
         Update: {
+          assigned_owner_id?: string | null
           business_name?: string
           business_type?: string | null
           created_at?: string
           current_website?: string | null
+          customer_confirmation_attempt_id?: string | null
+          customer_confirmation_attempted_at?: string | null
+          customer_confirmation_attempts?: number
+          customer_confirmation_error?: string | null
+          customer_confirmation_provider_id?: string | null
+          customer_confirmation_status?: string
           email?: string
           id?: string
           message?: string | null
           name?: string
           needs?: string[]
+          next_follow_up_at?: string | null
+          notes?: string | null
           notified_at?: string | null
+          owner_notification_attempt_id?: string | null
+          owner_notification_attempted_at?: string | null
+          owner_notification_attempts?: number
+          owner_notification_error?: string | null
+          owner_notification_provider_id?: string | null
+          owner_notification_status?: string
           phone?: string | null
+          source?: string
+          stage?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      owner_memberships: {
+        Row: {
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -88,7 +178,26 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      claim_lead_customer_confirmation: {
+        Args: {
+          p_attempt_id: string
+          p_lead_id: string
+          p_max_attempts: number
+          p_stale_before: string
+        }
+        Returns: boolean
+      }
+      claim_lead_owner_notification: {
+        Args: {
+          p_attempt_id: string
+          p_lead_id: string
+          p_max_attempts: number
+          p_stale_before: string
+        }
+        Returns: boolean
+      }
+      consume_rate_limit: { Args: { p_key: string }; Returns: number }
+      is_enquiry_owner: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never

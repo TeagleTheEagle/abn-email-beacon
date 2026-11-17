@@ -1,0 +1,1 @@
+COMMENT ON TABLE public.owner_memberships IS 'Accounts allowed to view and manage enquiries in the owner pipeline. Managed only by the site owner.';
