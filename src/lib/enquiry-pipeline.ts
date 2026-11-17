@@ -53,9 +53,53 @@ export function isFollowUpOverdue(lead: PipelineLead, now: Date): boolean {
   return Number.isFinite(timestamp) && timestamp < now.getTime();
 }
 
+export const ENQUIRY_PAGE_SIZE = 50;
+
+export type EnquiryFilters = {
+  overdueOnly: boolean;
+  stage: EnquiryStage | "all";
+};
+
+export interface EnquiryQuery {
+  eq(column: "stage", value: EnquiryStage): EnquiryQuery;
+  lt(column: "next_follow_up_at", value: string): EnquiryQuery;
+  neq(column: "stage", value: "Launched"): EnquiryQuery;
+  order(column: "created_at" | "id", options: { ascending: false }): EnquiryQuery;
+  range(
+    from: number,
+    to: number,
+  ): PromiseLike<{ data: unknown; count: number | null; error: { message: string } | null }>;
+}
+
+export interface EnquiryClient {
+  from(table: "leads"): {
+    select(columns: "*", options: { count: "exact" }): EnquiryQuery;
+  };
+}
+
+export function loadEnquiryPage(
+  client: EnquiryClient,
+  filters: EnquiryFilters,
+  page: number,
+  now: Date,
+) {
+  const safePage = Math.max(0, Math.floor(page));
+  const from = safePage * ENQUIRY_PAGE_SIZE;
+  let query = client.from("leads").select("*", { count: "exact" });
+  if (filters.stage !== "all") query = query.eq("stage", filters.stage);
+  if (filters.overdueOnly) {
+    // SQL comparison excludes null dates; launched work is never overdue by definition.
+    query = query.lt("next_follow_up_at", now.toISOString()).neq("stage", "Launched");
+  }
+  return query
+    .order("created_at", { ascending: false })
+    .order("id", { ascending: false })
+    .range(from, from + ENQUIRY_PAGE_SIZE - 1);
+}
+
 export function filterPipelineLeads(
   leads: PipelineLead[],
-  filters: { overdueOnly: boolean; stage: EnquiryStage | "all" },
+  filters: EnquiryFilters,
   now: Date,
 ): PipelineLead[] {
   return leads.filter(

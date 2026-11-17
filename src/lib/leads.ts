@@ -54,12 +54,32 @@ export async function updateLeadWorkflow(
   client: SupabaseClient<Database>,
   id: string,
   payload: LeadWorkflowUpdate,
+  expectedUpdatedAt: string,
 ) {
-  const { error } = await client
-    .from("leads")
-    .update(payload as unknown as TablesInsert<"leads">)
-    .eq("id", id);
-  return { error };
+  try {
+    const { data, error } = await client
+      .from("leads")
+      .update(payload as unknown as TablesInsert<"leads">)
+      .eq("id", id)
+      .eq("updated_at", expectedUpdatedAt)
+      .select("id, updated_at");
+    if (error) return { data: null, error };
+    const updated = data?.length === 1 ? data[0] : null;
+    if (!updated || updated.id !== id) {
+      return {
+        data: null,
+        error: new Error(
+          "Enquiry was not updated. It may be missing, changed by another owner, or no longer accessible.",
+        ),
+      };
+    }
+    return { data: updated, error: null };
+  } catch (error) {
+    return {
+      data: null,
+      error: error instanceof Error ? error : new Error("Enquiry update failed"),
+    };
+  }
 }
 
 // Best effort: the enquiry is already saved, so a failed email must never fail the form.

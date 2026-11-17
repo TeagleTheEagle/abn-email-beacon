@@ -8,25 +8,24 @@ export type JarvisRequest = {
 export type JsonReadResult =
   { ok: true; value: unknown } | { ok: false; status: 400 | 413; error: string };
 
+// Verified public application hosts: README.md and CLAUDE.md name both production domains and this
+// project's published Lovable URL. Do not accept other tenants on shared preview platforms.
 const ALLOWED_HOSTS = new Set([
   "www.teagueindustries.com.au",
   "teagueindustries.com.au",
-  "localhost",
-  "127.0.0.1",
+  "abn-email-beacon.lovable.app",
 ]);
-const ALLOWED_PLATFORM_SUFFIXES = [".lovable.app", ".lovable.dev", ".lovableproject.com"];
+const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "[::1]"]);
 
 export function isAllowedRequestOrigin(request: Request): boolean {
   const value = request.headers.get("origin") ?? request.headers.get("referer");
   if (!value) return true; // Non-browser MCP/API clients do not send an Origin header.
   try {
     const url = new URL(value);
-    const local = url.hostname === "localhost" || url.hostname === "127.0.0.1";
+    const local = LOCAL_HOSTS.has(url.hostname);
+    if (url.username || url.password) return false;
     if (url.protocol !== "https:" && !(local && url.protocol === "http:")) return false;
-    return (
-      ALLOWED_HOSTS.has(url.hostname) ||
-      ALLOWED_PLATFORM_SUFFIXES.some((suffix) => url.hostname.endsWith(suffix))
-    );
+    return ALLOWED_HOSTS.has(url.hostname) || local;
   } catch {
     return false;
   }

@@ -17,9 +17,10 @@ const { insert, navigate } = vi.hoisted(() => ({
   navigate: vi.fn(),
 }));
 
+let pathname = "/";
 vi.mock("@tanstack/react-router", () => ({
   useNavigate: () => navigate,
-  useLocation: () => "/",
+  useLocation: () => pathname,
 }));
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: { from: () => ({ insert }) },
@@ -34,6 +35,7 @@ vi.mock("@/lib/analytics", () => ({ track: vi.fn() }));
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
+  pathname = "/";
 });
 
 describe("JarvisAssistant", () => {
@@ -163,6 +165,64 @@ describe("JarvisAssistant", () => {
     await waitFor(() => expect(screen.getByLabelText(/Ask JARVIS about websites/)).toHaveFocus());
     fireEvent.click(screen.getByRole("button", { name: "Close JARVIS assistant" }));
     expect(shortcut).toHaveFocus();
+  });
+
+  it("keeps the floating launcher out of the mobile action-bar layout", () => {
+    render(
+      <>
+        <MobileStickyActions />
+        <JarvisAssistant />
+      </>,
+    );
+
+    expect(screen.getByRole("button", { name: /Ask JARVIS/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /JARVIS AI\s+Ask or get a free preview/i }),
+    ).toHaveClass("hidden", "sm:flex");
+  });
+
+  it("suppresses the nonessential floating launcher on mobile authentication screens", () => {
+    pathname = "/auth";
+    render(<JarvisAssistant />);
+
+    expect(
+      screen.getByRole("button", { name: /JARVIS AI\s+Ask or get a free preview/i }),
+    ).toHaveClass("hidden", "sm:flex");
+  });
+
+  it("closes with Escape and restores focus to the mobile shortcut", async () => {
+    render(
+      <>
+        <MobileStickyActions />
+        <JarvisAssistant />
+      </>,
+    );
+    const shortcut = screen.getByRole("button", { name: /Ask JARVIS/i });
+    shortcut.focus();
+    fireEvent.click(shortcut);
+    await waitFor(() => expect(screen.getByLabelText(/Ask JARVIS about websites/)).toHaveFocus());
+
+    fireEvent.keyDown(window, { key: "Escape" });
+
+    expect(
+      screen.queryByRole("region", { name: "JARVIS AI Website Assistant" }),
+    ).not.toBeInTheDocument();
+    expect(shortcut).toHaveFocus();
+  });
+
+  it("closes the chat when navigation changes the page launcher policy", async () => {
+    const { rerender } = render(<JarvisAssistant />);
+    fireEvent.click(screen.getByRole("button", { name: /JARVIS AI\s+Ask or get a free preview/i }));
+    expect(screen.getByRole("region", { name: "JARVIS AI Website Assistant" })).toBeVisible();
+
+    pathname = "/auth";
+    rerender(<JarvisAssistant />);
+
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("region", { name: "JARVIS AI Website Assistant" }),
+      ).not.toBeInTheDocument(),
+    );
   });
 
   it("opens the chat panel and submits an inline free-preview request to Supabase", async () => {

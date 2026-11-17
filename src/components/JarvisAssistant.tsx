@@ -818,6 +818,7 @@ export function JarvisAssistant() {
   const inputRef = useRef<HTMLInputElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const previousPathnameRef = useRef(pathname);
   const focusTimerRef = useRef<number | null>(null);
 
   const openChat = useCallback(() => {
@@ -831,6 +832,12 @@ export function JarvisAssistant() {
     const previous = previousFocusRef.current;
     (previous?.isConnected ? previous : launcherRef.current)?.focus();
   }, []);
+
+  useEffect(() => {
+    if (previousPathnameRef.current === pathname) return;
+    previousPathnameRef.current = pathname;
+    if (open) closeChat();
+  }, [pathname, open, closeChat]);
 
   useEffect(() => {
     const onExternalOpen = () => openChat();
@@ -1016,7 +1023,7 @@ export function JarvisAssistant() {
   return (
     <div
       data-testid="jarvis-assistant"
-      className="fixed bottom-20 right-4 z-50 sm:bottom-6 sm:right-6"
+      className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 z-50 sm:bottom-6 sm:right-6"
     >
       {/* Floating Holographic JARVIS Launcher Button */}
       <button
@@ -1028,7 +1035,7 @@ export function JarvisAssistant() {
         }}
         aria-expanded={open}
         aria-controls="jarvis-command-panel"
-        className="group flex items-center gap-3 rounded-full border border-primary/50 bg-[#070c17]/95 px-4 py-2.5 text-left text-foreground shadow-[0_0_28px_rgba(84,217,255,0.32)] backdrop-blur-xl transition duration-200 hover:border-primary hover:shadow-[0_0_36px_rgba(84,217,255,0.5)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        className="group hidden items-center gap-3 rounded-full border border-primary/50 bg-[#070c17]/95 px-4 py-2.5 text-left text-foreground shadow-[0_0_28px_rgba(84,217,255,0.32)] backdrop-blur-xl transition duration-200 hover:border-primary hover:shadow-[0_0_36px_rgba(84,217,255,0.5)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:flex"
       >
         <span className="relative grid h-9 w-9 shrink-0 place-items-center">
           <svg viewBox="0 0 100 100" aria-hidden="true" className="h-9 w-9">

@@ -39,6 +39,12 @@ describe("JARVIS endpoint validation and fallback", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  it("rejects an unrelated Lovable tenant before parsing an invalid payload", async () => {
+    const response = await call("not-json", "https://unrelated-tenant.lovable.app");
+
+    expect(response.status).toBe(403);
+  });
+
   it.each(["null", "not-json", '{"message":"Hello","history":[null]}'])(
     "returns 400 for malformed input %s",
     async (body) => {

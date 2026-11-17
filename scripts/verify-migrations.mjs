@@ -1,17 +1,11 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { PGlite } from "@electric-sql/pglite";
 
-const migrations = [
-  "0000_migration.sql",
-  "0001_profiles_table.sql",
-  "0002_profiles_access_and_existing_accounts.sql",
-  "0003_profiles_remove_anonymous_grants.sql",
-  "0004_lead_notification_delivery.sql",
-  "0005_shared_abuse_controls.sql",
-  "0006_owner_enquiry_pipeline.sql",
-  "0007_serialize_lead_submission_rate.sql",
-];
+const migrations = readdirSync("drizzle/migrations")
+  .filter((name) => /^\d{4}_.*\.sql$/.test(name))
+  .sort((a, b) => a.localeCompare(b));
+assert.ok(migrations.length > 0, "Migration discovery must find the numbered SQL history");
 const ownerId = "11111111-1111-4111-8111-111111111111";
 const customerId = "22222222-2222-4222-8222-222222222222";
 const leadId = "33333333-3333-4333-8333-333333333333";
@@ -56,6 +50,14 @@ await fresh.query("INSERT INTO auth.users (id, raw_user_meta_data) VALUES ($1, '
   customerId,
 ]);
 await fresh.query("INSERT INTO public.owner_memberships (user_id) VALUES ($1)", [ownerId]);
+const ownerMembershipComment = await fresh.query(
+  "SELECT obj_description('public.owner_memberships'::regclass) AS comment",
+);
+assert.equal(
+  ownerMembershipComment.rows[0].comment,
+  "Accounts allowed to view and manage enquiries in the owner pipeline. Managed only by the site owner.",
+  "Every discovered migration, including documentation-only follow-ups, is applied",
+);
 await fresh.query("RESET ROLE");
 await fresh.query("SET ROLE anon");
 await fresh.query(

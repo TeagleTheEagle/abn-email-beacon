@@ -9,10 +9,12 @@ import { useAuth } from "@/contexts/AuthContext";
 import { notifyLead, updateLeadWorkflow, checkEnquiryOwner } from "@/lib/leads";
 import { track } from "@/lib/analytics";
 import {
+  ENQUIRY_PAGE_SIZE,
   ENQUIRY_STAGES,
   LEAD_SOURCES,
-  filterPipelineLeads,
   isFollowUpOverdue,
+  loadEnquiryPage,
+  type EnquiryClient,
   type EnquiryStage,
   type LeadSource,
   type PipelineLead,
@@ -47,10 +49,13 @@ export function EnquiryPipeline() {
   const { user, loading: authLoading } = useAuth();
   const [access, setAccess] = useState<"loading" | "owner" | "denied">("loading");
   const [leads, setLeads] = useState<PipelineLead[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [version, setVersion] = useState(0);
   const [overdueOnly, setOverdueOnly] = useState(false);
   const [stage, setStage] = useState<EnquiryStage | "all">("all");
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
     let active = true;
@@ -58,50 +63,81 @@ export function EnquiryPipeline() {
     if (!user) {
       setAccess("denied");
       setLeads([]);
+      setTotal(0);
+      setLoading(false);
       return;
     }
+
+    setAccess((current) => (current === "owner" ? "owner" : "loading"));
+    setLoading(true);
+    setLeads([]);
+    setTotal(0);
+    setError(null);
     const load = async () => {
-      setAccess("loading");
-      setError(null);
-      const membership = await checkEnquiryOwner(supabase, user.id);
+      let membership;
+      try {
+        membership = await checkEnquiryOwner(supabase, user.id);
+      } catch {
+        if (active) {
+          setAccess("denied");
+          setLoading(false);
+        }
+        return;
+      }
       if (!active) return;
       if (membership.error || !membership.isOwner) {
         setAccess("denied");
         setLeads([]);
+        setTotal(0);
+        setLoading(false);
         return;
       }
-      const result = await supabase
-        .from("leads")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(200);
-      if (!active) return;
-      if (result.error) {
-        setError("Could not load enquiries. Please try again.");
-        setAccess("owner");
-        return;
-      }
-      const parsed = parsedLeads.safeParse(result.data);
-      if (!parsed.success) {
-        setError(
-          "Enquiry data could not be read. Regenerate the Lovable database types and retry.",
+
+      try {
+        const result = await loadEnquiryPage(
+          supabase as unknown as EnquiryClient,
+          { overdueOnly, stage },
+          page,
+          new Date(),
         );
+        if (!active) return;
+        if (result.error) {
+          setError("Could not load enquiries. Please try again.");
+          setAccess("owner");
+          setLoading(false);
+          return;
+        }
+        const parsed = parsedLeads.safeParse(result.data);
+        if (!parsed.success || result.count === null) {
+          setError(
+            "Enquiry data could not be read. Regenerate the Lovable database types and retry.",
+          );
+          setAccess("owner");
+          setLoading(false);
+          return;
+        }
+        const pageCount = Math.max(1, Math.ceil(result.count / ENQUIRY_PAGE_SIZE));
+        if (page >= pageCount) {
+          setPage(pageCount - 1);
+          return;
+        }
+        setLeads(parsed.data);
+        setTotal(result.count);
         setAccess("owner");
-        return;
+        setLoading(false);
+      } catch {
+        if (active) {
+          setError("Could not load enquiries. Please try again.");
+          setAccess("owner");
+          setLoading(false);
+        }
       }
-      setLeads(parsed.data);
-      setAccess("owner");
     };
-    void load().catch(() => {
-      if (active) {
-        setError("Could not load enquiries. Please try again.");
-        setAccess("denied");
-      }
-    });
+    void load();
     return () => {
       active = false;
     };
-  }, [user, authLoading, version]);
+  }, [user, authLoading, version, overdueOnly, stage, page]);
 
   if (access === "loading" || authLoading)
     return <p className="px-6 py-24 text-center text-muted-foreground">Loading enquiries…</p>;
@@ -118,8 +154,9 @@ export function EnquiryPipeline() {
       </section>
     );
 
-  const visible = filterPipelineLeads(leads, { overdueOnly, stage }, new Date());
-  const overdue = leads.filter((lead) => isFollowUpOverdue(lead, new Date())).length;
+  const pageCount = Math.max(1, Math.ceil(total / ENQUIRY_PAGE_SIZE));
+  const first = total === 0 ? 0 : page * ENQUIRY_PAGE_SIZE + 1;
+  const last = Math.min((page + 1) * ENQUIRY_PAGE_SIZE, total);
   return (
     <div className="mx-auto max-w-6xl px-6 py-24 sm:py-28">
       <Link to="/account" className="inline-flex items-center gap-2 text-sm text-primary-soft">
@@ -143,7 +180,10 @@ export function EnquiryPipeline() {
           <span className="mr-2">Stage</span>
           <select
             value={stage}
-            onChange={(event) => setStage(event.target.value as EnquiryStage | "all")}
+            onChange={(event) => {
+              setStage(event.target.value as EnquiryStage | "all");
+              setPage(0);
+            }}
             className="field inline-block w-auto"
           >
             <option value="all">All stages</option>
@@ -156,13 +196,16 @@ export function EnquiryPipeline() {
           <input
             type="checkbox"
             checked={overdueOnly}
-            onChange={(event) => setOverdueOnly(event.target.checked)}
+            onChange={(event) => {
+              setOverdueOnly(event.target.checked);
+              setPage(0);
+            }}
             className="accent-[var(--primary)]"
           />
-          Overdue follow-ups only ({overdue})
+          Overdue follow-ups only
         </label>
         <p className="text-sm text-muted-foreground" aria-live="polite">
-          Showing {visible.length} of {leads.length}
+          {loading ? "Loading matching enquiries…" : `Showing ${first}–${last} of ${total}`}
         </p>
       </div>
       {error && (
@@ -170,11 +213,11 @@ export function EnquiryPipeline() {
           {error}
         </p>
       )}
-      {!error && visible.length === 0 ? (
+      {!loading && !error && leads.length === 0 ? (
         <p className="mt-10 text-muted-foreground">No enquiries match these filters.</p>
       ) : (
-        <div className="mt-8 space-y-5">
-          {visible.map((lead) => (
+        <div className="mt-8 space-y-5" aria-busy={loading}>
+          {leads.map((lead) => (
             <PipelineCard
               key={lead.id}
               lead={lead}
@@ -183,6 +226,30 @@ export function EnquiryPipeline() {
             />
           ))}
         </div>
+      )}
+      {!loading && total > ENQUIRY_PAGE_SIZE && (
+        <nav
+          className="mt-8 flex flex-wrap items-center justify-between gap-3"
+          aria-label="Enquiry pages"
+        >
+          <Button
+            variant="outline"
+            onClick={() => setPage((value) => value - 1)}
+            disabled={page === 0}
+          >
+            Previous page
+          </Button>
+          <p className="text-sm text-muted-foreground">
+            Page {page + 1} of {pageCount}
+          </p>
+          <Button
+            variant="outline"
+            onClick={() => setPage((value) => value + 1)}
+            disabled={page + 1 >= pageCount}
+          >
+            Next page
+          </Button>
+        </nav>
       )}
     </div>
   );
@@ -212,19 +279,34 @@ function PipelineCard({
   const save = async () => {
     setSaving(true);
     setError(null);
-    const { error: updateError } = await updateLeadWorkflow(supabase, lead.id, {
-      stage,
-      assigned_owner_id: lead.assigned_owner_id ?? ownerId,
-      next_follow_up_at: followUp ? `${followUp}T00:00:00.000Z` : null,
-      notes: notes.trim() || null,
-    });
-    if (updateError) setError("Could not save the enquiry changes. Please try again.");
-    else {
-      if (lead.stage !== stage)
-        track("enquiry_stage_changed", { previous_stage: lead.stage, next_stage: stage });
-      onChanged();
+    try {
+      const { data, error: updateError } = await updateLeadWorkflow(
+        supabase,
+        lead.id,
+        {
+          stage,
+          assigned_owner_id: lead.assigned_owner_id ?? ownerId,
+          next_follow_up_at: followUp ? `${followUp}T00:00:00.000Z` : null,
+          notes: notes.trim() || null,
+        },
+        lead.updated_at,
+      );
+      if (updateError || data?.id !== lead.id) {
+        setError(
+          "Could not save the enquiry changes. Refresh and try again; your entries are retained.",
+        );
+      } else {
+        if (lead.stage !== stage)
+          track("enquiry_stage_changed", { previous_stage: lead.stage, next_stage: stage });
+        onChanged();
+      }
+    } catch {
+      setError(
+        "Could not save the enquiry changes. Refresh and try again; your entries are retained.",
+      );
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
   };
 
   const retryNotifications = async () => {

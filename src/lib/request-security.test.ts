@@ -19,6 +19,7 @@ describe("request origin validation", () => {
     "https://abn-email-beacon.lovable.app",
     "http://localhost:8080",
     "http://127.0.0.1:3000",
+    "http://[::1]:5173",
   ])("accepts %s", (origin) => {
     expect(isAllowedRequestOrigin(request(origin))).toBe(true);
   });
@@ -29,6 +30,14 @@ describe("request origin validation", () => {
     "https://localhost.evil.example",
     "javascript:alert(1)",
     "https://evil.lovable.app.evil.example",
+    "https://unrelated-tenant.lovable.app",
+    "https://abn-email-beacon.lovable.dev",
+    "https://abn-email-beacon.lovableproject.com",
+    "https://abn-email-beacon.lovable.app.evil.example",
+    "http://abn-email-beacon.lovable.app",
+    "ftp://www.teagueindustries.com.au",
+    "https://user@www.teagueindustries.com.au",
+    "null",
   ])("rejects %s", (origin) => {
     expect(isAllowedRequestOrigin(request(origin))).toBe(false);
   });
@@ -37,6 +46,20 @@ describe("request origin validation", () => {
     expect(isAllowedRequestOrigin(request())).toBe(true);
     const referer = new Request("https://example.com", { headers: { referer: "not a URL" } });
     expect(isAllowedRequestOrigin(referer)).toBe(false);
+  });
+
+  it("accepts an approved referer path but never uses it to override a hostile origin", () => {
+    const approved = new Request("https://example.com", {
+      headers: { referer: "https://www.teagueindustries.com.au/contact?source=test" },
+    });
+    expect(isAllowedRequestOrigin(approved)).toBe(true);
+    const hostile = new Request("https://example.com", {
+      headers: {
+        origin: "https://unrelated-tenant.lovable.app",
+        referer: "https://www.teagueindustries.com.au/contact",
+      },
+    });
+    expect(isAllowedRequestOrigin(hostile)).toBe(false);
   });
 });
 
