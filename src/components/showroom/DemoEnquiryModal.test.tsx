@@ -8,7 +8,11 @@ const { insert, notifyLead } = vi.hoisted(() => ({
   notifyLead: vi.fn(),
 }));
 vi.mock("@/integrations/supabase/client", () => ({ supabase: { from: () => ({ insert }) } }));
-vi.mock("@/lib/leads", () => ({ newLeadId: () => "test-id", notifyLead }));
+vi.mock("@/lib/leads", () => ({
+  newLeadId: () => "test-id",
+  notifyLead,
+  insertLead: (_client: unknown, payload: object, source: string) => insert({ ...payload, source }),
+}));
 vi.mock("@/lib/analytics", () => ({ track: vi.fn() }));
 afterEach(() => {
   cleanup();

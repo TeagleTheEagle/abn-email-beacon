@@ -35,9 +35,7 @@ export function SiteFooter() {
             </a>
           </p>
           <p>
-            <BookCallLink className="text-foreground hover:text-primary-soft">
-              Book a 15-minute call
-            </BookCallLink>
+            <BookCallLink className="text-foreground hover:text-primary-soft" />
           </p>
           <p>ABN: {site.abn}</p>
           <p>{site.location}</p>

@@ -9,7 +9,7 @@ import { Field } from "@/components/FormField";
 import { supabase } from "@/integrations/supabase/client";
 import { site } from "@/content/site";
 import { seo } from "@/lib/seo";
-import { newLeadId, notifyLead } from "@/lib/leads";
+import { newLeadId, notifyLead, insertLead } from "@/lib/leads";
 import { track } from "@/lib/analytics";
 
 export const Route = createFileRoute("/book")({
@@ -51,15 +51,19 @@ function Book() {
     }
     setErr(null);
     const id = newLeadId();
-    const { error } = await supabase.from("leads").insert({
-      id,
-      name: v.name,
-      business_name: v.business_name,
-      email: v.email,
-      phone: v.phone,
-      needs: ["Call request"],
-      message: [`Call request. Best time: ${v.time}.`, v.topic].filter(Boolean).join("\n\n"),
-    });
+    const { error } = await insertLead(
+      supabase,
+      {
+        id,
+        name: v.name,
+        business_name: v.business_name,
+        email: v.email,
+        phone: v.phone,
+        needs: ["Call request"],
+        message: [`Call request. Best time: ${v.time}.`, v.topic].filter(Boolean).join("\n\n"),
+      },
+      "Call request",
+    );
     if (error) {
       setErr("Sorry, something went wrong. Please try again or email us directly.");
       return;
@@ -74,7 +78,7 @@ function Book() {
       <PageHeader
         label="Book a call"
         title="Book a 15-minute call"
-        sub="Talk through your website or store with Ben before you decide anything. No sales pitch, no obligation."
+        sub="Request a time to talk through your website or store with Ben. No sales pitch, no obligation. Your time is not confirmed until Ben replies."
       />
       <div className="mx-auto grid max-w-5xl gap-8 px-6 lg:grid-cols-[1.6fr_1fr]">
         <Reveal>

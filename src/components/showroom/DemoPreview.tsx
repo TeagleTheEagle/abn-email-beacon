@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { demoDomain, isShowroomSlug, type ShowroomDesign } from "@/content/showroom";
 import { showroomDemos } from "./demos";
+import { DemoLoadBoundary } from "./DemoLoadBoundary";
 
 // Gallery card preview: the real demo rendered at desktop width and scaled down to fit the card,
 // inside a mock browser bar. Decorative and inert — "View Live Demo" opens the interactive viewer.
@@ -19,6 +20,7 @@ const DARK_BAR_ACCENT_OVERRIDES: Record<string, string> = {
 export function DemoPreview({ design }: { design: ShowroomDesign }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const [near, setNear] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [scale, setScale] = useState(0);
   const Demo = isShowroomSlug(design.slug) ? showroomDemos[design.slug] : undefined;
   const { background, surface, text, accent } = design.palette;
@@ -28,14 +30,14 @@ export function DemoPreview({ design }: { design: ShowroomDesign }) {
     if (!el) return;
     if (typeof IntersectionObserver === "undefined") {
       setNear(true);
+      setVisible(true);
       return;
     }
     const io = new IntersectionObserver(
       (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setNear(true);
-          io.disconnect();
-        }
+        const onScreen = entries.some((e) => e.isIntersecting);
+        setVisible(onScreen);
+        if (onScreen) setNear(true);
       },
       { rootMargin: "300px" },
     );
@@ -105,19 +107,21 @@ export function DemoPreview({ design }: { design: ShowroomDesign }) {
             ))}
           </div>
         </div>
-        {Demo && near && scale > 0 && (
-          <div className="absolute inset-0 overflow-hidden" inert>
-            <div
-              style={{
-                width: STAGE_W,
-                height: STAGE_H,
-                transform: `scale(${scale})`,
-                transformOrigin: "top left",
-              }}
-            >
-              <Demo design={design} />
+        {Demo && near && visible && scale > 0 && (
+          <DemoLoadBoundary title={design.title}>
+            <div className="absolute inset-0 overflow-hidden" inert>
+              <div
+                style={{
+                  width: STAGE_W,
+                  height: STAGE_H,
+                  transform: `scale(${scale})`,
+                  transformOrigin: "top left",
+                }}
+              >
+                <Demo design={design} />
+              </div>
             </div>
-          </div>
+          </DemoLoadBoundary>
         )}
       </div>
     </div>

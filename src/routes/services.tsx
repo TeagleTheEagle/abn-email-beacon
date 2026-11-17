@@ -11,7 +11,6 @@ import { site } from "@/content/site";
 import { seo } from "@/lib/seo";
 import { EstimateCalculator } from "@/components/EstimateCalculator";
 import templatesStore from "@/assets/work-templates.jpg";
-import { MobileStickyActions } from "@/components/MobileStickyActions";
 
 export const Route = createFileRoute("/services")({
   head: () =>
@@ -119,8 +118,8 @@ function Services() {
           days, and you own the finished site, domain and accounts.
         </p>
         <p>
-          Digital templates in our shop are instant digital downloads: no change-of-mind refunds
-          once downloaded, with faulty or not-as-described files replaced or refunded within 30 days
+          Digital templates in our shop are delivered electronically: no change-of-mind refunds once
+          downloaded, with faulty or not-as-described files replaced or refunded within 30 days
           (Australian Consumer Law rights unaffected).
         </p>
         <p>
@@ -128,7 +127,6 @@ function Services() {
           Australia online.
         </p>
       </Reveal>
-      <MobileStickyActions />
     </>
   );
 }

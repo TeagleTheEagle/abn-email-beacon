@@ -37,6 +37,11 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
+import {
+  changePasswordWithVerification,
+  isGoogleOnlyUser,
+  sendPasswordSetupLink,
+} from "@/lib/account-security";
 
 const profileSchema = z.object({
   full_name: z
@@ -114,6 +119,7 @@ function PasswordField({
       <div className="relative mt-1.5">
         <Input
           id={name}
+          name={name}
           type={type}
           className="field pr-12"
           autoComplete={name.includes("current") ? "current-password" : "new-password"}
@@ -182,6 +188,7 @@ function AccountRouteComponent() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | undefined>();
+  const [signOutError, setSignOutError] = useState<string | undefined>();
 
   const profileForm = useForm<ProfileForm>({
     resolver: zodResolver(profileSchema),
@@ -201,52 +208,105 @@ function AccountRouteComponent() {
     },
   });
 
+  useEffect(() => {
+    profileForm.reset({
+      full_name: profile?.full_name || "",
+      business_name: profile?.business_name || "",
+      phone: profile?.phone || "",
+    });
+  }, [profile, user?.id, profileForm]);
+
   const handleProfileSave = async (data: ProfileForm) => {
     if (!user) return;
     setIsSaving(true);
     setSaveError(undefined);
     setSaveSuccess(undefined);
-
-    const { error } = await supabase
-      .from("profiles")
-      .update({
-        full_name: data.full_name || null,
-        business_name: data.business_name || null,
-        phone: data.phone || null,
-      })
-      .eq("id", user.id);
-
-    if (error) {
-      setSaveError(error.message);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          full_name: data.full_name || null,
+          business_name: data.business_name || null,
+          phone: data.phone || null,
+        })
+        .eq("id", user.id);
+      if (error) {
+        setSaveError(error.message);
+        return;
+      }
+      const refreshed = await refreshProfile();
+      if (refreshed.error) {
+        setSaveError(
+          "Profile was saved, but the latest details could not be loaded. Refresh the page.",
+        );
+        return;
+      }
+      setSaveSuccess("Profile updated successfully");
+      setTimeout(() => setSaveSuccess(undefined), 3000);
+    } catch {
+      setSaveError("Could not update your profile. Please try again.");
+    } finally {
       setIsSaving(false);
-      return;
     }
-
-    await refreshProfile();
-    setSaveSuccess("Profile updated successfully");
-    setIsSaving(false);
-    setTimeout(() => setSaveSuccess(undefined), 3000);
   };
 
   const handlePasswordChange = async (data: PasswordForm) => {
     setIsChangingPassword(true);
     setPasswordError(undefined);
     setPasswordSuccess(undefined);
-
-    const { error } = await supabase.auth.updateUser({
-      password: data.newPassword,
-    });
-
-    if (error) {
-      setPasswordError(error.message);
+    try {
+      if (!user?.email) {
+        setPasswordError("Your session has expired. Please sign in again.");
+        return;
+      }
+      const result = await changePasswordWithVerification(
+        supabase.auth,
+        user.email,
+        data.currentPassword,
+        data.newPassword,
+        user.id,
+      );
+      if (!result.success) {
+        setPasswordError(result.error);
+        return;
+      }
+      setPasswordSuccess("Password changed successfully");
+      passwordForm.reset();
+      setTimeout(() => setPasswordSuccess(undefined), 3000);
+    } finally {
       setIsChangingPassword(false);
+    }
+  };
+
+  const handlePasswordSetup = async () => {
+    if (!user?.email) {
+      setPasswordError("Your session has expired. Please sign in again.");
       return;
     }
+    setIsChangingPassword(true);
+    setPasswordError(undefined);
+    setPasswordSuccess(undefined);
+    try {
+      const result = await sendPasswordSetupLink(
+        supabase.auth,
+        user.email,
+        `${window.location.origin}/reset-password`,
+      );
+      if (result.success) setPasswordSuccess("Check your email for a secure password setup link.");
+      else setPasswordError(result.error);
+    } finally {
+      setIsChangingPassword(false);
+    }
+  };
 
-    setPasswordSuccess("Password changed successfully");
-    passwordForm.reset();
-    setIsChangingPassword(false);
-    setTimeout(() => setPasswordSuccess(undefined), 3000);
+  const handleSignOutEverywhere = async () => {
+    setSignOutError(undefined);
+    const result = await signOut("global");
+    if (result.error) {
+      setSignOutError(`Could not sign out everywhere: ${result.error}`);
+      return;
+    }
+    navigate({ to: "/" });
   };
 
   const handleDeleteAccount = async () => {
@@ -284,7 +344,7 @@ function AccountRouteComponent() {
       return;
     }
 
-    await signOut();
+    await signOut("local", true);
     navigate({ to: "/" });
   };
 
@@ -309,6 +369,7 @@ function AccountRouteComponent() {
   }
 
   const displayName = profile?.full_name || profile?.business_name || user.email || "Account";
+  const googleOnly = isGoogleOnlyUser(user);
 
   return (
     <div className="min-h-screen bg-background">
@@ -319,9 +380,14 @@ function AccountRouteComponent() {
               <h1 className="font-display text-2xl font-bold text-foreground">Client Portal</h1>
               <p className="mt-1 text-muted-foreground">Manage your account and projects</p>
             </div>
-            <Link to="/" className="btn-chrome text-sm">
-              Back to site
-            </Link>
+            <div className="flex flex-wrap gap-2">
+              <Link to="/enquiries" className="btn-chrome text-sm">
+                Enquiry pipeline
+              </Link>
+              <Link to="/" className="btn-chrome text-sm">
+                Back to site
+              </Link>
+            </div>
           </div>
         </div>
       </header>
@@ -465,71 +531,95 @@ function AccountRouteComponent() {
               <CardHeader>
                 <CardTitle>Change password</CardTitle>
                 <CardDescription>
-                  Your current password is required to set a new one
+                  {googleOnly
+                    ? "This account currently uses Google sign-in"
+                    : "Your current password is required to set a new one"}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <FormError message={passwordError} />
                 <FormSuccess message={passwordSuccess} />
-                <form
-                  onSubmit={passwordForm.handleSubmit(handlePasswordChange)}
-                  className="space-y-4"
-                >
-                  <PasswordField
-                    label="Current password"
-                    type={showCurrentPassword ? "text" : "password"}
-                    onToggle={() => setShowCurrentPassword(!showCurrentPassword)}
-                    showPassword={showCurrentPassword}
-                    {...passwordForm.register("currentPassword")}
-                    disabled={isChangingPassword}
-                  />
-                  {passwordForm.formState.errors.currentPassword && (
-                    <p className="mt-1 text-sm text-destructive" role="alert">
-                      {passwordForm.formState.errors.currentPassword.message}
+                {googleOnly ? (
+                  <div className="space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                      You do not need to enter a current password. We can email you a secure link to
+                      create one for this account.
                     </p>
-                  )}
-                  <PasswordField
-                    label="New password"
-                    type={showNewPassword ? "text" : "password"}
-                    onToggle={() => setShowNewPassword(!showNewPassword)}
-                    showPassword={showNewPassword}
-                    {...passwordForm.register("newPassword")}
-                    disabled={isChangingPassword}
-                  />
-                  {passwordForm.formState.errors.newPassword && (
-                    <p className="mt-1 text-sm text-destructive" role="alert">
-                      {passwordForm.formState.errors.newPassword.message}
-                    </p>
-                  )}
-                  <PasswordField
-                    label="Confirm new password"
-                    type={showConfirmPassword ? "text" : "password"}
-                    onToggle={() => setShowConfirmPassword(!showConfirmPassword)}
-                    showPassword={showConfirmPassword}
-                    {...passwordForm.register("confirmPassword")}
-                    disabled={isChangingPassword}
-                  />
-                  {passwordForm.formState.errors.confirmPassword && (
-                    <p className="mt-1 text-sm text-destructive" role="alert">
-                      {passwordForm.formState.errors.confirmPassword.message}
-                    </p>
-                  )}
-                  <div className="pt-4 border-t border-border flex justify-end">
-                    <Button type="submit" className="btn-primary" disabled={isChangingPassword}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handlePasswordSetup}
+                      disabled={isChangingPassword}
+                    >
                       {isChangingPassword ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
-                          Changing…
-                        </>
+                        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                       ) : (
-                        <>
-                          <Key className="mr-2 h-4 w-4" aria-hidden="true" />
-                          Change password
-                        </>
+                        <Mail className="h-4 w-4" aria-hidden="true" />
                       )}
+                      Email me a password setup link
                     </Button>
                   </div>
-                </form>
+                ) : (
+                  <form
+                    onSubmit={passwordForm.handleSubmit(handlePasswordChange)}
+                    className="space-y-4"
+                  >
+                    <PasswordField
+                      label="Current password"
+                      type={showCurrentPassword ? "text" : "password"}
+                      onToggle={() => setShowCurrentPassword(!showCurrentPassword)}
+                      showPassword={showCurrentPassword}
+                      {...passwordForm.register("currentPassword")}
+                      disabled={isChangingPassword}
+                    />
+                    {passwordForm.formState.errors.currentPassword && (
+                      <p className="mt-1 text-sm text-destructive" role="alert">
+                        {passwordForm.formState.errors.currentPassword.message}
+                      </p>
+                    )}
+                    <PasswordField
+                      label="New password"
+                      type={showNewPassword ? "text" : "password"}
+                      onToggle={() => setShowNewPassword(!showNewPassword)}
+                      showPassword={showNewPassword}
+                      {...passwordForm.register("newPassword")}
+                      disabled={isChangingPassword}
+                    />
+                    {passwordForm.formState.errors.newPassword && (
+                      <p className="mt-1 text-sm text-destructive" role="alert">
+                        {passwordForm.formState.errors.newPassword.message}
+                      </p>
+                    )}
+                    <PasswordField
+                      label="Confirm new password"
+                      type={showConfirmPassword ? "text" : "password"}
+                      onToggle={() => setShowConfirmPassword(!showConfirmPassword)}
+                      showPassword={showConfirmPassword}
+                      {...passwordForm.register("confirmPassword")}
+                      disabled={isChangingPassword}
+                    />
+                    {passwordForm.formState.errors.confirmPassword && (
+                      <p className="mt-1 text-sm text-destructive" role="alert">
+                        {passwordForm.formState.errors.confirmPassword.message}
+                      </p>
+                    )}
+                    <div className="pt-4 border-t border-border flex justify-end">
+                      <Button type="submit" className="btn-primary" disabled={isChangingPassword}>
+                        {isChangingPassword ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                            Changing…
+                          </>
+                        ) : (
+                          <>
+                            <Key className="mr-2 h-4 w-4" aria-hidden="true" />
+                            Change password
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                )}
               </CardContent>
             </Card>
 
@@ -540,13 +630,13 @@ function AccountRouteComponent() {
                   Delete account
                 </CardTitle>
                 <CardDescription>
-                  Permanently delete your account and all associated data
+                  Permanently delete your sign-in and private profile
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-4">
-                  This action is irreversible. All your profile data, project history, and access
-                  will be permanently removed.
+                  This action is irreversible. Your sign-in and profile will be removed. Enquiries
+                  and order records are separate and are not deleted automatically.
                 </p>
                 <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
                   <DialogTrigger asChild>
@@ -563,8 +653,8 @@ function AccountRouteComponent() {
                     <DialogHeader>
                       <DialogTitle>Delete account?</DialogTitle>
                       <DialogDescription>
-                        This will permanently delete your account and all associated data. This
-                        action cannot be undone.
+                        This deletes your sign-in and private profile, not separate enquiry or order
+                        records. This action cannot be undone.
                       </DialogDescription>
                     </DialogHeader>
                     <FormError message={deleteError} />
@@ -614,8 +704,8 @@ function AccountRouteComponent() {
                     Delete account
                   </h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Permanently delete your account and all associated data. This action cannot be
-                    undone.
+                    Permanently delete your sign-in and private profile. Separate enquiries and
+                    order records are not deleted automatically. This action cannot be undone.
                   </p>
                   <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
                     <DialogTrigger asChild>
@@ -628,8 +718,8 @@ function AccountRouteComponent() {
                       <DialogHeader>
                         <DialogTitle>Delete account?</DialogTitle>
                         <DialogDescription>
-                          This will permanently delete your account and all associated data. This
-                          action cannot be undone.
+                          This deletes your sign-in and private profile, not separate enquiry or
+                          order records. This action cannot be undone.
                         </DialogDescription>
                       </DialogHeader>
                       <FormError message={deleteError} />
@@ -670,15 +760,8 @@ function AccountRouteComponent() {
                     Sign out of all devices and invalidate all sessions. You'll need to sign in
                     again on each device.
                   </p>
-                  <Button
-                    variant="outline"
-                    onClick={async () => {
-                      await supabase.auth.signOut({ scope: "global" });
-                      await signOut();
-                      navigate({ to: "/" });
-                    }}
-                    disabled={isDeleting}
-                  >
+                  <FormError message={signOutError} />
+                  <Button variant="outline" onClick={handleSignOutEverywhere} disabled={isDeleting}>
                     Sign out everywhere
                   </Button>
                 </div>

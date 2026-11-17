@@ -43,7 +43,6 @@ import {
 } from "@/lib/shopify";
 import templatesStore from "@/assets/work-templates.jpg";
 import { PreviewConfigurator } from "@/components/PreviewConfigurator";
-import { MobileStickyActions } from "@/components/MobileStickyActions";
 
 // The product given the oversized showcase. Falls back to whatever Shopify lists first.
 const FEATURED_HANDLE = "48-hour-website-speed-conversion-audit";
@@ -148,7 +147,7 @@ function Home() {
               Australian businesses of every size — with a free preview before you pay.
             </p>
             <div className="mt-7 max-w-md">
-              <QuickLeadForm />
+              <QuickLeadForm source="Homepage quick form" />
             </div>
             <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
               <span className="inline-flex items-center gap-1.5">
@@ -450,7 +449,6 @@ function Home() {
         </div>
       </Section>
       <CtaBand />
-      <MobileStickyActions />
     </>
   );
 }

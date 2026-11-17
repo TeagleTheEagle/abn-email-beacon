@@ -3,6 +3,7 @@ import { Loader2, Plus } from "lucide-react";
 import { useState } from "react";
 import { deliveryLabel, formatPrice, type ShopifyProduct, shopifyImage } from "@/lib/shopify";
 import { cartItemFromVariant, useCartStore } from "@/stores/cartStore";
+import { track } from "@/lib/analytics";
 
 // `priority` is for the first card on /shop: it's the largest image on screen, so load it first.
 export function ProductCard({
@@ -15,6 +16,7 @@ export function ProductCard({
   const addItem = useCartStore((state) => state.addItem);
   const isLoading = useCartStore((state) => state.isLoading);
   const [justAdded, setJustAdded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const node = product.node;
   const image = node.images.edges[0]?.node;
@@ -24,8 +26,19 @@ export function ProductCard({
   const outOfStock = !firstAvailable?.availableForSale;
 
   const handleAddToCart = async () => {
-    if (!firstAvailable) return;
-    await addItem(cartItemFromVariant(node, firstAvailable));
+    if (!firstAvailable || isLoading) return;
+    setError(null);
+    setJustAdded(false);
+    const result = await addItem(cartItemFromVariant(node, firstAvailable));
+    if (!result.success) {
+      setError(result.error);
+      return;
+    }
+    track("add_to_cart", {
+      currency: firstAvailable.price.currencyCode,
+      value: Number(firstAvailable.price.amount),
+      items: [{ item_name: node.title, price: Number(firstAvailable.price.amount), quantity: 1 }],
+    });
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 1500);
   };
@@ -90,6 +103,11 @@ export function ProductCard({
             )}
           </button>
         </div>
+        {error && (
+          <p role="alert" className="text-xs text-destructive">
+            {error}
+          </p>
+        )}
       </div>
     </div>
   );

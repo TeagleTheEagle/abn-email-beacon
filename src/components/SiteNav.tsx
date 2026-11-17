@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { nav } from "@/content/site";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 export function SiteNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -35,6 +36,10 @@ export function SiteNav() {
   }, []);
 
   const displayName = profile?.full_name || profile?.business_name || user?.email || "Account";
+  const handleSignOut = async () => {
+    const result = await signOut();
+    if (result.error) toast.error("Could not sign out", { description: result.error });
+  };
 
   return (
     <header
@@ -104,9 +109,7 @@ export function SiteNav() {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onClick={async () => {
-                      await signOut();
-                    }}
+                    onClick={handleSignOut}
                     className="flex items-center gap-2 text-destructive"
                   >
                     <LogOut className="h-4 w-4" aria-hidden="true" />
@@ -139,9 +142,7 @@ export function SiteNav() {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onClick={async () => {
-                      await signOut();
-                    }}
+                    onClick={handleSignOut}
                     className="flex items-center gap-2 text-destructive"
                   >
                     <LogOut className="h-4 w-4" aria-hidden="true" />
@@ -197,7 +198,7 @@ export function SiteNav() {
                     <button
                       onClick={async () => {
                         setOpen(false);
-                        await signOut();
+                        await handleSignOut();
                       }}
                       className="btn-primary mt-2 text-destructive bg-destructive border-destructive hover:bg-destructive/90"
                     >

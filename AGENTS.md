@@ -15,3 +15,4 @@
 - Use the global sans heading style for readable content; reserve font-display for branding, and keep theme colours in src/styles.css.
 - The guided Services preview builder shares the estimate calculator and service prices; all enquiry submissions use the existing lead flow to avoid duplicate pricing or delivery logic.
 - Keep patched transitive dependency overrides until upstream packages adopt compatible fixed releases; this prevents known vulnerable versions returning during installs.
+- These repository instructions are self-contained. There is no `RTK.md` dependency in this project; do not follow stale external references to one.

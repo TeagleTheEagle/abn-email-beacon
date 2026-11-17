@@ -206,6 +206,7 @@ function InstantConcept({
             {selection} · {demo.name}. Tell us where to send your personalised preview.
           </p>
           <QuickLeadForm
+            source="Preview configurator"
             submitText="Send my custom preview request"
             successText="Thanks! Ben will be in touch within 1–2 business days."
             message={`Instant preview configurator: ${selection} · ${demo.name}`}

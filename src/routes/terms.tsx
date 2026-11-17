@@ -62,8 +62,8 @@ function Terms() {
         <section>
           <h2>Digital templates and downloads</h2>
           <p className="mt-3">
-            Because templates are instant digital downloads, we don't offer refunds for change of
-            mind. If a file is faulty, won't open, or isn't as described, email us at{" "}
+            Because templates are digital downloads, we don't offer refunds for change of mind. If a
+            file is faulty, won't open, or isn't as described, email us at{" "}
             <a className="text-primary-soft" href={`mailto:${site.email}`}>
               {site.email}
             </a>{" "}

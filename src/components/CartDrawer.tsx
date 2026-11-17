@@ -23,6 +23,7 @@ import { track } from "@/lib/analytics";
 export function CartDrawer() {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { items, isLoading, isSyncing, updateQuantity, removeItem, getCheckoutUrl, syncCart } =
     useCartStore();
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -37,24 +38,36 @@ export function CartDrawer() {
 
   // Sync cart with Shopify when drawer opens (catches edge cases)
   useEffect(() => {
-    if (isOpen) syncCart();
+    if (!isOpen) return;
+    setError(null);
+    void syncCart().then((result) => {
+      if (!result.success) setError(result.error);
+    });
   }, [isOpen, syncCart]);
+
+  const reportResult = (result: { success: boolean; error?: string }) => {
+    if (!result.success)
+      setError(result.error ?? "The cart could not be updated. Please try again.");
+  };
 
   const handleCheckout = () => {
     const checkoutUrl = getCheckoutUrl();
-    if (checkoutUrl) {
-      track("begin_checkout", {
-        currency,
-        value: Number(totalPrice.toFixed(2)),
-        items: items.map((i) => ({
-          item_name: i.product.node.title,
-          price: Number(i.price.amount),
-          quantity: i.quantity,
-        })),
-      });
-      window.open(checkoutUrl, "_blank");
-      setIsOpen(false);
+    if (!checkoutUrl) {
+      setError("Checkout is unavailable until your cart has been refreshed. Please try again.");
+      return;
     }
+    setError(null);
+    track("begin_checkout", {
+      currency,
+      value: Number(totalPrice.toFixed(2)),
+      items: items.map((i) => ({
+        item_name: i.product.node.title,
+        price: Number(i.price.amount),
+        quantity: i.quantity,
+      })),
+    });
+    window.open(checkoutUrl, "_blank", "noopener,noreferrer");
+    setIsOpen(false);
   };
 
   return (
@@ -83,6 +96,11 @@ export function CartDrawer() {
               : `${totalItems} item${totalItems !== 1 ? "s" : ""} in your cart.`}
           </SheetDescription>
         </SheetHeader>
+        {error && (
+          <p role="alert" className="mt-3 text-sm text-destructive">
+            {error}
+          </p>
+        )}
         <div className="flex min-h-0 flex-1 flex-col pt-4">
           {items.length === 0 ? (
             <div className="flex flex-1 items-center justify-center">
@@ -126,16 +144,24 @@ export function CartDrawer() {
                       <div className="flex shrink-0 flex-col items-end gap-2">
                         <button
                           className="text-muted-foreground transition-colors hover:text-foreground"
-                          onClick={() => removeItem(item.variantId)}
-                          aria-label="Remove item"
+                          disabled={isLoading || isSyncing}
+                          onClick={async () => {
+                            setError(null);
+                            reportResult(await removeItem(item.variantId));
+                          }}
+                          aria-label={`Remove ${item.product.node.title}`}
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>
                         <div className="flex items-center gap-1">
                           <button
                             className="flex h-6 w-6 items-center justify-center rounded-full border border-border text-foreground"
-                            onClick={() => updateQuantity(item.variantId, item.quantity - 1)}
-                            aria-label="Decrease quantity"
+                            disabled={isLoading || isSyncing}
+                            onClick={async () => {
+                              setError(null);
+                              reportResult(await updateQuantity(item.variantId, item.quantity - 1));
+                            }}
+                            aria-label={`Decrease ${item.product.node.title} quantity`}
                           >
                             <Minus className="h-3 w-3" />
                           </button>
@@ -144,8 +170,12 @@ export function CartDrawer() {
                           </span>
                           <button
                             className="flex h-6 w-6 items-center justify-center rounded-full border border-border text-foreground"
-                            onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
-                            aria-label="Increase quantity"
+                            disabled={isLoading || isSyncing}
+                            onClick={async () => {
+                              setError(null);
+                              reportResult(await updateQuantity(item.variantId, item.quantity + 1));
+                            }}
+                            aria-label={`Increase ${item.product.node.title} quantity`}
                           >
                             <Plus className="h-3 w-3" />
                           </button>

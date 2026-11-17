@@ -36,7 +36,7 @@ describe("product details", () => {
       "Delivered within 48 hours",
     );
     expect(deliveryLabel({ handle: "tradie-website-starter-kit", details: [] })).toBe(
-      "Instant download",
+      "Digital delivery",
     );
   });
 });

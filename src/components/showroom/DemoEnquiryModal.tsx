@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Field } from "@/components/FormField";
 import { supabase } from "@/integrations/supabase/client";
-import { newLeadId, notifyLead } from "@/lib/leads";
+import { newLeadId, notifyLead, insertLead } from "@/lib/leads";
 import { track } from "@/lib/analytics";
 import type { ShowroomDesign } from "@/content/showroom";
 
@@ -75,17 +75,21 @@ export function DemoEnquiryModal({
     setErr(null);
     const id = newLeadId();
     const chosen = `Showroom design${designs.length > 1 ? "s" : ""}: ${designs.map(designName).join(", ")}`;
-    const { error } = await supabase.from("leads").insert({
-      id,
-      name: v.name,
-      business_name: v.business_name,
-      email: v.email,
-      phone: v.phone || null,
-      needs: designs.some((d) => d.category === "ecommerce")
-        ? ["Website", "Online store"]
-        : ["Website"],
-      message: v.message ? `${v.message}\n\n${chosen}` : chosen,
-    });
+    const { error } = await insertLead(
+      supabase,
+      {
+        id,
+        name: v.name,
+        business_name: v.business_name,
+        email: v.email,
+        phone: v.phone || null,
+        needs: designs.some((d) => d.category === "ecommerce")
+          ? ["Website", "Online store"]
+          : ["Website"],
+        message: v.message ? `${v.message}\n\n${chosen}` : chosen,
+      },
+      "Showroom",
+    );
     if (error) {
       setErr("Sorry, something went wrong. Please try again or email us directly.");
       return;

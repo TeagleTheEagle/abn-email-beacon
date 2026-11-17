@@ -1,9 +1,10 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { ArrowLeft, Check, Loader2, Shield, Download, Award, RefreshCw } from "lucide-react";
+import { ArrowLeft, Check, Loader2, Shield, Download, Award } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { ProductSpecs } from "@/components/ProductSpecs";
+import { ProductPreview } from "@/components/ProductPreview";
 import {
   deliveryLabel,
   formatPrice,
@@ -42,7 +43,7 @@ export const Route = createFileRoute("/product/$handle")({
     const title = product?.title ?? "Product";
     const description =
       product?.description?.slice(0, 155) ||
-      "Instant-download templates and digital products from Teague Industries.";
+      "Digital products and services from Teague Industries.";
     const base = seo(path, title, description);
     const image = product?.images.edges[0]?.node.url;
     if (image && image.startsWith("https://")) {
@@ -98,6 +99,7 @@ function ProductPage() {
   const addItem = useCartStore((state) => state.addItem);
   const isLoading = useCartStore((state) => state.isLoading);
   const [justAdded, setJustAdded] = useState(false);
+  const [cartError, setCartError] = useState<string | null>(null);
   const [activeImage, setActiveImage] = useState(0);
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
 
@@ -114,8 +116,14 @@ function ProductPage() {
   const outOfStock = !selectedVariant?.availableForSale;
 
   const handleAddToCart = async () => {
-    if (!selectedVariant) return;
-    await addItem(cartItemFromVariant(product, selectedVariant));
+    if (!selectedVariant || isLoading) return;
+    setCartError(null);
+    setJustAdded(false);
+    const result = await addItem(cartItemFromVariant(product, selectedVariant));
+    if (!result.success) {
+      setCartError(result.error);
+      return;
+    }
     track("add_to_cart", {
       currency: selectedVariant.price.currencyCode,
       value: Number(selectedVariant.price.amount),
@@ -254,13 +262,23 @@ function ProductPage() {
                 "Add to cart"
               )}
             </button>
-            <ConversionBadges />
-            <PeekInsidePreview details={productDetails(product)} />
+            {cartError && (
+              <p role="alert" className="mt-3 text-sm text-destructive">
+                {cartError}
+              </p>
+            )}
+            <ConversionBadges product={product} />
+            <PeekInsidePreview
+              details={{ ...productDetails(product), delivery: deliveryLabel(product) }}
+            />
             <p className="mt-3 text-xs text-muted-foreground">
               {deliveryLabel(product)}. Secure checkout through our store platform.
             </p>
 
-            <ProductSpecs details={productDetails(product)} />
+            <ProductSpecs
+              details={{ ...productDetails(product), delivery: deliveryLabel(product) }}
+            />
+            <ProductPreview handle={product.handle} />
 
             {product.descriptionHtml ? (
               <div
@@ -282,13 +300,14 @@ function ProductPage() {
   );
 }
 
-function ConversionBadges() {
+function ConversionBadges({ product }: { product: ShopifyProduct["node"] }) {
+  const delivery = deliveryLabel(product);
+  const instantDownload = /instant download/i.test(delivery);
   return (
-    <div className="mt-4 flex flex-wrap gap-2" role="list" aria-label="Trust badges">
-      <TrustBadge icon={Shield} text="Instant digital download" />
+    <div className="mt-4 flex flex-wrap gap-2" role="list" aria-label="Purchase information">
+      <TrustBadge icon={Shield} text={delivery} />
       <TrustBadge icon={Award} text="Built for Australian businesses" />
-      <TrustBadge icon={RefreshCw} text="Free lifetime file updates" />
-      <TrustBadge icon={Download} text="30-day faulty file replacement" />
+      {instantDownload && <TrustBadge icon={Download} text="30-day faulty-file support" />}
     </div>
   );
 }
@@ -335,8 +354,8 @@ function PeekInsidePreview({ details }: { details: ReturnType<typeof productDeta
         )}
       </div>
       <p className="mt-4 text-xs text-muted-foreground">
-        This is a sample preview based on the product's metafields. The full content is delivered
-        instantly after purchase.
+        This list summarises the product details. It is not a sample of the paid files.{" "}
+        {details.delivery}.
       </p>
     </section>
   );

@@ -5,33 +5,14 @@ import { addOns, carePlans, services } from "@/content/services";
 import { showroomDesigns } from "@/content/showroom";
 const normaliseStoreCopy = (s: string) => s;
 import { generateJarvisReply } from "@/components/JarvisAssistant";
+import {
+  isAllowedRequestOrigin,
+  parseJarvisRequest,
+  readBoundedJson,
+} from "@/lib/request-security";
+import { checkJarvisRateLimit } from "@/lib/rate-limit";
 
 const MODELS = ["gemini-3.5-flash-lite", "gemini-3.8-flash", "gemini-3.1-flash-lite"] as const;
-
-// Simple in-memory per-IP rate limiter (max 20 requests per 60s window) to protect the API key.
-const RATE_WINDOW_MS = 60_000;
-const MAX_REQUESTS_PER_WINDOW = 20;
-const ipHits = new Map<string, number[]>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const recent = (ipHits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
-  if (recent.length >= MAX_REQUESTS_PER_WINDOW) {
-    ipHits.set(ip, recent);
-    return true;
-  }
-  recent.push(now);
-  ipHits.set(ip, recent);
-  return false;
-}
-
-function isAllowedOrigin(request: Request): boolean {
-  const origin = request.headers.get("origin") ?? request.headers.get("referer") ?? "";
-  if (!origin) return true;
-  return /localhost|127\.0\.0\.1|teagueindustries\.com\.au|lovable\.app|lovable\.dev|lovableproject\.com/i.test(
-    origin,
-  );
-}
 
 // --- Zero-Key Public APIs (from github.com/public-apis/public-apis) ---
 // 1. Open-Meteo (No key required): Live Sydney / Lower North Shore weather
@@ -184,61 +165,33 @@ function buildSystemInstruction(liveContext: string[]): string {
   ].join("\n");
 }
 
-type HistoryTurn = {
-  sender: "user" | "jarvis";
-  text: string;
-};
-
-type JarvisRequestBody = {
-  message?: string;
-  history?: HistoryTurn[];
-  cartCount?: number;
-  checkoutUrl?: string | null;
-};
-
 export const Route = createFileRoute("/api/jarvis")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        if (!isAllowedOrigin(request)) {
+        if (!isAllowedRequestOrigin(request))
           return Response.json({ error: "Forbidden origin" }, { status: 403 });
-        }
 
-        const ip =
-          request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-          request.headers.get("cf-connecting-ip") ||
-          "local";
-        if (isRateLimited(ip)) {
+        const json = await readBoundedJson(request, 16_384);
+        if (!json.ok) return Response.json({ error: json.error }, { status: json.status });
+        const parsed = parseJarvisRequest(json.value);
+        if (!parsed.ok) return Response.json({ error: parsed.error }, { status: 400 });
+        const { message: rawMessage, history, cartCount, checkoutUrl } = parsed.value;
+
+        const rateLimit = await checkJarvisRateLimit(request);
+        if (rateLimit.unavailable)
+          return Response.json({ error: "Assistant temporarily unavailable" }, { status: 503 });
+        if (!rateLimit.allowed)
           return Response.json(
             { error: "Rate limit exceeded. Please wait a moment." },
             { status: 429 },
           );
-        }
-
-        let body: JarvisRequestBody;
-        try {
-          body = (await request.json()) as JarvisRequestBody;
-        } catch {
-          return Response.json({ error: "Invalid JSON body" }, { status: 400 });
-        }
-
-        const rawMessage =
-          typeof body.message === "string" ? body.message.trim().slice(0, 800) : "";
-        if (!rawMessage) {
-          return Response.json({ error: "Message is required" }, { status: 400 });
-        }
-
-        const cartCount = typeof body.cartCount === "number" ? body.cartCount : 0;
-        const checkoutUrl = typeof body.checkoutUrl === "string" ? body.checkoutUrl : null;
 
         // Compute context-aware action buttons using our deterministic matcher
         const localFallback = generateJarvisReply(rawMessage, cartCount, checkoutUrl);
         const liveContext = await gatherPublicApiContext(rawMessage);
 
         const apiKey = process.env["GEMINI_API_KEY"] || process.env["GOOGLE_API_KEY"];
-        if (process.env["GEMINI_API_KEY"] && process.env["GOOGLE_API_KEY"]) {
-          delete process.env["GOOGLE_API_KEY"];
-        }
         if (!apiKey) {
           const enrichedText =
             liveContext.length > 0
@@ -252,7 +205,6 @@ export const Route = createFileRoute("/api/jarvis")({
           });
         }
 
-        const history = Array.isArray(body.history) ? body.history.slice(-8) : [];
         const transcript = history
           .map(
             (turn) =>
@@ -267,15 +219,21 @@ export const Route = createFileRoute("/api/jarvis")({
         const ai = new GoogleGenAI({ apiKey });
         const systemInstruction = buildSystemInstruction(liveContext);
 
-        for (const model of MODELS) {
+        // One model attempt and no automatic continuation prevent a single click turning into
+        // several billable provider calls. The deterministic local reply remains the fallback.
+        for (const model of MODELS.slice(0, 1)) {
           try {
-            const interaction = await ai.interactions.create({
-              model,
-              input: promptInput,
-              system_instruction: systemInstruction,
-              store: false,
-            });
-            const output = interaction.output_text?.trim();
+            const interaction = await ai.interactions.create(
+              {
+                model,
+                input: promptInput,
+                system_instruction: systemInstruction,
+                store: false,
+                automatic_continuation: false,
+              },
+              { timeout_ms: 15_000 },
+            );
+            const output = interaction.output_text?.trim().slice(0, 4000);
             if (output) {
               const cleaned = normaliseStoreCopy(output)
                 .replace(/\bsmall businesses\b/gi, "Australian businesses")
@@ -290,7 +248,10 @@ export const Route = createFileRoute("/api/jarvis")({
               });
             }
           } catch (err) {
-            console.warn(`[JARVIS] Model ${model} failed, trying next fallback:`, err);
+            // Provider errors can contain request context. Log only the failure category, not chat text.
+            console.warn(
+              `[JARVIS] AI request failed (${err instanceof Error ? err.name : "unknown error"}); using local fallback`,
+            );
           }
         }
 

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -12,14 +12,15 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { newLeadId, notifyLead } from "@/lib/leads";
+import { newLeadId, notifyLead, insertLead } from "@/lib/leads";
 import { track } from "@/lib/analytics";
-import { faqs, site, steps } from "@/content/site";
+import { faqs, site, steps, bookingActionLabel } from "@/content/site";
 import { addOns, carePlans, services } from "@/content/services";
 import { demos, type DemoKind } from "@/content/demos";
 import { showroomDesigns, type ShowroomSlug } from "@/content/showroom";
 import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
+import { JARVIS_OPEN_EVENT } from "@/lib/jarvis-events";
 
 export interface JarvisAction {
   label: string;
@@ -562,7 +563,7 @@ export function generateJarvisReply(
   if (
     /book a call|call|phone|talk|speak|chat with ben|15-min|15 min|appointment|meeting/i.test(lower)
   ) {
-    const actions: JarvisAction[] = [{ label: "Book a 15-minute call", to: "/book" }];
+    const actions: JarvisAction[] = [{ label: bookingActionLabel, to: "/book" }];
     if (site.bookingUrl) {
       actions.unshift({ label: "Choose a calendar time", externalHref: site.bookingUrl });
     }
@@ -571,7 +572,9 @@ export function generateJarvisReply(
       openLeadForm: { needs: ["Call request"], note: "Requested via JARVIS chat" },
     });
     return {
-      text: `You can book a free, no-obligation 15-minute call with Ben on our Book a Call page, or email ${site.email} directly.`,
+      text: site.bookingUrl
+        ? `You can book a free, no-obligation 15-minute call with Ben on our booking page, or email ${site.email} directly.`
+        : `You can request a free, no-obligation 15-minute call with Ben on our Book a Call page. Your time is not confirmed until Ben replies. You can also email ${site.email} directly.`,
       actions,
     };
   }
@@ -813,6 +816,30 @@ export function JarvisAssistant() {
 
   const logRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const focusTimerRef = useRef<number | null>(null);
+
+  const openChat = useCallback(() => {
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    setOpen(true);
+    if (focusTimerRef.current !== null) window.clearTimeout(focusTimerRef.current);
+    focusTimerRef.current = window.setTimeout(() => inputRef.current?.focus(), 80);
+  }, []);
+  const closeChat = useCallback(() => {
+    setOpen(false);
+    const previous = previousFocusRef.current;
+    (previous?.isConnected ? previous : launcherRef.current)?.focus();
+  }, []);
+
+  useEffect(() => {
+    const onExternalOpen = () => openChat();
+    window.addEventListener(JARVIS_OPEN_EVENT, onExternalOpen);
+    return () => {
+      window.removeEventListener(JARVIS_OPEN_EVENT, onExternalOpen);
+      if (focusTimerRef.current !== null) window.clearTimeout(focusTimerRef.current);
+    };
+  }, [openChat]);
 
   useEffect(() => {
     if (open && logRef.current) {
@@ -823,12 +850,12 @@ export function JarvisAssistant() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && open) {
-        setOpen(false);
+        closeChat();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
+  }, [open, closeChat]);
 
   const handleUserPrompt = (rawText: string) => {
     const text = rawText.trim();
@@ -952,14 +979,18 @@ export function JarvisAssistant() {
     setSubmittingLead(true);
     try {
       const id = newLeadId();
-      const { error } = await supabase.from("leads").insert({
-        id,
-        name: bName,
-        business_name: bName,
-        email: mail,
-        needs: leadNeeds,
-        message: `[JARVIS Assistant on ${pathname}] ${leadNote || "Free preview request"}`.trim(),
-      });
+      const { error } = await insertLead(
+        supabase,
+        {
+          id,
+          name: bName,
+          business_name: bName,
+          email: mail,
+          needs: leadNeeds,
+          message: `[JARVIS Assistant on ${pathname}] ${leadNote || "Free preview request"}`.trim(),
+        },
+        "JARVIS assistant",
+      );
       if (error) throw new Error("Could not send request. Please try again.");
       track("generate_lead", { form: "jarvis_assistant" });
       void notifyLead(supabase, id, mail);
@@ -989,10 +1020,11 @@ export function JarvisAssistant() {
     >
       {/* Floating Holographic JARVIS Launcher Button */}
       <button
+        ref={launcherRef}
         type="button"
         onClick={() => {
-          setOpen((v) => !v);
-          if (!open) setTimeout(() => inputRef.current?.focus(), 80);
+          if (open) closeChat();
+          else openChat();
         }}
         aria-expanded={open}
         aria-controls="jarvis-command-panel"
@@ -1097,7 +1129,7 @@ export function JarvisAssistant() {
             </div>
             <button
               type="button"
-              onClick={() => setOpen(false)}
+              onClick={closeChat}
               aria-label="Close JARVIS assistant"
               className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground transition hover:border-primary hover:text-foreground"
             >

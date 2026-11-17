@@ -1,12 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-
-function isAllowedOrigin(request: Request): boolean {
-  const origin = request.headers.get("origin") ?? request.headers.get("referer") ?? "";
-  if (!origin) return true;
-  return /localhost|127\.0\.0\.1|teagueindustries\.com\.au|lovable\.app|lovable\.dev|lovableproject\.com/i.test(
-    origin,
-  );
-}
+import { isAllowedRequestOrigin } from "@/lib/request-security";
 
 // Server-side self-service account deletion. Deleting an auth.users row needs
 // the service role key, so the browser client cannot do it — the caller proves
@@ -16,7 +9,7 @@ export const Route = createFileRoute("/api/delete-account")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        if (!isAllowedOrigin(request)) {
+        if (!isAllowedRequestOrigin(request)) {
           return Response.json({ error: "Forbidden origin" }, { status: 403 });
         }
 

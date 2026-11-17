@@ -12,7 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { site } from "@/content/site";
 import { getShowroomDesign, isShowroomSlug, type ShowroomSlug } from "@/content/showroom";
 import { seo } from "@/lib/seo";
-import { newLeadId, notifyLead } from "@/lib/leads";
+import { newLeadId, notifyLead, insertLead } from "@/lib/leads";
 import { track } from "@/lib/analytics";
 
 export const Route = createFileRoute("/contact")({
@@ -93,20 +93,24 @@ function Contact() {
     }
     setErr(null);
     const id = newLeadId();
-    const { error } = await supabase.from("leads").insert({
-      id,
-      name: v.name,
-      business_name: v.business_name,
-      email: v.email,
-      phone: v.phone || null,
-      business_type: v.business_type || null,
-      needs: v.needs ?? [],
-      current_website: normaliseWebsite(v.current_website),
-      // The design line is always recorded, even if the visitor edits the message.
-      message: designLine
-        ? `${v.message ? `${v.message}\n\n` : ""}${designLine}`
-        : v.message || null,
-    });
+    const { error } = await insertLead(
+      supabase,
+      {
+        id,
+        name: v.name,
+        business_name: v.business_name,
+        email: v.email,
+        phone: v.phone || null,
+        business_type: v.business_type || null,
+        needs: v.needs ?? [],
+        current_website: normaliseWebsite(v.current_website),
+        // The design line is always recorded, even if the visitor edits the message.
+        message: designLine
+          ? `${v.message ? `${v.message}\n\n` : ""}${designLine}`
+          : v.message || null,
+      },
+      "Contact page",
+    );
     if (error) {
       setErr("Sorry, something went wrong. Please try again or email us directly.");
       return;

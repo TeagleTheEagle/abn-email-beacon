@@ -16,7 +16,7 @@ export const Route = createFileRoute("/privacy")({
 function Privacy() {
   return (
     <>
-      <PageHeader label="Legal" title="Privacy Policy" sub="Last updated 20 October 2026" />
+      <PageHeader label="Legal" title="Privacy Policy" sub="Last updated 17 November 2026" />
       <article className="mx-auto max-w-2xl space-y-8 px-6 text-muted-foreground [&_h2]:text-sm [&_h2]:text-foreground">
         <section>
           <h2>What we collect</h2>
@@ -27,7 +27,41 @@ function Privacy() {
             preferred time and anything you'd like to talk about. The quick form on the home page
             collects your business name and email. The estimate tools on the pricing and services
             pages collect your business name and email together with the business type and services
-            you selected.
+            you selected. The public assistant enquiry tool collects the same contact details needed
+            to respond.
+          </p>
+        </section>
+        <section>
+          <h2>Accounts and sign-in</h2>
+          <p className="mt-3">
+            When you create an account, Supabase stores your email address and authentication
+            details. Your private profile can contain your full name, business name and phone
+            number. If you choose Google sign-in, Google and Supabase process the account
+            information needed to authenticate you. Passwords are handled by Supabase and are not
+            included in our analytics.
+          </p>
+        </section>
+        <section>
+          <h2>Website assistant chat</h2>
+          <p className="mt-3">
+            JARVIS processes the message you enter, recent chat history and basic cart context to
+            answer you. Chat history is held in your browser only for the current page session and
+            is not saved in our enquiry database. When Google AI is configured, your message and
+            recent history are sent to Google for that response. Requests for public weather,
+            exchange-rate or reference information may also be sent to Open-Meteo, Frankfurter or
+            Wikipedia. Do not enter passwords, payment details or sensitive personal information
+            into chat.
+          </p>
+          <p className="mt-3">
+            See{" "}
+            <a className="text-primary-soft" href="https://policies.google.com/privacy">
+              Google's privacy information
+            </a>{" "}
+            and{" "}
+            <a className="text-primary-soft" href="https://supabase.com/privacy">
+              Supabase's privacy policy
+            </a>
+            . Provider retention settings are separate from this website and are not asserted here.
           </p>
         </section>
         <section>
@@ -43,18 +77,21 @@ function Privacy() {
         <section>
           <h2>Where it's stored</h2>
           <p className="mt-3">
-            Your details are stored securely with our hosting and database provider, which may store
-            data on servers outside Australia. Only Teague Industries can view your enquiry.
+            Your enquiry and account details are stored with Supabase and our hosting provider,
+            which may process data on servers outside Australia. Public visitors cannot read your
+            enquiry or profile.
           </p>
         </section>
         <section>
           <h2>Shop purchases</h2>
           <p className="mt-3">
-            Purchases in our shop are processed by our e-commerce checkout provider. At checkout,
-            the provider collects your name, email, billing details and payment information to
-            complete the order. We never see or store your full card details. The provider handles
-            this data under its own privacy policy, available at checkout, and we can see your order
-            details to provide your download and support.
+            Purchases in our shop are processed by Shopify. At checkout, Shopify collects your name,
+            email, billing details and payment information to complete the order. We never see or
+            store your full card details. Shopify handles this data under its own{" "}
+            <a className="text-primary-soft" href="https://www.shopify.com/legal/privacy">
+              privacy policy
+            </a>
+            , and we can see order details to provide the product and support.
           </p>
         </section>
         <section>
@@ -62,31 +99,41 @@ function Privacy() {
           <p className="mt-3">
             We use Google Analytics to count page visits and see which pages are popular, where
             visitors come from, what device type they use, and whether visitors send an enquiry or
-            start a purchase. Google Analytics does not collect your IP address in full and we do
-            not use it to identify you personally; the information is used in aggregate to improve
-            the site. Google's privacy policy (policies.google.com/privacy) explains how it handles
-            this data, and you can opt out with Google's browser add-on
-            (tools.google.com/dlpage/gaoptout).
+            start a purchase. We do not send names, email addresses, phone numbers, chat text or
+            enquiry messages as analytics event data. Google's privacy policy{" "}
+            <a className="text-primary-soft" href="https://policies.google.com/privacy">
+              policies.google.com/privacy
+            </a>{" "}
+            explains how it handles analytics data, and you can opt out with{" "}
+            <a className="text-primary-soft" href="https://tools.google.com/dlpage/gaoptout">
+              Google's browser add-on
+            </a>
+            .
           </p>
         </section>
         <section>
           <h2>Enquiry emails</h2>
           <p className="mt-3">
             When you send an enquiry we use an email delivery service (Resend) to notify us and to
-            send you a confirmation. It processes your name, business name, email address and
-            message for that purpose only.
+            send you a confirmation when a verified sender is configured. It processes your contact
+            details and message for that purpose only. See{" "}
+            <a className="text-primary-soft" href="https://resend.com/legal/privacy-policy">
+              Resend's privacy policy
+            </a>
+            .
           </p>
         </section>
         <section>
           <h2>Cookies and local storage</h2>
           <p className="mt-3">
-            Our site uses browser local storage to remember your shopping cart. Google Analytics
-            sets first-party cookies (named _ga and _ga_*) that last up to two years, to tell
-            returning visitors from new ones. Our hosting's analytics also uses a first-party cookie
-            called session-id to group page visits into browsing sessions; it expires after 30
-            minutes and is refreshed when analytics events are sent. Our secure checkout uses its
-            own cookies to process orders securely. You can clear cookies and site data in your
-            browser settings at any time; your cart will be emptied if you do.
+            Our site uses browser local storage to remember your shopping cart and keep your account
+            session signed in. Google Analytics sets first-party cookies (named _ga and _ga_*) that
+            last up to two years, to tell returning visitors from new ones. Our hosting's analytics
+            also uses a first-party cookie called session-id to group page visits into browsing
+            sessions; it expires after 30 minutes and is refreshed when analytics events are sent.
+            Our secure checkout uses its own cookies to process orders securely. You can clear
+            cookies and site data in your browser settings at any time; your cart will be emptied if
+            you do.
           </p>
         </section>
         <section>
@@ -97,13 +144,15 @@ function Privacy() {
           </p>
         </section>
         <section>
-          <h2>Deleting your data</h2>
+          <h2>Deleting your account and data</h2>
           <p className="mt-3">
-            Email{" "}
+            You can delete your account from Account → Danger zone, or email{" "}
             <a className="text-primary-soft" href={`mailto:${site.email}`}>
               {site.email}
-            </a>{" "}
-            and we'll delete your details.
+            </a>
+            . This removes your Supabase sign-in and private profile. Enquiries you have sent and
+            Shopify order records are separate records and are not automatically deleted with your
+            account. Contact us to request access, correction or deletion of those records.
           </p>
         </section>
         <section>

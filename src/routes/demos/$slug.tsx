@@ -13,6 +13,7 @@ import {
   Tablet,
 } from "lucide-react";
 import { DemoShareDialog } from "@/components/showroom/DemoShareDialog";
+import { DemoLoadBoundary } from "@/components/showroom/DemoLoadBoundary";
 import { showroomDemos } from "@/components/showroom/demos";
 import {
   demoDomain,
@@ -362,7 +363,11 @@ function DemoViewer() {
 function DemoView({ design }: { design: ShowroomDesign }) {
   if (!isShowroomSlug(design.slug)) return null;
   const Demo = showroomDemos[design.slug];
-  return <Demo key={design.slug} design={design} />;
+  return (
+    <DemoLoadBoundary title={design.title}>
+      <Demo key={design.slug} design={design} />
+    </DemoLoadBoundary>
+  );
 }
 
 // Desktop shows the demo in a browser window at full height. Tablet and phone show it at their real

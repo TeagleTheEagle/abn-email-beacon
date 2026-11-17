@@ -15,6 +15,7 @@ vi.mock("@/integrations/supabase/client", () => ({
 vi.mock("@/lib/leads", () => ({
   newLeadId: () => "qa-lead-id",
   notifyLead,
+  insertLead: (_client: unknown, payload: object, source: string) => insert({ ...payload, source }),
 }));
 vi.mock("@/lib/analytics", () => ({ track: vi.fn() }));
 

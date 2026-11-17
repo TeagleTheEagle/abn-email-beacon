@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { DemoSite } from "@/components/DemoSite";
 import { carePlans, services } from "@/content/services";
 import { supabase } from "@/integrations/supabase/client";
-import { newLeadId, notifyLead } from "@/lib/leads";
+import { newLeadId, notifyLead, insertLead } from "@/lib/leads";
 import { track } from "@/lib/analytics";
 
 // Instant estimate on the pricing page. Prices come from src/content/services.ts, never from here.
@@ -63,15 +63,19 @@ export function EstimateCalculator({ guided = false }: { guided?: boolean }) {
     setErr(null);
     const id = newLeadId();
     const summary = `${estimate.oneOff}${estimate.monthly ? ` + ${estimate.monthly}` : ""}`;
-    const { error } = await supabase.from("leads").insert({
-      id,
-      name: v.business_name,
-      business_name: v.business_name,
-      email: v.email,
-      business_type: businessType,
-      needs: chosen,
-      message: `Estimate from the ${guided ? "services" : "pricing"} page: ${chosen.join(" + ")} — ${summary}.`,
-    });
+    const { error } = await insertLead(
+      supabase,
+      {
+        id,
+        name: v.business_name,
+        business_name: v.business_name,
+        email: v.email,
+        business_type: businessType,
+        needs: chosen,
+        message: `Estimate from the ${guided ? "services" : "pricing"} page: ${chosen.join(" + ")} — ${summary}.`,
+      },
+      "Estimate calculator",
+    );
     if (error) {
       setErr("Sorry, something went wrong. Please try again.");
       return;

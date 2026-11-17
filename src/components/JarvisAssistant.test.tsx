@@ -10,6 +10,7 @@ import {
   getPagePrompts,
 } from "./JarvisAssistant";
 import { DemoSite } from "./DemoSite";
+import { MobileStickyActions } from "./MobileStickyActions";
 
 const { insert, navigate } = vi.hoisted(() => ({
   insert: vi.fn().mockResolvedValue({ error: null }),
@@ -23,7 +24,11 @@ vi.mock("@tanstack/react-router", () => ({
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: { from: () => ({ insert }) },
 }));
-vi.mock("@/lib/leads", () => ({ newLeadId: () => "jarvis-lead-id", notifyLead: vi.fn() }));
+vi.mock("@/lib/leads", () => ({
+  newLeadId: () => "jarvis-lead-id",
+  notifyLead: vi.fn(),
+  insertLead: (_client: unknown, payload: object, source: string) => insert({ ...payload, source }),
+}));
 vi.mock("@/lib/analytics", () => ({ track: vi.fn() }));
 
 afterEach(() => {
@@ -141,6 +146,23 @@ describe("JarvisAssistant", () => {
     expect(reply.card?.kind).toBe("service");
     expect(reply.card?.title).toBe("Website Build");
     expect(reply.card?.price).toContain("A$500");
+  });
+
+  it("opens and focuses the real chat from the mobile shortcut, then returns focus", async () => {
+    render(
+      <>
+        <MobileStickyActions />
+        <JarvisAssistant />
+      </>,
+    );
+    const shortcut = screen.getByRole("button", { name: /Ask JARVIS/i });
+    shortcut.focus();
+    fireEvent.click(shortcut);
+
+    expect(screen.getByRole("region", { name: "JARVIS AI Website Assistant" })).toBeVisible();
+    await waitFor(() => expect(screen.getByLabelText(/Ask JARVIS about websites/)).toHaveFocus());
+    fireEvent.click(screen.getByRole("button", { name: "Close JARVIS assistant" }));
+    expect(shortcut).toHaveFocus();
   });
 
   it("opens the chat panel and submits an inline free-preview request to Supabase", async () => {

@@ -31,13 +31,16 @@ export const site = {
   ],
 };
 
+export const bookingActionLabel = site.bookingUrl
+  ? "Book a 15-minute call"
+  : "Request a 15-minute call";
+
 export const nav = [
   { to: "/", label: "Home" },
   { to: "/services", label: "Services" },
   { to: "/work", label: "Work" },
   { to: "/demos", label: "Website Designs" },
   { to: "/pricing", label: "Pricing" },
-  { to: "/templates", label: "Templates" },
   { to: "/shop", label: "Shop" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
@@ -122,6 +125,6 @@ export const faqs = [
   },
   {
     q: "What is the refund policy on digital templates?",
-    a: "Digital templates and guides are instant digital downloads — there are no change-of-mind refunds once downloaded. Faulty or not-as-described files are replaced or refunded in full within 30 days. Your rights under the Australian Consumer Law are unaffected.",
+    a: "Digital templates and guides are delivered electronically — there are no change-of-mind refunds once downloaded. Faulty or not-as-described files are replaced or refunded in full within 30 days. Your rights under the Australian Consumer Law are unaffected.",
   },
 ];

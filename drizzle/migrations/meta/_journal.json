@@ -29,6 +29,27 @@
       "when": 1794539994707,
       "tag": "0003_profiles_remove_anonymous_grants",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794877056546,
+      "tag": "0004_lead_notification_delivery",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1794877854111,
+      "tag": "0005_shared_abuse_controls",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794878315347,
+      "tag": "0006_owner_enquiry_pipeline",
+      "breakpoints": true
     }
   ]
 }

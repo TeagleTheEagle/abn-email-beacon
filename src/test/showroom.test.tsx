@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { cleanup, render, screen } from "@testing-library/react";
@@ -28,15 +29,21 @@ describe("Website designs showroom", () => {
     expect(new Set(showroomSlugs).size).toBe(12);
     expect(new Set(showroomDesigns.map((d) => d.id)).size).toBe(12);
   });
-  it.each(showroomSlugs)("matches and renders the live demo /demos/%s", (slug) => {
+  it.each(showroomSlugs)("matches and lazy-loads the live demo /demos/%s", async (slug) => {
     expect(router().matchRoutes(`/demos/${slug}`).at(-1)?.routeId).toBe("/demos/$slug");
     expect(isShowroomSlug(slug)).toBe(true);
     const Demo = showroomDemos[slug];
-    expect(Demo).toBeTypeOf("function");
+    expect(Demo).toBeTypeOf("object");
     const design = getShowroomDesign(slug);
-    render(<Demo design={design} />);
+    render(
+      <Suspense fallback={<p>Loading {design.title}…</p>}>
+        <Demo design={design} />
+      </Suspense>,
+    );
     expect(
-      screen.getByRole("region", { name: `${design.businessName}: demonstration website` }),
+      await screen.findByRole("region", {
+        name: `${design.businessName}: demonstration website`,
+      }),
     ).toBeTruthy();
     expect(
       screen.getByText(new RegExp(`${design.businessName} is a fictional business`, "i")),

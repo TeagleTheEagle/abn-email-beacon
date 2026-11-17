@@ -1,225 +1,66 @@
-# Project Context: Teague Industries Authentication System
+# Teague Industries — current project context
 
-**Last Updated:** 2026-11-07  
-**Branch:** main  
-**Status:** In progress — route tree generation conflict blocking verification
+**Reviewed:** 17 November 2026
+**Branch:** `main`
+**Status:** Reliability changes are implemented locally. They have not been committed, pushed, deployed, or applied to production by this review.
 
----
+## Current architecture
 
-## Completed Work
+- TanStack Start/React with file-based routes. The authenticated pathless layout is `src/routes/_authenticated/route.tsx`; the account screen is `/_authenticated/account.tsx` at `/account`.
+- Supabase Auth and Postgres. Existing profile migrations and existing-account backfills are retained. Profile RLS remains owner-only.
+- Shopify is the product source of truth. Storefront cart IDs and checkout URLs come from Shopify; no manual checkout URL construction.
+- Lovable owns generated Supabase integration files and synchronises `main`. Do not rewrite published history.
+- Shared business content remains in `src/content/`. Main-site theme tokens remain in `src/styles.css`.
+- Public MCP tools expose public content and permitted enquiry submissions only. Demo forms, bookings and bags are local demonstrations.
 
-### 1. Database Schema (Supabase)
+## Superseded information
 
-- **File:** `drizzle/migrations/0001_profiles_table.sql`
-- Profiles table with `id` (UUID, FK to `auth.users`), `full_name`, `business_name`, `phone`, `created_at`, `updated_at`
-- RLS policies: users can SELECT/UPDATE/INSERT their own profile
-- Trigger `on_auth_user_created` auto-creates profile on signup
-- ON DELETE CASCADE from auth.users
+The old route-tree conflict described in earlier notes is not the current state. Route generation, TypeScript and a production build have run successfully. The previous `_layout.tsx` instructions and claims that no accounts exist are obsolete.
 
-### 2. Supabase Types
+The earlier roadmap mixed completed work, historical claims and open tasks. It is archived at `docs/archive/roadmap-2026-11-17.md`; entries in that archive were not all reverified.
 
-- **File:** `src/integrations/supabase/types.ts`
-- Added `profiles` table to `Database['public']['Tables']`
+## Implemented in the current local work
 
-### 3. Auth Context
+- Separate owner/customer notification state, atomic claim hooks, stale leases, bounded retries, explicit unknown outcomes and stable Resend idempotency keys.
+- Additive migrations `0004`–`0006` for notification state, shared abuse controls and an owner-only enquiry workflow.
+- Explicit cart operation results, accessible failures, expired-cart recovery, serialised mutations, checkout refresh and success-only analytics.
+- Current-password verification before password updates, Google-only password setup, sign-out errors and stale-profile isolation.
+- A working mobile JARVIS event/focus contract and one coordinated responsive mobile action bar.
+- Product-specific delivery wording, no lifetime-update badge, and a labelled two-page preview from the actual conversion playbook PDF.
+- Precise origin parsing, bounded JARVIS requests/responses, shared production rate limiting, database-enforced enquiry throttling and mode-aware environment loading.
+- Lazy showroom implementations with loading/error states and off-screen unmounting.
+- An owner-only enquiry pipeline at `/enquiries` with source, assignment, manual stages, follow-up dates, notes, notification status/retry and overdue filters.
 
-- **File:** `src/contexts/AuthContext.tsx`
-- `AuthProvider` wraps app with Supabase auth state management
-- `onAuthStateChange` filtered to `SIGNED_IN`, `SIGNED_OUT`, `USER_UPDATED`
-- `useAuth()` hook returns `{ user, profile, loading, signOut, refreshProfile }`
-- **File:** `src/routes/__root.tsx` — wrapped `<Outlet />` with `<AuthProvider>`
+## Verification boundaries
 
-### 4. Site Navigation
+Final local checks on 17 November 2026:
 
-- **File:** `src/components/SiteNav.tsx`
-- Signed out: "Client Portal" link → `/auth`
-- Signed in: Avatar dropdown with:
-  - User email + "Account" link → `/_authenticated/account`
-  - "Sign out" button (calls `signOut()`)
+- `npx --yes bun x tsc --noEmit` — passed with 0 errors.
+- `npx --yes bun run test` — 184/184 tests passed across 34 files.
+- `npx --yes bun run lint` — 0 errors; 16 Fast Refresh warnings in shared UI/helper exports.
+- `npx --yes bun run build` — production client, SSR and Nitro builds passed.
+- `npx --yes bun audit` — 0 vulnerabilities across 694 packages.
+- Local HTTP checks — all 37 sitemap URLs returned 200; a nonexistent route returned 404; home canonical and checked private-preview noindex were present.
+- Chromium checks — 320 px keyboard menu/chat, 390 px chat, 768 px layout, desktop product preview and audit wording completed without page errors. A pre-hydration shortcut tap did not open chat; after hydration it did.
 
-### 5. Auth Routes
+Unit and component tests use mocks for Supabase, Resend, Shopify mutations and analytics. They prove local logic and UI behaviour only. They do not prove real email arrival, account provider configuration, attached Shopify files, payment fulfilment or production access policies.
 
-#### `/auth` (Sign In / Sign Up)
+An isolated PGlite run executed fresh and upgrade migrations, data retention, profile/enquiry RLS, owner grants, protected delivery fields, legacy state, transition handling, claims and counter smoke checks. Its calls are sequential, not proof of multi-connection production concurrency. A real Supabase test environment was not available.
 
-- **File:** `src/routes/auth.tsx`
-- Tabs: "Sign in" / "Create account"
-- Email/password forms with React Hook Form + Zod validation
-- "Forgot password?" → Dialog → `/reset-password` flow
-- Google OAuth button (`signInWithOAuth` with `access_type: offline`, `prompt: consent`)
-- Redirect handling via `?redirect=` search param
+A production build with harmless sentinel values for private key names produced zero sentinel matches in public assets.
 
-#### `/reset-password`
+See `docs/OPERATIONS.md` for release checks and recovery, and `roadmap.md` for ordered open work.
 
-- **File:** `src/routes/reset-password.tsx`
-- Recovers session via `exchangeCodeForSession` (PKCE flow)
-- Password strength indicator (zxcvbn-style checks)
-- Updates password via `supabase.auth.updateUser({ password })`
+## External dependencies requiring approval or evidence
 
-### 6. Protected Layout & Account Page
+- Apply migrations and deploy the notification function through Lovable after reviewing production schema.
+- Assign the owner account in `owner_memberships`; no owner UUID is assumed or hard-coded.
+- Configure and verify the retry scheduler, Resend sender and provider spending limits.
+- Verify Google OAuth, email signup/recovery and account deletion with authorised test accounts.
+- Verify each Shopify Digital Products attachment and complete one authorised controlled fulfilment test.
+- Configure Shopify purchase analytics without duplicate events.
+- Supply an approved calendar URL and availability to replace the call-request fallback.
+- Keep the existing Gmail contact until an approved domain mailbox is verified. Transactional sender configuration is separate.
+- Supply permission-based client screenshots, problem/delivered/outcome evidence and testimonials before adding real client claims.
 
-#### Authenticated Layout (`_layout.tsx`)
-
-- **File:** `src/routes/_authenticated/_layout.tsx` (renamed from `layout.tsx`)
-- `beforeLoad` guard: redirects to `/auth?redirect=/_authenticated/account` if no user
-- Renders `<Outlet />` for child routes
-
-#### `/_authenticated/account` (Account Dashboard)
-
-- **File:** `src/routes/_authenticated/account.tsx`
-- Three tabs: **Profile**, **Security**, **Danger zone**
-- **Profile:** Edit full name, business name, phone; save to `profiles` table
-- **Security:** Change password (current + new + confirm); "Sign out everywhere" (global signout)
-- **Danger zone:** Delete account (requires email confirmation; calls `supabase.auth.admin.deleteUser` via client)
-- Uses `useAuth()` for profile data and `refreshProfile()`
-
-### 7. Tests
-
-- **File:** `src/contexts/AuthContext.test.tsx` — AuthContext unit tests (mocked Supabase)
-  - Mostly passing; 2 timing-related failures on `USER_UPDATED`/`refreshProfile`
-- **File:** `src/routes/_authenticated/-account.test.tsx` — Route matching tests using `router.matchRoutes()`
-  - Tests for `/auth`, `/reset-password`, `/_authenticated/account`
-
-### 8. TypeScript Fixes Applied
-
-- Fixed `Profile` type import in `AuthContext.tsx`
-- Fixed `Tabs` `onValueChange` typing in `auth.tsx`
-- Fixed duplicate `name` props on `TabsTrigger` in `account.tsx`
-- Fixed `useSearch` API usage in `auth.tsx` and `reset-password.tsx`
-- Fixed `map` types in `index.tsx`
-
----
-
-## Remaining Tasks
-
-### 1. **CRITICAL: Fix Route Tree Generation Conflict** ⚠️
-
-**Error:** `Conflicting configuration paths were found for the following routes: "/", "/". Conflicting files: src/routes/index.tsx, src/routes/_authenticated/_layout.tsx`
-
-**Root cause:** The authenticated layout route (`_layout.tsx`) uses `path: ""` with `getParentRoute: () => RootRouteExport`, which creates a route at `/` conflicting with `index.tsx`.
-
-**Solution needed:** Configure the authenticated layout as a proper parent route for `/account` without creating a conflicting path. Based on TanStack Router conventions:
-
-- The layout file should be named `_layout.tsx` inside `_authenticated/` folder ✓ (done)
-- It should use a path that represents the folder (`/_authenticated` or similar)
-- The account route should use `getParentRoute: () => LayoutRoute` ✓ (already done in account.tsx)
-
-**Current state:** Renamed `layout.tsx` → `_layout.tsx`; account.tsx imports `LayoutRoute` from `./_layout` and uses it as parent. Need to fix the path configuration in `_layout.tsx`.
-
-### 2. Run Full Verification Suite
-
-```bash
-npx tsc --noEmit       # Type check
-npm test               # All tests
-npm run build          # Production build
-npm run lint           # ESLint
-npm run format         # Prettier
-```
-
-### 3. Commit & Push
-
-```bash
-git add -A
-git commit -m "feat: complete auth system with email/password, Google OAuth, account dashboard"
-git push origin main
-```
-
-### 4. Supabase Dashboard Configuration (Manual)
-
-- Enable Google OAuth provider in Supabase Auth settings
-- Add authorized redirect URLs: `https://www.teagueindustries.com.au/auth`, `https://abn-email-beacon.lovable.app/auth`
-- Customize email templates (Confirm signup, Reset password, Magic link)
-
-### 5. Future Enhancements
-
-- Phone number validation (Australian format: `+61 4xx xxx xxx`)
-- Test OAuth flow end-to-end
-- Add rate limiting on auth endpoints
-
----
-
-## Important Project Details
-
-### Stack
-
-- **Framework:** TanStack Start (React 19, SSR) + TanStack Router (file-based)
-- **Auth:** Supabase Auth (email/password, Google OAuth, PKCE)
-- **Database:** Supabase (PostgreSQL) with RLS
-- **UI:** shadcn/ui (new-york) + Tailwind v4 + custom utilities (`glass`, `btn-primary`, `field`, `label`, `font-display`, `chrome-line`)
-- **Forms:** React Hook Form + Zod
-- **Locale:** Australian English, AUD pricing, "businesses of every size"
-
-### Key Conventions
-
-- Path alias `@/` → `src/`
-- TypeScript strict: `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `noPropertyAccessFromIndexSignature`
-- `src/routeTree.gen.ts` is **generated** — never edit manually
-- Run `npx @tanstack/router-cli generate` after route changes
-
-### Environment Variables (`.env`)
-
-```
-VITE_SUPABASE_URL=...
-VITE_SUPABASE_ANON_KEY=...
-SUPABASE_SERVICE_ROLE_KEY=...  (server only)
-```
-
-### File Structure (Auth-Related)
-
-```
-src/
-├── contexts/
-│   ├── AuthContext.tsx
-│   └── AuthContext.test.tsx
-├── routes/
-│   ├── auth.tsx
-│   ├── reset-password.tsx
-│   ├── __root.tsx
-│   ├── _authenticated/
-│   │   ├── _layout.tsx          # Layout route (parent)
-│   │   ├── account.tsx          # Account dashboard
-│   │   └── -account.test.tsx    # Route matching tests
-│   └── index.tsx                # Home page (conflicts with layout)
-├── components/
-│   └── SiteNav.tsx              # Auth-aware header
-└── integrations/supabase/
-    ├── client.ts                # Browser client (anon)
-    ├── client.server.ts         # Server client (service role)
-    └── types.ts                 # Database types (includes profiles)
-```
-
----
-
-## Instructions for Continuing in a New Session
-
-1. **First:** Fix the route tree generation conflict in `src/routes/_authenticated/_layout.tsx`
-   - Change `path: ""` to a non-conflicting path (e.g., `path: "/_authenticated"` or use folder-based routing convention)
-   - Ensure `getParentRoute` correctly references root
-   - Run `npx @tanstack/router-cli generate` to verify
-
-2. **Then:** Run the full verification suite (see commands above)
-
-3. **If all passes:** Commit and push to `main`
-
-4. **Manual steps:** Configure Google OAuth in Supabase Dashboard, customize email templates
-
-5. **Test:** Sign up, sign in, OAuth, password reset, account dashboard, sign out everywhere, delete account
-
----
-
-## Current Blockers
-
-| Blocker                        | Impact                                     | Resolution                           |
-| ------------------------------ | ------------------------------------------ | ------------------------------------ |
-| Route tree generation conflict | Cannot run build, tests, or verify routing | Fix `_layout.tsx` path configuration |
-
----
-
-## Related Memories
-
-- [[always-merge-to-main]] — No branches/PRs; merge directly to main
-- [[site-push-and-publish]] — `git push` may hang on credential popup; use `gh` creds; Lovable needs `deploy_project` after push
-- [[jarvis-changes-go-into-the-exe]] — JARVIS changes ship via release + `update-step.cmd`
-
----
-
-_This document captures the state at context exhaustion. Resume by fixing the route tree conflict, then run the verification suite._
+No real customer messages, orders, charges, account deletions, DNS changes, deployments or production migrations were performed.

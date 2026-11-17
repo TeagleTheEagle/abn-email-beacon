@@ -4,7 +4,11 @@ import { EstimateCalculator } from "./EstimateCalculator";
 
 const { insert } = vi.hoisted(() => ({ insert: vi.fn().mockResolvedValue({ error: null }) }));
 vi.mock("@/integrations/supabase/client", () => ({ supabase: { from: () => ({ insert }) } }));
-vi.mock("@/lib/leads", () => ({ newLeadId: () => "test-id", notifyLead: vi.fn() }));
+vi.mock("@/lib/leads", () => ({
+  newLeadId: () => "test-id",
+  notifyLead: vi.fn(),
+  insertLead: (_client: unknown, payload: object, source: string) => insert({ ...payload, source }),
+}));
 vi.mock("@/lib/analytics", () => ({ track: vi.fn() }));
 afterEach(() => {
   cleanup();

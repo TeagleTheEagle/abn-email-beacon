@@ -15,12 +15,13 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
-import { MobileCta } from "@/components/MobileCta";
+import { MobileStickyActions } from "@/components/MobileStickyActions";
 import { JarvisAssistant } from "@/components/JarvisAssistant";
 import { Toaster } from "@/components/ui/sonner";
 import { useCartSync } from "@/hooks/useCartSync";
 import { analyticsScripts, trackPageView } from "@/lib/analytics";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { hasMobileActionBar } from "@/lib/mobile-actions";
 
 function NotFoundComponent() {
   useEffect(() => {
@@ -142,6 +143,7 @@ function RootComponent() {
   // Teague Industries nav and footer; the preview page carries its own thin band instead.
   const pathname = useLocation({ select: (l) => l.pathname });
   const bare = pathname.startsWith("/preview/");
+  const showMobileActions = !bare && hasMobileActionBar(pathname);
   // One page_view per page: the first on load, then one per client-side navigation.
   useEffect(() => {
     trackPageView(window.location.pathname + window.location.search);
@@ -160,11 +162,13 @@ function RootComponent() {
           Skip to content
         </a>
         {!bare && <SiteNav />}
-        <main id="main" tabIndex={-1}>
-          <Outlet />
-        </main>
-        {!bare && <SiteFooter />}
-        {!bare && <MobileCta />}
+        <div className={showMobileActions ? "pb-24 sm:pb-0" : undefined}>
+          <main id="main" tabIndex={-1}>
+            <Outlet />
+          </main>
+          {!bare && <SiteFooter />}
+        </div>
+        {showMobileActions && <MobileStickyActions />}
         {!bare && <JarvisAssistant />}
         <Toaster position="top-center" />
       </AuthProvider>

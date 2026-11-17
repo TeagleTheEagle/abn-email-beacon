@@ -27,6 +27,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WorkRouteImport } from './routes/work'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
+import { Route as AuthenticatedEnquiriesRouteImport } from './routes/_authenticated/enquiries'
 import { Route as ApiDeleteAccountRouteImport } from './routes/api.delete-account'
 import { Route as ApiJarvisRouteImport } from './routes/api.jarvis'
 import { Route as DemoKindRouteImport } from './routes/demo.$kind'
@@ -125,6 +126,11 @@ const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
   path: '/account',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedEnquiriesRoute = AuthenticatedEnquiriesRouteImport.update({
+  id: '/enquiries',
+  path: '/enquiries',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const ApiDeleteAccountRoute = ApiDeleteAccountRouteImport.update({
   id: '/api/delete-account',
   path: '/api/delete-account',
@@ -179,6 +185,7 @@ export interface FileRoutesByFullPath {
   '/work': typeof WorkRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/enquiries': typeof AuthenticatedEnquiriesRoute
   '/api/delete-account': typeof ApiDeleteAccountRoute
   '/api/jarvis': typeof ApiJarvisRoute
   '/demo/$kind': typeof DemoKindRoute
@@ -205,6 +212,7 @@ export interface FileRoutesByTo {
   '/work': typeof WorkRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/enquiries': typeof AuthenticatedEnquiriesRoute
   '/api/delete-account': typeof ApiDeleteAccountRoute
   '/api/jarvis': typeof ApiJarvisRoute
   '/demo/$kind': typeof DemoKindRoute
@@ -233,6 +241,7 @@ export interface FileRoutesById {
   '/work': typeof WorkRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
+  '/_authenticated/enquiries': typeof AuthenticatedEnquiriesRoute
   '/api/delete-account': typeof ApiDeleteAccountRoute
   '/api/jarvis': typeof ApiJarvisRoute
   '/demo/$kind': typeof DemoKindRoute
@@ -261,6 +270,7 @@ export interface FileRouteTypes {
     | '/work'
     | '/.well-known/oauth-protected-resource'
     | '/account'
+    | '/enquiries'
     | '/api/delete-account'
     | '/api/jarvis'
     | '/demo/$kind'
@@ -287,6 +297,7 @@ export interface FileRouteTypes {
     | '/work'
     | '/.well-known/oauth-protected-resource'
     | '/account'
+    | '/enquiries'
     | '/api/delete-account'
     | '/api/jarvis'
     | '/demo/$kind'
@@ -314,6 +325,7 @@ export interface FileRouteTypes {
     | '/work'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/account'
+    | '/_authenticated/enquiries'
     | '/api/delete-account'
     | '/api/jarvis'
     | '/demo/$kind'
@@ -478,6 +490,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/enquiries': {
+      id: '/_authenticated/enquiries'
+      path: '/enquiries'
+      fullPath: '/enquiries'
+      preLoaderRoute: typeof AuthenticatedEnquiriesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/api/delete-account': {
       id: '/api/delete-account'
       path: '/api/delete-account'
@@ -532,10 +551,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
+  AuthenticatedEnquiriesRoute: typeof AuthenticatedEnquiriesRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
+  AuthenticatedEnquiriesRoute: AuthenticatedEnquiriesRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

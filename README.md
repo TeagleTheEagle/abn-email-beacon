@@ -1,26 +1,42 @@
-# Abn Email Beacon
+# Teague Industries website
 
-my actaul abn is : 64 813107974 and my email is benteaguey6@gmail.com
+Marketing site, interactive demos, digital shop and client accounts for Teague Industries.
 
-This project was built with [Lovable](https://lovable.dev).
+- Production: https://www.teagueindustries.com.au
+- Lovable project: https://lovable.dev/projects/3558f9ce-cbe6-4a1a-b3ba-cff533474cd4
+- Stack: TanStack Start, React, TypeScript, Supabase, Shopify, Tailwind and Lovable
 
-**Live app**: https://abn-email-beacon.lovable.app
+## Local development
 
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/3558f9ce-cbe6-4a1a-b3ba-cff533474cd4).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Use the committed `bun.lock` in Lovable/CI and locally. If Bun is not installed globally, invoke it through `npx --yes bun`.
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+npx --yes bun install
+npx --yes bun run dev
 ```
+
+Do not commit `.env`, real customer exports or the ignored `products/` files. Never put service-role, Resend or Google AI private keys in browser values.
+
+## Checks
+
+```sh
+npx --yes bun x tsc --noEmit
+npx --yes bun run test
+npx --yes bun run lint
+npx --yes bun run build
+npx --yes bun audit
+```
+
+CI uses the equivalent Bun commands and installs with `bun install --frozen-lockfile`.
+
+## Project guides
+
+- `CLAUDE.md` — architecture and implementation constraints
+- `AGENTS.md` — repository/Lovable rules; self-contained, with no `RTK.md` dependency
+- `PROJECT_CONTEXT.md` — verified current state and superseded notes
+- `roadmap.md` — ordered open work and external dependencies
+- `docs/OPERATIONS.md` — setup, release, fulfilment and recovery checklist
+- `docs/CLIENT_EVIDENCE.md` — evidence required before publishing client claims
+- `supabase/functions/notify-lead/README.md` — notification delivery, retry and scheduler setup
+
+Do not rewrite published Git history. Pushing `main` synchronises with Lovable, but local changes are not deployed fixes until separately applied and verified.
