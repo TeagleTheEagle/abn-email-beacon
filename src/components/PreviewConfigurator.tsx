@@ -1,290 +1,227 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Check, Zap, ShoppingBag, Sparkles, Users } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  BriefcaseBusiness,
+  CalendarDays,
+  Coffee,
+  MessageSquareText,
+  ShoppingBag,
+  Sparkles,
+  Store,
+  Wrench,
+  type LucideIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { QuickLeadForm } from "@/components/QuickLeadForm";
-import { services } from "@/content/services";
-import { demos } from "@/content/demos";
+import { demos, type DemoKind } from "@/content/demos";
 
 const INDUSTRY_OPTIONS = [
-  { id: "tradie", label: "Tradies & Services", icon: Zap, demoKind: "tradie" },
-  { id: "cafe", label: "Café & Hospitality", icon: Users, demoKind: "cafe" },
-  { id: "salon", label: "Salon & Wellness", icon: Sparkles, demoKind: "salon" },
-  { id: "retail", label: "Online Store", icon: ShoppingBag, demoKind: "retail" },
-  { id: "professional", label: "Professional Services", icon: Users, demoKind: "consulting" },
-] as const;
+  { id: "tradie", label: "Tradie / Services", icon: Wrench, demoKind: "tradie" },
+  { id: "hospitality", label: "Hospitality / Cafe", icon: Coffee, demoKind: "cafe" },
+  { id: "retail", label: "Boutique / Retail", icon: Store, demoKind: "retail" },
+  // The salon demo is the service-led professional concept available in demos.ts.
+  { id: "professional", label: "Professional", icon: BriefcaseBusiness, demoKind: "salon" },
+] as const satisfies readonly { id: string; label: string; icon: LucideIcon; demoKind: DemoKind }[];
 
 const GOAL_OPTIONS = [
-  { id: "leads", label: "Instant Lead Capture", icon: Zap, services: ["website-build"] },
-  {
-    id: "shopify",
-    label: "Shopify Store & Checkout",
-    icon: ShoppingBag,
-    services: ["shopify-store", "smart-store"],
+  { id: "enquiries", label: "More enquiries", icon: MessageSquareText },
+  { id: "bookings", label: "Online bookings", icon: CalendarDays },
+  { id: "shop", label: "Digital shop", icon: ShoppingBag },
+  { id: "brand", label: "Brand refresh", icon: Sparkles },
+] as const satisfies readonly { id: string; label: string; icon: LucideIcon }[];
+
+const STEP_CONTENT: Record<Step, { title: string; description: string }> = {
+  1: {
+    title: "Step 1: Choose your industry",
+    description: "Start with the kind of business you run.",
   },
-  { id: "bookings", label: "Service Bookings", icon: Users, services: ["website-build"] },
-  { id: "ai", label: "Smart AI Assistance", icon: Sparkles, services: ["smart-store"] },
-] as const;
+  2: {
+    title: "Step 2: Choose your goal",
+    description: "Pick the outcome you want your new website to support.",
+  },
+  3: {
+    title: "Step 3: Instant Concept",
+    description: "Your matched concept is ready to explore.",
+  },
+};
 
 type Step = 1 | 2 | 3;
 type IndustryId = (typeof INDUSTRY_OPTIONS)[number]["id"];
 type GoalId = (typeof GOAL_OPTIONS)[number]["id"];
-
-interface Recommendation {
-  title: string;
-  price: string;
-  priceNote?: string | undefined;
-  inclusions: string[];
-  demoUrl: string;
-  leadNeeds: string[];
-  leadNote: string;
-}
-
-function getRecommendation(industry: IndustryId, goal: GoalId): Recommendation {
-  const industryOption = INDUSTRY_OPTIONS.find((o) => o.id === industry);
-  const goalOption = GOAL_OPTIONS.find((o) => o.id === goal);
-
-  const isStore = goal === "shopify";
-  const primaryService = services.find(
-    (s) => s.id === (isStore ? "shopify-store" : "website-build"),
-  );
-
-  const basePrice = primaryService?.price ?? (isStore ? "From A$1,200" : "A$500");
-  const demoKind = industryOption?.demoKind ?? "tradie";
-  const demo = demos[demoKind as keyof typeof demos];
-
-  const inclusions = [
-    "Custom domain & HTTPS",
-    "Mobile-optimised speed",
-    "Search-ready SEO structure",
-    "2 revision rounds included",
-    "100% ownership — your content, domain & accounts",
-  ];
-
-  let leadNeeds = ["Website"];
-  let leadNote = `Configurator: ${industryOption?.label} / ${goalOption?.label}`;
-
-  if (isStore) {
-    leadNeeds = ["Website", "Online store"];
-    leadNote = `Configurator: ${industryOption?.label} / ${goalOption?.label} (Store)`;
-  } else if (goal === "bookings") {
-    leadNeeds = ["Website", "Booking system"];
-    leadNote = `Configurator: ${industryOption?.label} / ${goalOption?.label} (Bookings)`;
-  } else if (goal === "ai") {
-    leadNeeds = ["Website", "Smart Store"];
-    leadNote = `Configurator: ${industryOption?.label} / ${goalOption?.label} (AI)`;
-  }
-
-  return {
-    title: isStore ? "Online Store Setup" : "Custom Website Build",
-    price: basePrice,
-    priceNote: primaryService?.priceNote,
-    inclusions,
-    demoUrl: `/demo/${demoKind}`,
-    leadNeeds,
-    leadNote,
-  };
-}
+type IndustryOption = (typeof INDUSTRY_OPTIONS)[number];
+type GoalOption = (typeof GOAL_OPTIONS)[number];
 
 export function PreviewConfigurator() {
   const [step, setStep] = useState<Step>(1);
-  const [industry, setIndustry] = useState<IndustryId | null>(null);
-  const [goal, setGoal] = useState<GoalId | null>(null);
-  const [showLeadForm, setShowLeadForm] = useState(false);
-  const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
+  const [industryId, setIndustryId] = useState<IndustryId | null>(null);
+  const [goalId, setGoalId] = useState<GoalId | null>(null);
+  const industry = INDUSTRY_OPTIONS.find((option) => option.id === industryId);
+  const goal = GOAL_OPTIONS.find((option) => option.id === goalId);
 
-  const handleIndustrySelect = (id: IndustryId) => {
-    setIndustry(id);
+  const chooseIndustry = (id: IndustryId) => {
+    setIndustryId(id);
+    setGoalId(null);
     setStep(2);
   };
-
-  const handleGoalSelect = (id: GoalId) => {
-    setGoal(id);
-    if (industry) {
-      const rec = getRecommendation(industry, id);
-      setRecommendation(rec);
-      setStep(3);
-    }
+  const chooseGoal = (id: GoalId) => {
+    setGoalId(id);
+    setStep(3);
   };
 
-  const handleBack = (toStep: Step) => {
-    setStep(toStep);
-  };
-
-  const handleGeneratePreview = () => {
-    setShowLeadForm(true);
-  };
-
-  if (step === 1) {
-    return (
-      <section className="border-y border-border bg-surface/40 px-6 py-16 sm:py-24">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-10 text-center">
-            <p className="label">Build your preview</p>
-            <h2 className="mt-4 text-4xl sm:text-5xl">See your website before you commit</h2>
-            <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
-              Answer 2 quick questions and we'll show you an interactive prototype tailored to your
-              industry — plus the exact price and what's included.
-            </p>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {INDUSTRY_OPTIONS.map(({ id, label, icon: Icon }) => (
-              <button
-                key={id}
-                type="button"
-                onClick={() => handleIndustrySelect(id)}
-                className="glass glass-hover group relative h-full flex flex-col items-center gap-4 p-6 text-left transition-all"
-              >
-                <div className="relative grid h-14 w-14 place-items-center rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                  <Icon className="h-7 w-7" aria-hidden="true" />
-                </div>
-                <p className="text-base font-semibold text-foreground">{label}</p>
-                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-              </button>
-            ))}
-          </div>
+  return (
+    <section
+      aria-labelledby="preview-configurator-title"
+      className="border-y border-border bg-surface/40 px-6 py-16 sm:py-24"
+    >
+      <div className="mx-auto max-w-6xl">
+        <div className="mx-auto mb-10 max-w-3xl text-center">
+          <p className="label">Instant preview configurator</p>
+          <h2 id="preview-configurator-title" className="mt-4 text-4xl sm:text-5xl">
+            {STEP_CONTENT[step].title}
+          </h2>
+          <p className="mt-4 text-muted-foreground">{STEP_CONTENT[step].description}</p>
         </div>
-      </section>
-    );
-  }
+        <div aria-live="polite">
+          {step === 1 && (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {INDUSTRY_OPTIONS.map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  type="button"
+                  aria-label={label}
+                  onClick={() => chooseIndustry(id)}
+                  className="glass glass-hover group flex min-h-44 flex-col items-center justify-center gap-5 p-6 text-center"
+                >
+                  <span className="grid h-14 w-14 place-items-center rounded-md bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                    <Icon className="h-7 w-7" aria-hidden="true" />
+                  </span>
+                  <span className="font-semibold text-foreground">{label}</span>
+                  <ArrowRight className="h-4 w-4 text-primary-soft" aria-hidden="true" />
+                </button>
+              ))}
+            </div>
+          )}
+          {step === 2 && (
+            <div>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {GOAL_OPTIONS.map(({ id, label, icon: Icon }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    aria-label={label}
+                    onClick={() => chooseGoal(id)}
+                    className="glass glass-hover group flex min-h-44 flex-col items-center justify-center gap-5 p-6 text-center"
+                  >
+                    <span className="grid h-14 w-14 place-items-center rounded-md bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                      <Icon className="h-7 w-7" aria-hidden="true" />
+                    </span>
+                    <span className="font-semibold text-foreground">{label}</span>
+                    <ArrowRight className="h-4 w-4 text-primary-soft" aria-hidden="true" />
+                  </button>
+                ))}
+              </div>
+              <BackButton onClick={() => setStep(1)}>Back to industry</BackButton>
+            </div>
+          )}
+          {step === 3 && industry && goal && (
+            <InstantConcept
+              industry={industry}
+              goal={goal}
+              onChangeIndustry={() => setStep(1)}
+              onChangeGoal={() => setStep(2)}
+            />
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
 
-  if (step === 2) {
-    return (
-      <section className="border-y border-border bg-surface/40 px-6 py-16 sm:py-24">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-10 text-center">
-            <p className="label">Step 2 of 3</p>
-            <h2 className="mt-4 text-4xl sm:text-5xl">What's your main goal?</h2>
-            <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
-              Choose the outcome that matters most for your business right now.
-            </p>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {GOAL_OPTIONS.map(({ id, label, icon: Icon }) => (
-              <button
-                key={id}
-                type="button"
-                onClick={() => handleGoalSelect(id)}
-                className="glass glass-hover group relative h-full flex flex-col items-center gap-4 p-6 text-left transition-all"
-              >
-                <div className="relative grid h-14 w-14 place-items-center rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                  <Icon className="h-7 w-7" aria-hidden="true" />
-                </div>
-                <p className="text-base font-semibold text-foreground">{label}</p>
-                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-              </button>
-            ))}
-          </div>
-          <div className="mt-8 text-center">
-            <Button variant="outline" onClick={() => handleBack(1)} className="h-11">
-              Back to industry
+function InstantConcept({
+  industry,
+  goal,
+  onChangeIndustry,
+  onChangeGoal,
+}: {
+  industry: IndustryOption;
+  goal: GoalOption;
+  onChangeIndustry: () => void;
+  onChangeGoal: () => void;
+}) {
+  const [showLeadForm, setShowLeadForm] = useState(false);
+  const demo = demos[industry.demoKind];
+  const selection = `${industry.label} · ${goal.label}`;
+
+  return (
+    <div>
+      <article className="glass overflow-hidden lg:grid lg:grid-cols-2">
+        <img
+          src={demo.imageSmall}
+          alt={`${demo.name} demo preview`}
+          width={640}
+          height={400}
+          loading="lazy"
+          className="h-full min-h-64 w-full object-cover"
+        />
+        <div className="flex flex-col p-6 sm:p-8">
+          <p className="label">{demo.category} concept</p>
+          <h3 className="mt-3 text-3xl">{demo.name}</h3>
+          <p className="mt-3 text-xl text-primary-soft">{demo.title}</p>
+          <p className="mt-3 text-sm text-muted-foreground">{demo.body}</p>
+          <p className="mt-5 text-sm text-muted-foreground">
+            Matched to <strong className="text-foreground">{selection}</strong>. Explore the
+            concept, then ask us to tailor it to your business.
+          </p>
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <a href={`/demo/${industry.demoKind}`} className="btn-primary">
+              Try interactive demo <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+            <Button type="button" variant="outline" size="lg" onClick={() => setShowLeadForm(true)}>
+              Get your custom preview
             </Button>
           </div>
         </div>
-      </section>
-    );
-  }
-
-  // Step 3: Recommendation
-  if (!recommendation) return null;
-
-  return (
-    <section className="border-y border-border bg-surface/40 px-6 py-16 sm:py-24">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-10 text-center">
-          <p className="label">Step 3 of 3 — Your recommendation</p>
-          <h2 className="mt-4 text-4xl sm:text-5xl">Here's what we'd build for you</h2>
-        </div>
-        <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
-          <div className="glass glass-hover p-8">
-            <div className="flex items-center gap-2">
-              <span className="label">Recommended build</span>
-              <span className="inline-flex items-center rounded-[2px] border border-primary/40 bg-primary/10 px-2.5 py-1 !text-[9px] !text-primary">
-                {recommendation.title}
-              </span>
-            </div>
-            <h3 className="mt-4 text-3xl sm:text-4xl">{recommendation.price}</h3>
-            {recommendation.priceNote && (
-              <p className="mt-1 text-sm text-muted-foreground">{recommendation.priceNote}</p>
-            )}
-            <p className="mt-6 text-muted-foreground">
-              Based on your selection:{" "}
-              <strong>{INDUSTRY_OPTIONS.find((o) => o.id === industry)?.label}</strong>
-              with a focus on <strong>{GOAL_OPTIONS.find((o) => o.id === goal)?.label}</strong>.
-            </p>
-            <ul className="mt-8 space-y-4" role="list">
-              {recommendation.inclusions.map((item) => (
-                <li key={item} className="flex gap-3 text-base">
-                  <Check className="mt-1 h-5 w-5 shrink-0 text-primary-soft" aria-hidden="true" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg" onClick={handleGeneratePreview} className="h-12 !px-8">
-                <a href="#preview-form">
-                  Generate Free Preview <ArrowRight className="h-4 w-4" />
-                </a>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="h-12">
-                <a href={recommendation.demoUrl}>
-                  View Interactive Demo <ArrowRight className="h-4 w-4" />
-                </a>
-              </Button>
-            </div>
-          </div>
-          <div className="glass glass-hover p-8">
-            <p className="label mb-4">Free preview includes</p>
-            <ul className="space-y-3 text-sm text-muted-foreground">
-              {[
-                "A working, clickable prototype of your homepage",
-                "Your business name, colours & imagery applied",
-                "Mobile & desktop views ready to explore",
-                "Delivered within 1–2 business days",
-                "Zero obligation — only pay if you approve",
-              ].map((item) => (
-                <li key={item} className="flex gap-2">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary-soft" aria-hidden="true" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-6 text-xs text-muted-foreground">
-              Two rounds of revisions included. Written quotes valid 30 days. You own everything.
-            </p>
-          </div>
-        </div>
-        {showLeadForm && (
-          <div
-            id="preview-form"
-            className="mt-10 glass glass-hover p-8 animate-rise"
-            role="region"
-            aria-labelledby="preview-form-title"
-          >
-            <h3 id="preview-form-title" className="text-2xl">
-              Request your free preview
-            </h3>
-            <p className="mt-2 text-muted-foreground">
-              We'll build and send your personalised preview for{" "}
-              <strong>{INDUSTRY_OPTIONS.find((o) => o.id === industry)?.label}</strong>
-              focused on <strong>{GOAL_OPTIONS.find((o) => o.id === goal)?.label}</strong>.
-            </p>
-            <QuickLeadForm
-              onSuccess={() => {
-                setShowLeadForm(false);
-                setStep(1);
-                setIndustry(null);
-                setGoal(null);
-                setRecommendation(null);
-              }}
-              submitText="Send my free preview request"
-              successText="Your free preview request has been sent! Ben will be in touch within 1–2 business days."
-              message={`Configurator: ${INDUSTRY_OPTIONS.find((o) => o.id === industry)?.label} / ${GOAL_OPTIONS.find((o) => o.id === goal)?.label}`}
-            />
-          </div>
-        )}
+      </article>
+      <div className="mt-6 flex flex-wrap justify-center gap-3">
+        <Button type="button" variant="ghost" onClick={onChangeIndustry}>
+          <ArrowLeft aria-hidden="true" /> Change industry
+        </Button>
+        <Button type="button" variant="ghost" onClick={onChangeGoal}>
+          <ArrowLeft aria-hidden="true" /> Change goal
+        </Button>
       </div>
-    </section>
+      {showLeadForm && (
+        <div
+          role="region"
+          aria-labelledby="custom-preview-title"
+          className="glass animate-rise mx-auto mt-8 max-w-2xl p-6 sm:p-8"
+        >
+          <h3 id="custom-preview-title" className="text-2xl">
+            Get your custom preview
+          </h3>
+          <p className="mb-6 mt-2 text-sm text-muted-foreground">
+            {selection} · {demo.name}. Tell us where to send your personalised preview.
+          </p>
+          <QuickLeadForm
+            submitText="Send my custom preview request"
+            successText="Thanks! Ben will be in touch within 1–2 business days."
+            message={`Instant preview configurator: ${selection} · ${demo.name}`}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function BackButton({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
+  return (
+    <div className="mt-8 text-center">
+      <Button type="button" variant="outline" onClick={onClick}>
+        <ArrowLeft aria-hidden="true" /> {children}
+      </Button>
+    </div>
   );
 }

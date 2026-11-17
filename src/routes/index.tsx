@@ -170,6 +170,7 @@ function Home() {
           </div>
         </div>
       </section>
+      <PreviewConfigurator />
       <section className="border-y border-border bg-surface/60 px-6 py-6">
         <div className="mx-auto grid max-w-6xl gap-5 sm:grid-cols-3">
           {[
@@ -449,7 +450,6 @@ function Home() {
         </div>
       </Section>
       <CtaBand />
-      <PreviewConfigurator />
       <MobileStickyActions />
     </>
   );
