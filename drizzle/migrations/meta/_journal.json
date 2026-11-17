@@ -50,6 +50,13 @@
       "when": 1794878315347,
       "tag": "0006_owner_enquiry_pipeline",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794884073161,
+      "tag": "0007_serialize_lead_submission_rate",
+      "breakpoints": true
     }
   ]
 }

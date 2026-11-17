@@ -10,12 +10,28 @@ jobs:
   checks:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
     env:
       # Placeholder values so the Supabase client imports cleanly during typecheck and tests.
       # Real values stay in .env locally and in Lovable Cloud; CI never touches production data.
       VITE_SUPABASE_URL: https://placeholder.supabase.co
       VITE_SUPABASE_PUBLISHABLE_KEY: placeholder-publishable-key
       VITE_SUPABASE_PROJECT_ID: placeholder
+      TEST_DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/postgres
 
     steps:
       - uses: actions/checkout@v5
@@ -43,6 +59,9 @@ jobs:
 
       - name: Tests
         run: bun run test
+
+      - name: Real PostgreSQL migration and concurrency tests
+        run: bun run test:postgres
 
       - name: Lint
         run: bun run lint

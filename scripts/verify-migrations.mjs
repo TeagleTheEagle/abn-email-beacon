@@ -10,6 +10,7 @@ const migrations = [
   "0004_lead_notification_delivery.sql",
   "0005_shared_abuse_controls.sql",
   "0006_owner_enquiry_pipeline.sql",
+  "0007_serialize_lead_submission_rate.sql",
 ];
 const ownerId = "11111111-1111-4111-8111-111111111111";
 const customerId = "22222222-2222-4222-8222-222222222222";
