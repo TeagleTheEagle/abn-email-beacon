@@ -2,7 +2,7 @@
 
 import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Mail, Lock, Eye, EyeOff, Loader2, AlertCircle, CheckCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -41,10 +41,18 @@ const signInSchema = z.object({
   remember: z.boolean().optional(),
 });
 
-const signUpSchema = z
+export const signUpSchema = z
   .object({
-    fullName: z.string().min(2, "Full name must be at least 2 characters").optional(),
-    businessName: z.string().min(2, "Business name must be at least 2 characters").optional(),
+    fullName: z
+      .string()
+      .min(2, "Full name must be at least 2 characters")
+      .optional()
+      .or(z.literal("")),
+    businessName: z
+      .string()
+      .min(2, "Business name must be at least 2 characters")
+      .optional()
+      .or(z.literal("")),
     email: z.string().email("Enter a valid email address"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string(),
@@ -199,6 +207,13 @@ function AuthRouteComponent() {
   const [isForgotSubmitting, setIsForgotSubmitting] = useState(false);
   const [forgotError, setForgotError] = useState<string | undefined>();
   const [forgotSuccess, setForgotSuccess] = useState<string | undefined>();
+
+  // Signed-in users (including returning OAuth flows) should never sit on the sign-in page.
+  useEffect(() => {
+    if (!authLoading && user) {
+      navigate({ to: redirect, replace: true });
+    }
+  }, [authLoading, user, navigate, redirect]);
 
   const signInForm = useForm<SignInForm>({
     resolver: zodResolver(signInSchema),
@@ -516,6 +531,11 @@ function AuthRouteComponent() {
                           {...signUpForm.register("fullName")}
                           disabled={isSubmitting}
                         />
+                        {signUpForm.formState.errors.fullName && (
+                          <p className="mt-1 text-sm text-destructive" role="alert">
+                            {signUpForm.formState.errors.fullName.message}
+                          </p>
+                        )}
                       </div>
                       <div>
                         <Label htmlFor="businessName" className="label">
@@ -528,6 +548,11 @@ function AuthRouteComponent() {
                           {...signUpForm.register("businessName")}
                           disabled={isSubmitting}
                         />
+                        {signUpForm.formState.errors.businessName && (
+                          <p className="mt-1 text-sm text-destructive" role="alert">
+                            {signUpForm.formState.errors.businessName.message}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div>
