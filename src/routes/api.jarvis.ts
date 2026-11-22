@@ -12,6 +12,28 @@ import {
 } from "@/lib/request-security";
 import { checkJarvisRateLimit } from "@/lib/rate-limit";
 
+// The paid model is reserved for signed-in visitors; anonymous visitors get the free built-in replies.
+async function isSignedInCaller(request: Request): Promise<boolean> {
+  const header = request.headers.get("authorization") ?? "";
+  const token = header.startsWith("Bearer ") ? header.slice(7).trim() : "";
+  if (!token || token.split(".").length !== 3) return false;
+  const baseUrl = process.env["SUPABASE_URL"] ?? process.env["VITE_SUPABASE_URL"];
+  const publishableKey =
+    process.env["SUPABASE_PUBLISHABLE_KEY"] ?? process.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
+  if (!baseUrl || !publishableKey) return false;
+  try {
+    const res = await fetch(`${baseUrl}/auth/v1/user`, {
+      headers: { apikey: publishableKey, Authorization: `Bearer ${token}` },
+      signal: AbortSignal.timeout(3000),
+    });
+    if (!res.ok) return false;
+    const user = (await res.json()) as { id?: unknown };
+    return typeof user.id === "string" && user.id.length > 0;
+  } catch {
+    return false;
+  }
+}
+
 const MODELS = ["gemini-3.5-flash-lite", "gemini-3.8-flash", "gemini-3.1-flash-lite"] as const;
 
 // --- Zero-Key Public APIs (from github.com/public-apis/public-apis) ---
@@ -191,7 +213,9 @@ export const Route = createFileRoute("/api/jarvis")({
         const localFallback = generateJarvisReply(rawMessage, cartCount, checkoutUrl);
         const liveContext = await gatherPublicApiContext(rawMessage);
 
-        const apiKey = process.env["GEMINI_API_KEY"] || process.env["GOOGLE_API_KEY"];
+        const configuredKey = process.env["GEMINI_API_KEY"] || process.env["GOOGLE_API_KEY"];
+        const apiKey =
+          configuredKey && (await isSignedInCaller(request)) ? configuredKey : undefined;
         if (!apiKey) {
           const enrichedText =
             liveContext.length > 0

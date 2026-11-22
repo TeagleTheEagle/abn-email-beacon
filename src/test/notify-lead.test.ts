@@ -15,7 +15,7 @@ class FakeNotificationStore implements NotificationStore {
   constructor(message = "Website enquiry") {
     this.lead = {
       id: "11111111-1111-4111-8111-111111111111",
-      created_at: "2026-11-17T00:00:00Z",
+      created_at: "2026-11-17T00:55:00Z",
       name: "Alex",
       business_name: "Example Co",
       email: "alex@example.com.au",
@@ -191,6 +191,15 @@ describe("notify-lead delivery lifecycle", () => {
     const response = await handleNotifyLead(request(), dependencies(store, sendEmail));
 
     expect(response.status).toBe(409);
+    expect(sendEmail).not.toHaveBeenCalled();
+  });
+
+  it("refuses unscheduled notifications for enquiries older than ten minutes", async () => {
+    const store = new FakeNotificationStore();
+    store.lead.created_at = "2026-11-16T00:00:00Z";
+    const sendEmail = vi.fn();
+    const response = await handleNotifyLead(request(), dependencies(store, sendEmail));
+    expect(response.status).toBe(404);
     expect(sendEmail).not.toHaveBeenCalled();
   });
 

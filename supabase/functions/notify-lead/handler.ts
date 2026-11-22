@@ -74,6 +74,8 @@ export class ProviderResponseError extends Error {
 
 const MAX_ATTEMPTS = 5;
 const LEASE_MS = 2 * 60 * 1000;
+// Unscheduled (visitor) requests may only notify for a just-submitted enquiry; older retries need the scheduler key.
+const FRESH_LEAD_MS = 10 * 60 * 1000;
 const PROVIDER_IDEMPOTENCY_MS = 24 * 60 * 60 * 1000;
 const json = (body: unknown, status = 200) =>
   Response.json(body, { status, headers: { "Access-Control-Allow-Origin": "*" } });
@@ -178,7 +180,8 @@ export async function handleNotifyLead(request: Request, deps: NotificationDepen
   if (contentLength > 2048) return json({ error: "Request too large" }, 413);
   const body: unknown = await request.json().catch(() => null);
   if (!body || typeof body !== "object") return json({ error: "Invalid JSON body" }, 400);
-  if ((body as { scheduled?: unknown })["scheduled"] === true) {
+  const scheduled = (body as { scheduled?: unknown })["scheduled"] === true;
+  if (scheduled) {
     const expected = deps.schedulerKey;
     if (!expected || request.headers.get("authorization") !== `Bearer ${expected}`)
       return json({ error: "Unauthorised scheduler request" }, 401);
@@ -192,6 +195,12 @@ export async function handleNotifyLead(request: Request, deps: NotificationDepen
 
   const lead = await deps.store.findLead(id, email.trim());
   if (!lead) return json({ error: "Lead not found" }, 404);
+  if (!scheduled) {
+    const createdMs = Date.parse(lead.created_at);
+    const nowMs = (deps.now?.() ?? new Date()).getTime();
+    if (!Number.isFinite(createdMs) || nowMs - createdMs > FRESH_LEAD_MS)
+      return json({ error: "Lead not found" }, 404);
+  }
   const owner = await deliver("owner", lead, ownerPayload(lead, deps.ownerEmail, deps.from), deps);
   if (owner.http !== 200) return json({ ok: false, owner: owner.status }, owner.http);
 

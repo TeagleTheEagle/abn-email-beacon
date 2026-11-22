@@ -907,17 +907,25 @@ export function JarvisAssistant() {
 
     // Call the server-side Gemini + Public APIs endpoint (/api/jarvis) so JARVIS can answer any question
     if (typeof window !== "undefined" && typeof window.fetch === "function") {
-      void window
-        .fetch("/api/jarvis", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: text,
-            history: historySnapshot,
-            cartCount,
-            checkoutUrl,
+      void supabase.auth
+        .getSession()
+        .then(({ data }) => data.session?.access_token)
+        .catch(() => undefined)
+        .then((accessToken) =>
+          window.fetch("/api/jarvis", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+            },
+            body: JSON.stringify({
+              message: text,
+              history: historySnapshot,
+              cartCount,
+              checkoutUrl,
+            }),
           }),
-        })
+        )
         .then(async (res) => {
           if (!res.ok) return;
           const data = (await res.json()) as {
