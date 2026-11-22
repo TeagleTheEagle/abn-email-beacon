@@ -151,7 +151,7 @@ For every product advertised as an instant download:
 - A saved enquiry is not invalid when email fails.
 - Open `/enquiries` with the authorised owner account.
 - Filter/review `failed` and `unknown` owner/customer states, attempt counts and errors.
-- Retry through the owner control or scheduler. A successful owner send is not repeated when only the customer confirmation retries.
+- Retry through the owner control or scheduler. Unscheduled retries only work for enquiries created within the last 10 minutes; older enquiries need the scheduler credential. A successful owner send is not repeated when only the customer confirmation retries.
 - Treat `unknown` as uncertain provider acceptance. Use Resend logs and the stable idempotency key for reconciliation; do not blindly force a send.
 - Fresh processing claims return 202; five attempts return 409. Legacy pre-send timestamps are marked terminal unknown for review rather than assumed successful.
 

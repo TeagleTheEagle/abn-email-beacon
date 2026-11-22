@@ -29,7 +29,7 @@ The following are **pending**, not configured or verified by the local change:
 
 The owner-only enquiry workflow should show `owner_notification_status`, `customer_confirmation_status`, attempts, errors and provider ids. Query through an authorised owner session or the Supabase dashboard; do not expose these fields publicly.
 
-Retry a failed/unknown delivery by invoking `notify-lead` with the saved lead `id` and `email`. An already successful owner send is not repeated when only customer confirmation is retried. Fresh `processing` rows return HTTP 202. Rows at five attempts return HTTP 409.
+Retry a failed/unknown delivery by invoking `notify-lead` with the saved lead `id` and `email`. Unscheduled invocations only process enquiries created within the last **10 minutes**; older enquiries return HTTP 404 unless the call carries the scheduler credential (`scheduled: true` with `Authorization: Bearer <NOTIFY_SCHEDULER_KEY>`). An already successful owner send is not repeated when only customer confirmation is retried. Fresh `processing` rows return HTTP 202. Rows at five attempts return HTTP 409.
 
 ## Optional scheduler — prepared, not configured
 
