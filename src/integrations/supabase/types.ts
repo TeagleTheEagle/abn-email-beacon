@@ -35,6 +35,24 @@ export type Database = {
         }
         Relationships: []
       }
+      concept_views: {
+        Row: {
+          id: string
+          slug: string
+          viewed_at: string
+        }
+        Insert: {
+          id?: string
+          slug: string
+          viewed_at?: string
+        }
+        Update: {
+          id?: string
+          slug?: string
+          viewed_at?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           assigned_owner_id: string | null
