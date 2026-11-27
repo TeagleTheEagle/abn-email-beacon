@@ -35,6 +35,8 @@ vi.mock("@/lib/leads", () => ({
 }));
 vi.mock("@/lib/analytics", () => ({ track: api.track }));
 vi.mock("@/integrations/supabase/client", () => ({ supabase: { from: api.from } }));
+// The views panel has its own tests; stub it so its reads don't touch the leads query mock.
+vi.mock("@/components/ConceptViewsPanel", () => ({ ConceptViewsPanel: () => null }));
 
 const lead: PipelineLead = {
   id: "11111111-1111-4111-8111-111111111111",

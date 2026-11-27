@@ -1,7 +1,7 @@
 # Teague Industries roadmap
 
 **Current as of:** 27 November 2026
-**State:** Everything is committed and synced; migrations through `0009` (enquiry notify token) are applied to Lovable Cloud, `notify-lead` is deployed, and owner access is granted. 15 hidden concept pages live under `/concept/`.
+**State:** Everything is committed and synced; migrations through `0010` (concept views) are applied to Lovable Cloud, `notify-lead` is deployed, and owner access is granted. 15 hidden concept pages live under `/concept/` and report views.
 
 ## Open now (waiting on Ben)
 
@@ -9,12 +9,12 @@
 - Business mailbox + verified Resend sender (`LEAD_FROM`) for customer auto-replies.
 - Attach the 4 product ZIPs in Shopify Digital Products, then one test purchase.
 - Real client results/testimonials with permission.
-- Concept-page view tracking: needs Ben's OK to add a small tracking snippet to the concept HTML files (they are currently kept byte-for-byte unchanged).
 
 Historical notes are preserved in `docs/archive/roadmap-2026-11-17.md`. Historical claims in that archive were not all reverified.
 
 ## Implemented and verified locally
 
+- Concept-page view tracking (done 27 Nov 2026): the 15 `/concept/` pages post `{slug}` to `public.concept_views`; the owner-only `/enquiries` page shows a "Concept page views" panel with totals and last-viewed time per page, newest first. The `qa-test` slug is hidden from the panel (rows kept). Owner's own visits are counted. Verified with unit/component tests only; not yet checked with a real signed-in owner session.
 - Notification lifecycle handler, idempotency, independent recipient state and owner-visible retry workflow.
 - Cart success/failure results, failure alerts, expired-cart recovery, serialised mutations and success-only add-to-cart events.
 - Password verification, Google-only setup flow, sign-out failures and late-profile protection.

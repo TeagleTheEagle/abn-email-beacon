@@ -20,6 +20,7 @@ import {
   type PipelineLead,
 } from "@/lib/enquiry-pipeline";
 import { Button } from "@/components/ui/button";
+import { ConceptViewsPanel } from "@/components/ConceptViewsPanel";
 
 const leadSchema = z.object({
   id: z.string().uuid(),
@@ -251,6 +252,7 @@ export function EnquiryPipeline() {
           </Button>
         </nav>
       )}
+      <ConceptViewsPanel refreshKey={version} />
     </div>
   );
 }

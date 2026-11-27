@@ -15,4 +15,5 @@
 - Use the global sans heading style for readable content; reserve font-display for branding, and keep theme colours in src/styles.css.
 - The guided Services preview builder shares the estimate calculator and service prices; all enquiry submissions use the existing lead flow to avoid duplicate pricing or delivery logic.
 - Keep patched transitive dependency overrides until upstream packages adopt compatible fixed releases; this prevents known vulnerable versions returning during installs.
+- Concept pages (public/concept/*.html) report views to public.concept_views; anyone may insert, only enquiry owners (is_enquiry_owner()) can read them, shown in the owner /enquiries "Concept page views" panel.
 - These repository instructions are self-contained. There is no `RTK.md` dependency in this project; do not follow stale external references to one.
