@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { seo } from "@/lib/seo";
 
 const resetPasswordSchema = z
   .object({
@@ -196,7 +197,7 @@ function ResetPasswordRouteComponent() {
 
   if (isRecovering) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
+      <div className="min-h-screen flex items-center justify-center bg-background px-4 pb-12 pt-28">
         <div className="w-full max-w-md text-center">
           <Link
             to="/"
@@ -238,7 +239,7 @@ function ResetPasswordRouteComponent() {
 
   if (recoveryError) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
+      <div className="min-h-screen flex items-center justify-center bg-background px-4 pb-12 pt-28">
         <div className="w-full max-w-md text-center">
           <Link
             to="/"
@@ -278,7 +279,7 @@ function ResetPasswordRouteComponent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 pb-12 pt-28">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link
@@ -323,7 +324,7 @@ function ResetPasswordRouteComponent() {
                 </Label>
                 <div className="relative mt-1.5">
                   <Lock
-                    className="absolute left-3 top-[38px] h-4 w-4 text-muted-foreground"
+                    className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                     aria-hidden="true"
                   />
                   <Input
@@ -338,7 +339,7 @@ function ResetPasswordRouteComponent() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-[38px] text-muted-foreground hover:text-foreground transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -357,7 +358,7 @@ function ResetPasswordRouteComponent() {
                 </Label>
                 <div className="relative mt-1.5">
                   <Lock
-                    className="absolute left-3 top-[38px] h-4 w-4 text-muted-foreground"
+                    className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                     aria-hidden="true"
                   />
                   <Input
@@ -372,7 +373,7 @@ function ResetPasswordRouteComponent() {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-[38px] text-muted-foreground hover:text-foreground transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                     aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                   >
                     {showConfirmPassword ? (
@@ -415,5 +416,16 @@ function ResetPasswordRouteComponent() {
 }
 
 export const Route = createFileRoute("/reset-password")({
+  head: () => {
+    const metadata = seo(
+      "/reset-password",
+      "Reset your password",
+      "Choose a new password for your client portal.",
+    );
+    return {
+      ...metadata,
+      meta: [...metadata.meta, { name: "robots", content: "noindex,nofollow" }],
+    };
+  },
   component: ResetPasswordRouteComponent,
 });

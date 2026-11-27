@@ -16,16 +16,33 @@ import {
 import { services } from "@/content/services";
 import { faqs, site } from "@/content/site";
 import { seo } from "@/lib/seo";
+import { serviceCatalog } from "@/lib/service-schema";
 
 const websitePrice = services.find((s) => s.id === "website-build")?.price ?? "A$500";
 
 export const Route = createFileRoute("/pricing")({
-  head: () =>
-    seo(
+  head: () => ({
+    ...seo(
       "/pricing",
       "Pricing",
       `Website builds from ${websitePrice} with a free preview first. Store, smart store and care plan quotes to suit your business.`,
     ),
+    scripts: [
+      { type: "application/ld+json", children: JSON.stringify(serviceCatalog("/pricing")) },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: pricingFaqs.map((faq) => ({
+            "@type": "Question",
+            name: faq.q,
+            acceptedAnswer: { "@type": "Answer", text: faq.a },
+          })),
+        }),
+      },
+    ],
+  }),
   component: Pricing,
 });
 

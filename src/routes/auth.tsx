@@ -30,6 +30,7 @@ import { toast } from "sonner";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { seo } from "@/lib/seo";
 
 const searchSchema = z.object({
   redirect: z.string().optional(),
@@ -123,7 +124,7 @@ function PasswordField({
         <button
           type="button"
           onClick={onToggle}
-          className="absolute right-3 top-[38px] text-muted-foreground hover:text-foreground transition-colors"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
           aria-label={showPassword ? "Hide password" : "Show password"}
         >
           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -318,7 +319,7 @@ function AuthRouteComponent() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 pb-12 pt-28">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link
@@ -342,8 +343,10 @@ function AuthRouteComponent() {
               />
             </svg>
           </Link>
-          <h1 className="font-display text-3xl font-bold text-foreground">Teague Industries</h1>
-          <p className="mt-2 text-muted-foreground">Sign in to your client portal</p>
+          <p className="font-display text-3xl font-bold text-foreground">Teague Industries</p>
+          <h1 className="mt-2 font-sans text-base font-normal text-muted-foreground">
+            Sign in to your client portal
+          </h1>
         </div>
 
         <Card className="glass">
@@ -375,7 +378,7 @@ function AuthRouteComponent() {
                       </Label>
                       <div className="relative mt-1.5">
                         <Mail
-                          className="absolute left-3 top-[38px] h-4 w-4 text-muted-foreground"
+                          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                           aria-hidden="true"
                         />
                         <Input
@@ -444,7 +447,7 @@ function AuthRouteComponent() {
                               </Label>
                               <div className="relative mt-1.5">
                                 <Mail
-                                  className="absolute left-3 top-[38px] h-4 w-4 text-muted-foreground"
+                                  className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                                   aria-hidden="true"
                                 />
                                 <Input
@@ -561,7 +564,7 @@ function AuthRouteComponent() {
                       </Label>
                       <div className="relative mt-1.5">
                         <Mail
-                          className="absolute left-3 top-[38px] h-4 w-4 text-muted-foreground"
+                          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                           aria-hidden="true"
                         />
                         <Input
@@ -667,5 +670,12 @@ function AuthRouteComponent() {
 }
 
 export const Route = createFileRoute("/auth")({
+  head: () => {
+    const metadata = seo("/auth", "Sign in", "Sign in to your Teague Industries client portal.");
+    return {
+      ...metadata,
+      meta: [...metadata.meta, { name: "robots", content: "noindex,nofollow" }],
+    };
+  },
   component: AuthRouteComponent,
 });

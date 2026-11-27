@@ -4,7 +4,7 @@ import { site } from "@/content/site";
 import { PageHeader, Reveal } from "@/components/Reveal";
 import { BookCallLink } from "@/components/BookCallLink";
 import { seo } from "@/lib/seo";
-import founderAsset from "@/assets/founder.webp.asset.json";
+import founderAsset from "@/assets/founder-600.webp.asset.json";
 
 const websitePrice = services.find((s) => s.id === "website-build")?.price ?? "A$500";
 
@@ -68,8 +68,9 @@ function About() {
               <img
                 src={founderAsset.url}
                 alt="Ben Teague"
-                width={768}
-                height={1152}
+                width={600}
+                height={900}
+                loading="lazy"
                 className="h-full w-full object-cover object-top"
               />
             </div>

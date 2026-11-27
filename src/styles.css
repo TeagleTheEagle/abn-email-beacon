@@ -445,6 +445,10 @@
   align-items: center;
   gap: 56px;
 }
+/* Keep the decorative scan behind the hero copy at every point in its animation. */
+.home-hero.scanline::after {
+  z-index: 0;
+}
 .hero-heading {
   font-size: 54px;
   line-height: 1.05;

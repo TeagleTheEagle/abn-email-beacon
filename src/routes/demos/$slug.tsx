@@ -33,9 +33,9 @@ export const Route = createFileRoute("/demos/$slug")({
     const design = isShowroomSlug(params.slug) ? getShowroomDesign(params.slug) : undefined;
     return seo(
       `/demos/${params.slug}`,
-      design ? `${design.title} Website Design Demo` : "Website Design Demo",
+      design ? `${design.industry} Website Demo` : "Website Design Demo",
       design
-        ? `Try a live ${design.industry.toLowerCase()} website design by Teague Industries, with ${design.interactiveWidget.toLowerCase()}. ${design.businessName} is a fictional business.`
+        ? `Try ${design.businessName}: ${design.interactiveWidget.toLowerCase()}. A fictional ${design.industry.toLowerCase()} website demo by Teague Industries.`
         : "Try a live website design by Teague Industries.",
     );
   },

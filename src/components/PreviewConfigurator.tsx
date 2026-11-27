@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -152,6 +152,19 @@ function InstantConcept({
   onChangeGoal: () => void;
 }) {
   const [showLeadForm, setShowLeadForm] = useState(false);
+  const formRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!showLeadForm || !formRef.current) return;
+    formRef.current.scrollIntoView({
+      block: "center",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
+    });
+    formRef.current
+      .querySelector<HTMLInputElement>('input:not([type="hidden"]):not([aria-hidden="true"])')
+      ?.focus({ preventScroll: true });
+  }, [showLeadForm]);
   const demo = demos[industry.demoKind];
   const selection = `${industry.label} · ${goal.label}`;
 
@@ -195,6 +208,7 @@ function InstantConcept({
       </div>
       {showLeadForm && (
         <div
+          ref={formRef}
           role="region"
           aria-labelledby="custom-preview-title"
           className="glass animate-rise mx-auto mt-8 max-w-2xl p-6 sm:p-8"

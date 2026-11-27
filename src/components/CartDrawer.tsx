@@ -92,7 +92,7 @@ export function CartDrawer() {
           </SheetTitle>
           <SheetDescription className="text-muted-foreground">
             {totalItems === 0
-              ? "Your cart is empty."
+              ? "Review your items before checkout."
               : `${totalItems} item${totalItems !== 1 ? "s" : ""} in your cart.`}
           </SheetDescription>
         </SheetHeader>

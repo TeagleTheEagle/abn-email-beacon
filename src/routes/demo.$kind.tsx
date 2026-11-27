@@ -27,7 +27,7 @@ export const Route = createFileRoute("/demo/$kind")({
   head: ({ params }) => {
     const d = isDemoKind(params.kind) ? demos[params.kind] : null;
     const description = d
-      ? `Interactive ${d.category.toLowerCase()} website demo for ${d.name} — ${d.body} An illustrative concept by Teague Industries.`
+      ? `Try ${d.name}, an interactive ${d.category.toLowerCase()} website demo. Explore its services and features. Fictional business; no real bookings or payments.`
       : "Explore an interactive Teague Industries website concept. Fictional business, illustrative imagery and no real bookings or payments.";
     return seo(`/demo/${params.kind}`, `${d ? d.name : "Website"} — Interactive Demo`, description);
   },

@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Columns3, X } from "lucide-react";
 import {
@@ -49,13 +49,14 @@ export function ShowroomComparison({
   onEnquire: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const compareRef = useRef<HTMLButtonElement>(null);
   if (designs.length === 0) return null;
 
   return (
     <>
       <section
         aria-label="Shortlisted designs"
-        className="fixed inset-x-3 bottom-3 z-40 mx-auto max-w-3xl rounded-xl border border-border bg-surface/95 p-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+        className="fixed inset-x-3 bottom-3 sm:bottom-24 z-40 mx-auto max-w-3xl rounded-xl border border-border bg-surface/95 p-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl pb-[max(0.75rem,env(safe-area-inset-bottom))]"
       >
         <div className="flex flex-wrap items-center gap-2">
           <p className="label mr-1 shrink-0" aria-live="polite">
@@ -90,6 +91,7 @@ export function ShowroomComparison({
             <button
               type="button"
               onClick={() => setOpen(true)}
+              ref={compareRef}
               className="btn-primary !px-4 !py-2 !text-xs"
             >
               <Columns3 className="h-4 w-4" aria-hidden="true" /> Compare
@@ -99,7 +101,13 @@ export function ShowroomComparison({
       </section>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-h-[90dvh] overflow-y-auto border-border bg-surface sm:max-w-4xl">
+        <DialogContent
+          className="max-h-[90dvh] overflow-y-auto border-border bg-surface sm:max-w-4xl"
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            compareRef.current?.focus();
+          }}
+        >
           <DialogHeader>
             <DialogTitle className="text-xl">Compare designs</DialogTitle>
             <DialogDescription>

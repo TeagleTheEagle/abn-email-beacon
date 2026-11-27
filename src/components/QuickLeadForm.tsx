@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -56,6 +56,7 @@ export function QuickLeadForm({
 }: QuickLeadFormProps) {
   const [done, setDone] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const errorId = useId();
   const {
     register,
     handleSubmit,
@@ -124,33 +125,51 @@ export function QuickLeadForm({
         className="pointer-events-none absolute -left-[9999px] h-0 w-0 opacity-0"
       />
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <label className="min-w-0">
-          <span className="sr-only">Business name</span>
+        <div className="min-w-0">
+          <label htmlFor={`${errorId}-business-input`} className="sr-only">
+            Business name
+          </label>
           <input
+            id={`${errorId}-business-input`}
             {...register("business_name")}
             aria-invalid={errors.business_name ? true : undefined}
+            aria-describedby={errors.business_name ? `${errorId}-business` : undefined}
             autoComplete="organization"
             placeholder="Business name"
             className="w-full rounded-md border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-primary"
           />
-        </label>
-        <label className="min-w-0">
-          <span className="sr-only">Email</span>
+          {errors.business_name && (
+            <p id={`${errorId}-business`} className="mt-1 text-xs text-destructive">
+              {errors.business_name.message}
+            </p>
+          )}
+        </div>
+        <div className="min-w-0">
+          <label htmlFor={`${errorId}-email-input`} className="sr-only">
+            Email
+          </label>
           <input
+            id={`${errorId}-email-input`}
             {...register("email")}
             aria-invalid={errors.email ? true : undefined}
+            aria-describedby={errors.email ? `${errorId}-email` : undefined}
             type="email"
             placeholder="Email"
             className="w-full rounded-md border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-primary"
           />
-        </label>
+          {errors.email && (
+            <p id={`${errorId}-email`} className="mt-1 text-xs text-destructive">
+              {errors.email.message}
+            </p>
+          )}
+        </div>
         <Button type="submit" disabled={isSubmitting} className="h-12 sm:col-span-2">
           {isSubmitting ? "Sending…" : submitText}
         </Button>
       </div>
-      {(errors.business_name || errors.email || err) && (
+      {err && (
         <p role="alert" className="mt-2 px-1 text-xs text-destructive">
-          {errors.business_name?.message || errors.email?.message || err}
+          {err}
         </p>
       )}
     </form>

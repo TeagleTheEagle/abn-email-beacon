@@ -11,14 +11,19 @@ import { site } from "@/content/site";
 import { seo } from "@/lib/seo";
 import { EstimateCalculator } from "@/components/EstimateCalculator";
 import templatesStore from "@/assets/work-templates.jpg";
+import { serviceCatalog } from "@/lib/service-schema";
 
 export const Route = createFileRoute("/services")({
-  head: () =>
-    seo(
+  head: () => ({
+    ...seo(
       "/services",
       "Websites and Stores",
       "Website builds, online store setup, smart stores, care plans and fixed-scope add-ons for Australian businesses of every size.",
     ),
+    scripts: [
+      { type: "application/ld+json", children: JSON.stringify(serviceCatalog("/services")) },
+    ],
+  }),
   component: Services,
 });
 

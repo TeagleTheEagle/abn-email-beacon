@@ -17,3 +17,5 @@
 - Keep patched transitive dependency overrides until upstream packages adopt compatible fixed releases; this prevents known vulnerable versions returning during installs.
 - Concept pages (public/concept/*.html) report views to public.concept_views; anyone may insert, only enquiry owners (is_enquiry_owner()) can read them, shown in the owner /enquiries "Concept page views" panel.
 - These repository instructions are self-contained. There is no `RTK.md` dependency in this project; do not follow stale external references to one.
+- Service/pricing structured offers share src/lib/service-schema.ts and current content data, so fixed, from and monthly prices remain consistent with the visible tiers.
+- Product page metadata reads Shopify SEO titles with the product-name fallback; never rename products to shorten search titles.

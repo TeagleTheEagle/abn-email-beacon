@@ -10,6 +10,24 @@
 - Attach the 4 product ZIPs in Shopify Digital Products, then one test purchase.
 - Real client results/testimonials with permission.
 
+## Website audit improvements (27 November 2026)
+
+- [x] 1. Account-page icons, spacing, landmarks and private metadata (signed-in screens covered by existing component tests; real account/recovery session unavailable).
+- [x] 2. Quick-form per-field accessible errors, independently linked to each input.
+- [x] 3. Configurator scroll and input focus, respecting reduced motion.
+- [x] 4. Comparison tray clearance at 640/1024/1280 px and dialog focus restoration.
+- [x] 5. Services builder missing-business validation and clearing after selection.
+- [x] 6. Desktop menu wrapping; checked 800/1024/1280/1440 px signed out.
+- [x] 7. Hero decorative scan stays behind copy; inspected at 1440 px.
+- [x] 8. Single empty-cart message; verified through the opened cart.
+- [x] 9. Editorial titles/descriptions shortened; product metadata now reads Shopify SEO title. All live products currently have null SEO titles, so their required name fallback still exceeds 60 characters for long names. Products were not changed.
+- [x] 10. Services/pricing offer catalog from shared service/care tiers; fixed/from/monthly prices distinguished. Pricing FAQ schema uses exactly its visible FAQ subset. JSON parsed in browser and tests.
+- [x] 11. Earth image reduced from 156,750 to 65,854 bytes, phone variant 27,110 bytes; founder 600×900, 42,082 bytes, lazy. Original photos preserved. Further JavaScript splitting deferred as a separate structural change: JARVIS is 1,444 lines and showroom demos already use lazy boundaries; current preview cold-home loads measured 16 script requests before/after (not comparable to historical production counts).
+- [x] 12. Checked report-only warnings across home, services, shop, product, demos, fine-dining, about, contact, auth, signed-out enquiries, concept and JARVIS. Full CSP deliberately NOT enforced: observed script evaluation, Google Analytics collect requests to www.google.com and Tag Manager image beacons would be blocked. Signed-in enquiries and all assistant API interactions remain unverified.
+- [x] Verification: 232/232 tests across 38 files, preview automatic typecheck/build OK, project-code lint 0 errors/16 existing warnings, browser central flows passed without runtime errors. `npm run lint` traversing the whole checkout timed out twice (120/600s); explicitly scoped project-code lint passed. Manual build/typecheck were not run because the Lovable harness performs them.
+
+Protected files unchanged: concept HTML, robots, sitemap, preview route, prices/products, migrations and generated integration files. No real leads, emails, checkout writes or account mutations submitted; changes need publishing to reach the live site.
+
 Historical notes are preserved in `docs/archive/roadmap-2026-11-17.md`. Historical claims in that archive were not all reverified.
 
 ## Implemented and verified locally

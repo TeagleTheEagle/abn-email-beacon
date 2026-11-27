@@ -17,6 +17,7 @@ import {
 import { cartItemFromVariant, useCartStore } from "@/stores/cartStore";
 import { seo, SITE_URL } from "@/lib/seo";
 import { track } from "@/lib/analytics";
+import { productSeoTitle } from "@/lib/product-seo";
 
 function ProductNotFound() {
   return (
@@ -40,12 +41,13 @@ export const Route = createFileRoute("/product/$handle")({
   head: (ctx) => {
     const product = (ctx as unknown as { loaderData?: ShopifyProduct["node"] | null }).loaderData;
     const path = product ? `/product/${product.handle}` : "/shop";
-    const title = product?.title ?? "Product";
+    const title = product ? productSeoTitle(product) : "Product";
     const description =
       product?.description?.slice(0, 155) ||
       "Digital products and services from Teague Industries.";
     const base = seo(path, title, description);
-    const image = product?.images.edges[0]?.node.url;
+    const imageUrl = product?.images.edges[0]?.node.url;
+    const image = imageUrl ? shopifyImage(imageUrl, 1200) : undefined;
     if (image && image.startsWith("https://")) {
       base.meta.push(
         { property: "og:image", content: image },

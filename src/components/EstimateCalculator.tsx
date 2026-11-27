@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -26,6 +26,8 @@ const aud = (n: number) => `A$${n.toLocaleString("en-AU")}`;
 export function EstimateCalculator({ guided = false }: { guided?: boolean }) {
   const [step, setStep] = useState(0);
   const [businessType, setBusinessType] = useState<string | null>(null);
+  const [businessError, setBusinessError] = useState(false);
+  const businessErrorId = useId();
   const [buildId, setBuildId] = useState<string>(builds[0]?.id ?? "");
   const [careId, setCareId] = useState<string | null>(null);
   const [done, setDone] = useState(false);
@@ -123,7 +125,11 @@ export function EstimateCalculator({ guided = false }: { guided?: boolean }) {
             </ol>
           )}
 
-          <fieldset className="mt-8" hidden={guided && step !== 0}>
+          <fieldset
+            className="mt-8"
+            hidden={guided && step !== 0}
+            aria-describedby={businessError ? businessErrorId : undefined}
+          >
             <legend className="text-sm font-semibold">1. What kind of business?</legend>
             <div className="mt-3 flex flex-wrap gap-2">
               {businessTypes.map((b) => (
@@ -133,12 +139,20 @@ export function EstimateCalculator({ guided = false }: { guided?: boolean }) {
                   variant={businessType === b ? "default" : "outline"}
                   aria-pressed={businessType === b}
                   className="h-11"
-                  onClick={() => setBusinessType(b)}
+                  onClick={() => {
+                    setBusinessType(b);
+                    setBusinessError(false);
+                  }}
                 >
                   {b}
                 </Button>
               ))}
             </div>
+            {businessError && (
+              <p id={businessErrorId} className="mt-3 text-xs text-destructive">
+                Choose your type of business to continue.
+              </p>
+            )}
           </fieldset>
 
           <fieldset className="mt-8" hidden={guided && step !== 1}>
@@ -227,8 +241,14 @@ export function EstimateCalculator({ guided = false }: { guided?: boolean }) {
                 <Button
                   type="button"
                   className="h-11"
-                  disabled={step === 0 && !businessType}
-                  onClick={() => setStep((s) => s + 1)}
+                  aria-describedby={businessError ? businessErrorId : undefined}
+                  onClick={() => {
+                    if (step === 0 && !businessType) {
+                      setBusinessError(true);
+                      return;
+                    }
+                    setStep((s) => s + 1);
+                  }}
                 >
                   Continue <ArrowRight />
                 </Button>

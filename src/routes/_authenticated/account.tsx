@@ -36,6 +36,7 @@ import { toast } from "sonner";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { seo } from "@/lib/seo";
 import { format } from "date-fns";
 import {
   changePasswordWithVerification,
@@ -128,7 +129,7 @@ function PasswordField({
         <button
           type="button"
           onClick={onToggle}
-          className="absolute right-3 top-[38px] text-muted-foreground hover:text-foreground transition-colors"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
           aria-label={showPassword ? "Hide password" : "Show password"}
         >
           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -350,7 +351,7 @@ function AccountRouteComponent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-background pt-20 flex items-center justify-center">
         <div className="animate-pulse space-y-4 w-full max-w-4xl mx-auto px-4 py-12">
           <div className="h-8 bg-surface-2 rounded w-1/4" />
           <div className="h-48 bg-surface-2 rounded" />
@@ -372,7 +373,7 @@ function AccountRouteComponent() {
   const googleOnly = isGoogleOnlyUser(user);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pt-20">
       <header className="border-b border-border bg-surface/50 backdrop-blur-xl">
         <div className="mx-auto max-w-4xl px-4 py-6 sm:py-8">
           <div className="flex items-center justify-between gap-4">
@@ -392,7 +393,7 @@ function AccountRouteComponent() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-4xl px-4 py-8 sm:py-12">
+      <div className="mx-auto max-w-4xl px-4 py-8 sm:py-12">
         <div className="mb-8">
           <div className="flex items-center gap-4">
             <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
@@ -446,7 +447,7 @@ function AccountRouteComponent() {
                       </Label>
                       <div className="relative mt-1.5">
                         <User
-                          className="absolute left-3 top-[38px] h-4 w-4 text-muted-foreground"
+                          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                           aria-hidden="true"
                         />
                         <Input
@@ -464,7 +465,7 @@ function AccountRouteComponent() {
                       </Label>
                       <div className="relative mt-1.5">
                         <User
-                          className="absolute left-3 top-[38px] h-4 w-4 text-muted-foreground"
+                          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                           aria-hidden="true"
                         />
                         <Input
@@ -482,7 +483,7 @@ function AccountRouteComponent() {
                       </Label>
                       <div className="relative mt-1.5">
                         <Phone
-                          className="absolute left-3 top-[38px] h-4 w-4 text-muted-foreground"
+                          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                           aria-hidden="true"
                         />
                         <Input
@@ -769,11 +770,22 @@ function AccountRouteComponent() {
             </Card>
           </TabsContent>
         </Tabs>
-      </main>
+      </div>
     </div>
   );
 }
 
 export const Route = createFileRoute("/_authenticated/account")({
+  head: () => {
+    const metadata = seo(
+      "/account",
+      "Your account",
+      "Manage your Teague Industries client portal account.",
+    );
+    return {
+      ...metadata,
+      meta: [...metadata.meta, { name: "robots", content: "noindex,nofollow" }],
+    };
+  },
   component: AccountRouteComponent,
 });

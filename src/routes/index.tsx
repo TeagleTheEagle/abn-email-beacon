@@ -22,8 +22,9 @@ import { ProjectCard } from "@/components/ProjectCard";
 import { BookCallLink } from "@/components/BookCallLink";
 import { WebsitePreview } from "@/components/WebsitePreview";
 import { Button } from "@/components/ui/button";
-import earth from "@/assets/earth-horizon.webp";
-import founder from "@/assets/founder.webp.asset.json";
+import earth from "@/assets/earth-horizon-1600.webp.asset.json";
+import earthMobile from "@/assets/earth-horizon-768.webp.asset.json";
+import founder from "@/assets/founder-600.webp.asset.json";
 import { faqs, site } from "@/content/site";
 import { ProjectJourney } from "@/components/ProjectJourney";
 import { services } from "@/content/services";
@@ -55,8 +56,8 @@ export const Route = createFileRoute("/")({
   head: () => {
     const base = seo(
       "/",
-      "Websites and Stores for All Australian Businesses",
-      `Websites from ${websitePrice}, online stores and smart tools for businesses of every size on Sydney's Lower North Shore and across Australia. Free preview first.`,
+      "Websites and Stores for Australia",
+      `Websites from ${websitePrice}, online stores and smart tools for Australian businesses of every size. Based on Sydney's Lower North Shore. Free preview first.`,
     );
     return {
       ...base,
@@ -117,14 +118,18 @@ function Home() {
   return (
     <>
       <section className="home-hero scanline">
-        <img
-          src={earth}
-          alt=""
-          aria-hidden="true"
-          width={1920}
-          height={1088}
-          className="hero-earth"
-        />
+        <picture>
+          <source media="(max-width: 767px)" srcSet={earthMobile.url} />
+          <img
+            src={earth.url}
+            alt=""
+            aria-hidden="true"
+            width={1600}
+            height={907}
+            fetchPriority="high"
+            className="hero-earth"
+          />
+        </picture>
         <div className="hero-shade" />
         <div className="tech-grid absolute inset-0 opacity-70" aria-hidden="true" />
         <div className="hero-glow" aria-hidden="true" />
@@ -401,8 +406,8 @@ function Home() {
             <img
               src={founder.url}
               alt="Ben Teague, founder"
-              width={768}
-              height={1152}
+              width={600}
+              height={900}
               loading="lazy"
               className="aspect-[4/5] w-full border border-border object-cover object-top"
             />
@@ -501,11 +506,11 @@ export function CtaBand() {
   return (
     <section className="relative overflow-hidden border-t border-border px-6 py-16 text-center sm:py-24">
       <img
-        src={earth}
+        src={earth.url}
         alt=""
         aria-hidden="true"
-        width={1920}
-        height={1088}
+        width={1600}
+        height={907}
         loading="lazy"
         className="absolute inset-0 h-full w-full object-cover opacity-20"
       />

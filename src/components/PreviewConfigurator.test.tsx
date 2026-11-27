@@ -1,5 +1,5 @@
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { demos, type DemoKind } from "@/content/demos";
 import { PreviewConfigurator } from "./PreviewConfigurator";
 
@@ -17,9 +17,21 @@ vi.mock("@/lib/leads", () => ({
 }));
 vi.mock("@/lib/analytics", () => ({ track: vi.fn() }));
 
+const originalScrollIntoView = Object.getOwnPropertyDescriptor(Element.prototype, "scrollIntoView");
+const scrollIntoView = vi.fn();
+beforeEach(() => {
+  Object.defineProperty(Element.prototype, "scrollIntoView", {
+    configurable: true,
+    value: scrollIntoView,
+  });
+});
+
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
+  if (originalScrollIntoView)
+    Object.defineProperty(Element.prototype, "scrollIntoView", originalScrollIntoView);
+  else Reflect.deleteProperty(Element.prototype, "scrollIntoView");
 });
 
 const industries = ["Tradie / Services", "Hospitality / Cafe", "Boutique / Retail", "Professional"];
@@ -31,6 +43,13 @@ function chooseConcept(industry: string, goal: string) {
 }
 
 describe("PreviewConfigurator", () => {
+  it("scrolls the revealed form into view and focuses its business input, not the honeypot", () => {
+    render(<PreviewConfigurator />);
+    chooseConcept("Tradie / Services", "More enquiries");
+    fireEvent.click(screen.getByRole("button", { name: "Get your custom preview" }));
+    expect(screen.getByRole("textbox", { name: "Business name" })).toHaveFocus();
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: "center", behavior: "smooth" });
+  });
   it("offers the requested industry and goal choices in the first two steps", () => {
     render(<PreviewConfigurator />);
 

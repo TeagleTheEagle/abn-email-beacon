@@ -58,7 +58,7 @@ export function SiteNav() {
             Teague Industries
           </span>
         </Link>
-        <ul className="hidden min-w-0 items-center gap-5 lg:flex">
+        <ul className="hidden min-w-0 items-center gap-3 lg:flex xl:gap-5">
           {nav
             .filter((n) =>
               ["/services", "/work", "/demos", "/pricing", "/shop", "/about"].includes(n.to),
@@ -67,7 +67,7 @@ export function SiteNav() {
               <li key={n.to}>
                 <Link
                   to={n.to}
-                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  className="whitespace-nowrap text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                   activeProps={{ className: "text-primary-soft" }}
                   activeOptions={{ exact: true }}
                 >
@@ -76,7 +76,7 @@ export function SiteNav() {
               </li>
             ))}
         </ul>
-        <div className="flex shrink-0 items-center gap-3">
+        <div className="flex shrink-0 items-center gap-2 xl:gap-3">
           <CartDrawer />
           {loading ? (
             <div className="h-10 w-24 animate-pulse bg-surface-2 rounded" aria-hidden="true" />
@@ -124,7 +124,7 @@ export function SiteNav() {
                     <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center">
                       <User className="h-5 w-5 text-primary" aria-hidden="true" />
                     </div>
-                    <span className="text-sm font-medium truncate max-w-[140px]">
+                    <span className="hidden xl:inline text-sm font-medium truncate max-w-[140px]">
                       {displayName}
                     </span>
                   </Button>

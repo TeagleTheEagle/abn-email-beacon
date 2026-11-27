@@ -58,7 +58,17 @@ describe("QA flows: enquiry validation, honeypot spam protection, error handling
     render(<QuickLeadForm />);
     fireEvent.click(screen.getByRole("button", { name: /Get a free preview/i }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(/Please enter your business name/i);
+    const businessError = await screen.findByText("Please enter your business name");
+    const emailError = await screen.findByText("Please enter a valid email");
+    expect(screen.getByRole("textbox", { name: "Business name" })).toHaveAttribute(
+      "aria-describedby",
+      businessError.id,
+    );
+    expect(screen.getByRole("textbox", { name: "Email" })).toHaveAttribute(
+      "aria-describedby",
+      emailError.id,
+    );
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     expect(insert).not.toHaveBeenCalled();
   });
 

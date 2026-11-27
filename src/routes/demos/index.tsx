@@ -20,7 +20,7 @@ export const Route = createFileRoute("/demos/")({
     seo(
       "/demos",
       "Website Designs Showroom",
-      "Explore live demonstration websites across 12 industries, from barbershops and cafés to trades, fitness studios and online stores. Try every design on desktop, tablet or phone.",
+      "Explore 12 live website designs for trades, cafés, salons, fitness studios and online stores. Try demos and compare your favourites on any device.",
     ),
   component: Showroom,
 });
@@ -89,7 +89,7 @@ function Showroom() {
   ];
 
   return (
-    <div className={shortlist.length ? "pb-32" : undefined}>
+    <div className={shortlist.length ? "pb-32 sm:pb-52" : undefined}>
       <header className="relative px-6 pb-10 pt-28 text-center sm:pt-32">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-[radial-gradient(ellipse_at_top,rgba(59,140,255,0.18),transparent_70%)]" />
         <div className="animate-rise">
