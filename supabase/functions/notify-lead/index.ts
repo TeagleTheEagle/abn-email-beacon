@@ -117,6 +117,22 @@ function createStore(url: string, serviceRoleKey: string): NotificationStore {
   };
 }
 
+// Checks the caller's own session against owner_memberships via the is_enquiry_owner() RPC.
+async function isOwnerRequest(request: Request, url: string) {
+  const auth = request.headers.get("authorization") ?? "";
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  if (!anonKey || !auth.startsWith("Bearer ") || auth === `Bearer ${anonKey}`) return false;
+  try {
+    const userClient = createClient(url, anonKey, { global: { headers: { Authorization: auth } } });
+    const { data: userData, error: userError } = await userClient.auth.getUser(auth.slice(7));
+    if (userError || !userData.user) return false;
+    const { data, error } = await userClient.rpc("is_enquiry_owner");
+    return !error && data === true;
+  } catch {
+    return false;
+  }
+}
+
 Deno.serve(async (request) => {
   if (request.method === "OPTIONS") return new Response("ok", { headers: cors });
   const apiKey = Deno.env.get("RESEND_API_KEY");
@@ -132,6 +148,7 @@ Deno.serve(async (request) => {
       from: Deno.env.get("LEAD_FROM") || FALLBACK_FROM,
       customerConfirmationEnabled: Boolean(Deno.env.get("LEAD_FROM")),
       schedulerKey: Deno.env.get("NOTIFY_SCHEDULER_KEY"),
+      isOwner: (req) => isOwnerRequest(req, url),
     });
     const headers = new Headers(response.headers);
     for (const [key, value] of Object.entries(cors)) headers.set(key, value);

@@ -1,8 +1,15 @@
 # Teague Industries roadmap
 
-**Current as of:** 17 November 2026
-**Committed baseline:** `55d600a`; the previously reviewed reliability work is committed in that baseline.
-**Uncommitted follow-up:** The audit remediation, its regressions and these documentation updates are local only. They have not been committed, pushed, deployed or applied to production.
+**Current as of:** 27 November 2026
+**State:** Everything is committed and synced; migrations through `0009` (enquiry notify token) are applied to Lovable Cloud, `notify-lead` is deployed, and owner access is granted. 15 hidden concept pages live under `/concept/`.
+
+## Open now (waiting on Ben)
+
+- Booking link (Calendly/Cal.com) to replace the `/book` request form.
+- Business mailbox + verified Resend sender (`LEAD_FROM`) for customer auto-replies.
+- Attach the 4 product ZIPs in Shopify Digital Products, then one test purchase.
+- Real client results/testimonials with permission.
+- Concept-page view tracking: needs Ben's OK to add a small tracking snippet to the concept HTML files (they are currently kept byte-for-byte unchanged).
 
 Historical notes are preserved in `docs/archive/roadmap-2026-11-17.md`. Historical claims in that archive were not all reverified.
 

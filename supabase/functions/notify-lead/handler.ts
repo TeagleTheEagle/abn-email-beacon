@@ -60,6 +60,8 @@ export interface NotificationDependencies {
   from: string;
   customerConfirmationEnabled: boolean;
   schedulerKey?: string;
+  /** True when the request carries a signed-in enquiry owner's session (manual resend). */
+  isOwner?: (request: Request) => Promise<boolean>;
   now?: () => Date;
 }
 
@@ -199,12 +201,14 @@ export async function handleNotifyLead(request: Request, deps: NotificationDepen
   if (typeof email !== "string" || email.length < 3 || email.length > 255)
     return json({ error: "Lead not found" }, 404);
 
+  // A signed-in owner may resend any enquiry from the pipeline, like the scheduler.
+  const trusted = scheduled || (deps.isOwner ? await deps.isOwner(request) : false);
   const token = (body as { token?: unknown })["token"];
-  if (!scheduled && (typeof token !== "string" || token.length < 32 || token.length > 128))
+  if (!trusted && (typeof token !== "string" || token.length < 32 || token.length > 128))
     return json({ error: "Lead not found" }, 404);
   const lead = await deps.store.findLead(id, email.trim());
   if (!lead) return json({ error: "Lead not found" }, 404);
-  if (!scheduled) {
+  if (!trusted) {
     // Only the visitor who inserted the enquiry holds the token whose hash was stored with it.
     if (!lead.notify_token_hash || lead.notify_token_hash !== (await sha256Hex(token as string)))
       return json({ error: "Lead not found" }, 404);

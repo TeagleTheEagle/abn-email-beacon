@@ -215,6 +215,15 @@ describe("notify-lead delivery lifecycle", () => {
     expect(sendEmail).not.toHaveBeenCalled();
   });
 
+  it("lets a signed-in owner resend without the visitor token", async () => {
+    const store = new FakeNotificationStore();
+    const sendEmail = vi.fn().mockResolvedValue({ id: "email-1" });
+    const deps = { ...dependencies(store, sendEmail), isOwner: async () => true };
+    const response = await handleNotifyLead(request(false, "x".repeat(40)), deps);
+    expect(response.status).toBe(200);
+    expect(sendEmail).toHaveBeenCalled();
+  });
+
   it("rejects scheduled calls without the dedicated scheduler credential", async () => {
     const store = new FakeNotificationStore();
     const sendEmail = vi.fn();
