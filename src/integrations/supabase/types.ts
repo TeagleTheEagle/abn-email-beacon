@@ -56,6 +56,7 @@ export type Database = {
           next_follow_up_at: string | null
           notes: string | null
           notified_at: string | null
+          notify_token_hash: string | null
           owner_notification_attempt_id: string | null
           owner_notification_attempted_at: string | null
           owner_notification_attempts: number
@@ -87,6 +88,7 @@ export type Database = {
           next_follow_up_at?: string | null
           notes?: string | null
           notified_at?: string | null
+          notify_token_hash?: string | null
           owner_notification_attempt_id?: string | null
           owner_notification_attempted_at?: string | null
           owner_notification_attempts?: number
@@ -118,6 +120,7 @@ export type Database = {
           next_follow_up_at?: string | null
           notes?: string | null
           notified_at?: string | null
+          notify_token_hash?: string | null
           owner_notification_attempt_id?: string | null
           owner_notification_attempted_at?: string | null
           owner_notification_attempts?: number

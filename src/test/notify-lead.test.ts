@@ -16,6 +16,7 @@ class FakeNotificationStore implements NotificationStore {
     this.lead = {
       id: "11111111-1111-4111-8111-111111111111",
       created_at: "2026-11-17T00:55:00Z",
+      notify_token_hash: "6a87499eebbac68617673349b2d323e5a7974f5f71745fff8b5160ecf6243b40",
       name: "Alex",
       business_name: "Example Co",
       email: "alex@example.com.au",
@@ -87,7 +88,7 @@ class FakeNotificationStore implements NotificationStore {
   }
 }
 
-function request(scheduled = false) {
+function request(scheduled = false, token = "tttttttttttttttttttttttttttttttttttttttt") {
   return new Request("https://example.com/functions/notify-lead", {
     method: "POST",
     headers: {
@@ -97,7 +98,7 @@ function request(scheduled = false) {
     body: JSON.stringify({
       id: "11111111-1111-4111-8111-111111111111",
       email: "alex@example.com.au",
-      ...(scheduled ? { scheduled: true } : {}),
+      ...(scheduled ? { scheduled: true } : { token }),
     }),
   });
 }
@@ -199,6 +200,17 @@ describe("notify-lead delivery lifecycle", () => {
     store.lead.created_at = "2026-11-16T00:00:00Z";
     const sendEmail = vi.fn();
     const response = await handleNotifyLead(request(), dependencies(store, sendEmail));
+    expect(response.status).toBe(404);
+    expect(sendEmail).not.toHaveBeenCalled();
+  });
+
+  it("refuses visitor notifications without the enquiry's one-time token", async () => {
+    const store = new FakeNotificationStore();
+    const sendEmail = vi.fn().mockResolvedValue({ id: "email-1" });
+    const response = await handleNotifyLead(
+      request(false, "x".repeat(40)),
+      dependencies(store, sendEmail),
+    );
     expect(response.status).toBe(404);
     expect(sendEmail).not.toHaveBeenCalled();
   });

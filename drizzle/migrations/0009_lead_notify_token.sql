@@ -1,0 +1,2 @@
+ALTER TABLE public.leads ADD COLUMN IF NOT EXISTS notify_token_hash text;
+ALTER TABLE public.leads ADD CONSTRAINT leads_notify_token_hash_format CHECK (notify_token_hash IS NULL OR notify_token_hash ~ '^[0-9a-f]{64}$');

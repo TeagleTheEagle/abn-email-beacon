@@ -6,6 +6,14 @@ import { withLeadSource, type EnquiryStage, type LeadSource } from "@/lib/enquir
 // back), then the notify-lead function is asked to email the owner about that id.
 export const newLeadId = () => crypto.randomUUID();
 
+// Each insert stores only the SHA-256 of a random one-time token; notify-lead requires the token,
+// so knowing an enquiry's id and email is not enough to trigger its emails.
+const notifyTokens = new Map<string, string>();
+async function sha256Hex(value: string) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
 // The generated Lovable types are not hand-edited. This single boundary includes the additive
 // source column from migration 0006 until Lovable regenerates its database types.
 export async function insertLead(
@@ -13,10 +21,15 @@ export async function insertLead(
   payload: TablesInsert<"leads">,
   source: LeadSource,
 ) {
-  const withSource = withLeadSource(payload, source);
+  const token = `${crypto.randomUUID()}${crypto.randomUUID()}`;
+  const withSource = {
+    ...withLeadSource(payload, source),
+    notify_token_hash: await sha256Hex(token),
+  };
   const { error } = await client
     .from("leads")
     .insert(withSource as unknown as TablesInsert<"leads">);
+  if (!error && payload.id) notifyTokens.set(payload.id, token);
   return { error };
 }
 
@@ -84,8 +97,12 @@ export async function updateLeadWorkflow(
 
 // Best effort: the enquiry is already saved, so a failed email must never fail the form.
 export async function notifyLead(client: SupabaseClient<Database>, id: string, email: string) {
+  const token = notifyTokens.get(id);
   try {
-    const { error } = await client.functions.invoke("notify-lead", { body: { id, email } });
+    const { error } = await client.functions.invoke("notify-lead", {
+      body: { id, email, ...(token ? { token } : {}) },
+    });
+    if (!error) notifyTokens.delete(id);
     if (error) console.warn("Lead saved but notification failed:", error.message);
     return { success: !error };
   } catch (e) {

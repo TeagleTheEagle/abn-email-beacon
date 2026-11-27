@@ -30,6 +30,7 @@ export interface LeadForNotification {
   customer_confirmation_attempt_id: string | null;
   customer_confirmation_error: string | null;
   customer_confirmation_provider_id: string | null;
+  notify_token_hash?: string | null;
 }
 
 export interface NotificationStore {
@@ -70,6 +71,11 @@ export class ProviderResponseError extends Error {
     super(message);
     this.name = "ProviderResponseError";
   }
+}
+
+async function sha256Hex(value: string) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
 }
 
 const MAX_ATTEMPTS = 5;
@@ -193,9 +199,15 @@ export async function handleNotifyLead(request: Request, deps: NotificationDepen
   if (typeof email !== "string" || email.length < 3 || email.length > 255)
     return json({ error: "Lead not found" }, 404);
 
+  const token = (body as { token?: unknown })["token"];
+  if (!scheduled && (typeof token !== "string" || token.length < 32 || token.length > 128))
+    return json({ error: "Lead not found" }, 404);
   const lead = await deps.store.findLead(id, email.trim());
   if (!lead) return json({ error: "Lead not found" }, 404);
   if (!scheduled) {
+    // Only the visitor who inserted the enquiry holds the token whose hash was stored with it.
+    if (!lead.notify_token_hash || lead.notify_token_hash !== (await sha256Hex(token as string)))
+      return json({ error: "Lead not found" }, 404);
     const createdMs = Date.parse(lead.created_at);
     const nowMs = (deps.now?.() ?? new Date()).getTime();
     if (!Number.isFinite(createdMs) || nowMs - createdMs > FRESH_LEAD_MS)

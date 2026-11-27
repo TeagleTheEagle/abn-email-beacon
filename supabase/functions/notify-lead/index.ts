@@ -60,7 +60,7 @@ async function sendEmail(apiKey: string, payload: Record<string, unknown>, idemp
 function createStore(url: string, serviceRoleKey: string): NotificationStore {
   const db = createClient(url, serviceRoleKey);
   const fields =
-    "id, created_at, name, business_name, email, phone, business_type, needs, current_website, message, notified_at, owner_notification_status, owner_notification_attempts, owner_notification_attempted_at, owner_notification_attempt_id, owner_notification_error, owner_notification_provider_id, customer_confirmation_status, customer_confirmation_attempts, customer_confirmation_attempted_at, customer_confirmation_attempt_id, customer_confirmation_error, customer_confirmation_provider_id";
+    "id, created_at, name, business_name, email, phone, business_type, needs, current_website, message, notified_at, owner_notification_status, owner_notification_attempts, owner_notification_attempted_at, owner_notification_attempt_id, owner_notification_error, owner_notification_provider_id, customer_confirmation_status, customer_confirmation_attempts, customer_confirmation_attempted_at, customer_confirmation_attempt_id, customer_confirmation_error, customer_confirmation_provider_id, notify_token_hash";
   return {
     async findLead(id, email) {
       const { data, error } = await db
